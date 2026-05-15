@@ -1,0 +1,14 @@
+{
+  "name": "alec/app-japonais-v1",
+  "description": "Application web d'apprentissage des kana japonais.",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    },
+    "files": [
+      "app/helpers.php"
+    ]
+  },
+  "require": {}
+}

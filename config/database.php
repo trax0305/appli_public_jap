@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'host' => env_value('DB_HOST', '127.0.0.1'),
+    'port' => env_value('DB_PORT', '3306'),
+    'database' => env_value('DB_NAME', 'app_jap'),
+    'username' => env_value('DB_USER', 'root'),
+    'password' => env_value('DB_PASS', ''),
+    'charset' => env_value('DB_CHARSET', 'utf8mb4'),
+];
