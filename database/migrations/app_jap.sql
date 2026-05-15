@@ -1,0 +1,2359 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1
+-- Généré le : ven. 15 mai 2026 à 18:52
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données : `app_jap`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `badges`
+--
+
+CREATE TABLE `badges` (
+  `id` int(11) NOT NULL,
+  `code` varchar(100) NOT NULL,
+  `title` varchar(120) NOT NULL,
+  `description` text DEFAULT NULL,
+  `badge_type` enum('mission','path','performance','streak','special') NOT NULL DEFAULT 'special',
+  `icon` varchar(80) DEFAULT NULL,
+  `condition_type` varchar(80) DEFAULT NULL,
+  `condition_value` varchar(120) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `badges`
+--
+
+INSERT INTO `badges` (`id`, `code`, `title`, `description`, `badge_type`, `icon`, `condition_type`, `condition_value`, `created_at`, `updated_at`) VALUES
+(1, 'first_steps', 'Premiers pas', 'Débloqué en commençant ta première mission.', 'special', 'seedling', 'first_mission_started', '1', '2026-05-14 22:37:15', NULL),
+(2, 'first_quiz', 'Premier quiz', 'Débloqué en terminant ton premier quiz.', 'special', 'play-circle', 'first_quiz_completed', '1', '2026-05-14 22:37:15', NULL),
+(3, 'first_perfect_score', 'Sans faute', 'Débloqué en obtenant ton premier score parfait à 100%.', 'performance', 'sparkles', 'perfect_quiz_count', '1', '2026-05-14 22:37:15', NULL),
+(4, 'hiragana_base_complete', 'Hiragana de base maîtrisés', 'Débloqué en terminant le parcours Hiragana de base.', 'path', 'badge-jp-hira', 'path_completed', 'hiragana_base', '2026-05-14 22:37:15', NULL),
+(5, 'katakana_base_complete', 'Katakana de base maîtrisés', 'Débloqué en terminant le parcours Katakana de base.', 'path', 'badge-jp-kata', 'path_completed', 'katakana_base', '2026-05-14 22:37:15', NULL),
+(6, 'hiragana_variants_complete', 'Variantes hiragana maîtrisées', 'Débloqué en terminant le parcours Variantes hiragana.', 'path', 'layers-hira', 'path_completed', 'hiragana_variants', '2026-05-14 22:37:15', NULL),
+(7, 'katakana_variants_complete', 'Variantes katakana maîtrisées', 'Débloqué en terminant le parcours Variantes katakana.', 'path', 'layers-kata', 'path_completed', 'katakana_variants', '2026-05-14 22:37:15', NULL),
+(8, 'hiragana_combos_complete', 'Combinaisons hiragana maîtrisées', 'Débloqué en terminant le parcours Combinaisons hiragana.', 'path', 'merge-hira', 'path_completed', 'hiragana_combos', '2026-05-14 22:37:15', NULL),
+(9, 'katakana_combos_complete', 'Combinaisons katakana maîtrisées', 'Débloqué en terminant le parcours Combinaisons katakana.', 'path', 'merge-kata', 'path_completed', 'katakana_combos', '2026-05-14 22:37:15', NULL),
+(10, 'all_kana_complete', 'Tous les kana maîtrisés', 'Débloqué en terminant la Révision finale kana.', 'path', 'crown', 'path_completed', 'final_kana_review', '2026-05-14 22:37:15', NULL),
+(11, 'hiragana_halfway', 'Hiragana bien lancés', 'Débloqué après 5 missions terminées dans Hiragana de base.', 'mission', 'milestone-hira', 'path_missions_completed', 'hiragana_base:5', '2026-05-14 22:37:15', NULL),
+(12, 'katakana_halfway', 'Katakana bien lancés', 'Débloqué après 5 missions terminées dans Katakana de base.', 'mission', 'milestone-kata', 'path_missions_completed', 'katakana_base:5', '2026-05-14 22:37:15', NULL),
+(13, 'variants_started', 'Variantes débloquées', 'Débloqué en terminant ta première mission de variantes.', 'mission', 'unlock-variants', 'first_variants_mission_completed', '1', '2026-05-14 22:37:15', NULL),
+(14, 'combos_started', 'Combinaisons débloquées', 'Débloqué en terminant ta première mission de combinaisons.', 'mission', 'unlock-combos', 'first_combos_mission_completed', '1', '2026-05-14 22:37:15', NULL),
+(15, 'three_perfect_quizzes', 'Série propre', 'Débloqué après 3 quiz parfaits à 100%.', 'performance', 'triple-star', 'perfect_quiz_count', '3', '2026-05-14 22:37:15', NULL),
+(16, 'ten_perfect_quizzes', 'Précision solide', 'Débloqué après 10 quiz parfaits à 100%.', 'performance', 'target', 'perfect_quiz_count', '10', '2026-05-14 22:37:15', NULL),
+(17, 'written_master', 'Écrit maîtrisé', 'Débloqué après 10 quiz écrits réussis à 100%.', 'performance', 'pencil', 'perfect_written_quiz_count', '10', '2026-05-14 22:37:15', NULL),
+(18, 'evaluation_clean', 'Évaluation parfaite', 'Débloqué en réussissant une première évaluation parfaite à 100%.', 'performance', 'check-badge', 'perfect_evaluation_count', '1', '2026-05-14 22:37:15', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `consonant_groups`
+--
+
+CREATE TABLE `consonant_groups` (
+  `id` int(11) NOT NULL,
+  `code` varchar(30) NOT NULL,
+  `label` varchar(60) NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `consonant_groups`
+--
+
+INSERT INTO `consonant_groups` (`id`, `code`, `label`, `sort_order`) VALUES
+(1, 'VOWEL', 'Voyelles', 1),
+(2, 'K', 'Groupe K', 2),
+(3, 'S', 'Groupe S', 3),
+(4, 'T', 'Groupe T', 4),
+(5, 'N', 'Groupe N', 5),
+(6, 'H', 'Groupe H', 6),
+(7, 'M', 'Groupe M', 7),
+(8, 'R', 'Groupe R', 8),
+(9, 'Y', 'Groupe Y', 9),
+(10, 'W', 'Groupe W', 10),
+(11, 'N_FINAL', 'ん / ン', 11),
+(12, 'G', 'Groupe G', 20),
+(13, 'Z', 'Groupe Z', 21),
+(14, 'D', 'Groupe D', 22),
+(15, 'B', 'Groupe B', 23),
+(16, 'P', 'Groupe P', 24),
+(17, 'KY', 'Combinaisons KY', 40),
+(18, 'SH', 'Combinaisons SH', 41),
+(19, 'CH', 'Combinaisons CH', 42),
+(20, 'NY', 'Combinaisons NY', 43),
+(21, 'HY', 'Combinaisons HY', 44),
+(22, 'MY', 'Combinaisons MY', 45),
+(23, 'RY', 'Combinaisons RY', 46),
+(24, 'GY', 'Combinaisons GY', 47),
+(25, 'J', 'Combinaisons J', 48),
+(26, 'BY', 'Combinaisons BY', 49),
+(27, 'PY', 'Combinaisons PY', 50);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `kana`
+--
+
+CREATE TABLE `kana` (
+  `id` int(11) NOT NULL,
+  `romaji` varchar(20) NOT NULL,
+  `hira` varchar(10) NOT NULL,
+  `kata` varchar(10) NOT NULL,
+  `is_variant` tinyint(1) NOT NULL DEFAULT 0,
+  `is_combo` tinyint(1) NOT NULL DEFAULT 0,
+  `vowel_group_id` int(11) DEFAULT NULL,
+  `consonant_group_id` int(11) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `kana`
+--
+
+INSERT INTO `kana` (`id`, `romaji`, `hira`, `kata`, `is_variant`, `is_combo`, `vowel_group_id`, `consonant_group_id`, `sort_order`, `created_at`, `updated_at`) VALUES
+(1, 'a', 'あ', 'ア', 0, 0, 1, 1, 1, '2026-05-14 20:03:03', NULL),
+(2, 'i', 'い', 'イ', 0, 0, 2, 1, 2, '2026-05-14 20:03:03', NULL),
+(3, 'u', 'う', 'ウ', 0, 0, 3, 1, 3, '2026-05-14 20:03:03', NULL),
+(4, 'e', 'え', 'エ', 0, 0, 4, 1, 4, '2026-05-14 20:03:03', NULL),
+(5, 'o', 'お', 'オ', 0, 0, 5, 1, 5, '2026-05-14 20:03:03', NULL),
+(6, 'ka', 'か', 'カ', 0, 0, 1, 2, 6, '2026-05-14 20:03:03', NULL),
+(7, 'ki', 'き', 'キ', 0, 0, 2, 2, 7, '2026-05-14 20:03:03', NULL),
+(8, 'ku', 'く', 'ク', 0, 0, 3, 2, 8, '2026-05-14 20:03:03', NULL),
+(9, 'ke', 'け', 'ケ', 0, 0, 4, 2, 9, '2026-05-14 20:03:03', NULL),
+(10, 'ko', 'こ', 'コ', 0, 0, 5, 2, 10, '2026-05-14 20:03:03', NULL),
+(11, 'sa', 'さ', 'サ', 0, 0, 1, 3, 11, '2026-05-14 20:03:03', NULL),
+(12, 'shi', 'し', 'シ', 0, 0, 2, 3, 12, '2026-05-14 20:03:03', NULL),
+(13, 'su', 'す', 'ス', 0, 0, 3, 3, 13, '2026-05-14 20:03:03', NULL),
+(14, 'se', 'せ', 'セ', 0, 0, 4, 3, 14, '2026-05-14 20:03:03', NULL),
+(15, 'so', 'そ', 'ソ', 0, 0, 5, 3, 15, '2026-05-14 20:03:03', NULL),
+(16, 'ta', 'た', 'タ', 0, 0, 1, 4, 16, '2026-05-14 20:03:03', NULL),
+(17, 'chi', 'ち', 'チ', 0, 0, 2, 4, 17, '2026-05-14 20:03:03', NULL),
+(18, 'tsu', 'つ', 'ツ', 0, 0, 3, 4, 18, '2026-05-14 20:03:03', NULL),
+(19, 'te', 'て', 'テ', 0, 0, 4, 4, 19, '2026-05-14 20:03:03', NULL),
+(20, 'to', 'と', 'ト', 0, 0, 5, 4, 20, '2026-05-14 20:03:03', NULL),
+(21, 'na', 'な', 'ナ', 0, 0, 1, 5, 21, '2026-05-14 20:03:03', NULL),
+(22, 'ni', 'に', 'ニ', 0, 0, 2, 5, 22, '2026-05-14 20:03:03', NULL),
+(23, 'nu', 'ぬ', 'ヌ', 0, 0, 3, 5, 23, '2026-05-14 20:03:03', NULL),
+(24, 'ne', 'ね', 'ネ', 0, 0, 4, 5, 24, '2026-05-14 20:03:03', NULL),
+(25, 'no', 'の', 'ノ', 0, 0, 5, 5, 25, '2026-05-14 20:03:03', NULL),
+(26, 'ha', 'は', 'ハ', 0, 0, 1, 6, 26, '2026-05-14 20:03:03', NULL),
+(27, 'hi', 'ひ', 'ヒ', 0, 0, 2, 6, 27, '2026-05-14 20:03:03', NULL),
+(28, 'fu', 'ふ', 'フ', 0, 0, 3, 6, 28, '2026-05-14 20:03:03', NULL),
+(29, 'he', 'へ', 'ヘ', 0, 0, 4, 6, 29, '2026-05-14 20:03:03', NULL),
+(30, 'ho', 'ほ', 'ホ', 0, 0, 5, 6, 30, '2026-05-14 20:03:03', NULL),
+(31, 'ma', 'ま', 'マ', 0, 0, 1, 7, 31, '2026-05-14 20:03:03', NULL),
+(32, 'mi', 'み', 'ミ', 0, 0, 2, 7, 32, '2026-05-14 20:03:03', NULL),
+(33, 'mu', 'む', 'ム', 0, 0, 3, 7, 33, '2026-05-14 20:03:03', NULL),
+(34, 'me', 'め', 'メ', 0, 0, 4, 7, 34, '2026-05-14 20:03:03', NULL),
+(35, 'mo', 'も', 'モ', 0, 0, 5, 7, 35, '2026-05-14 20:03:03', NULL),
+(36, 'ra', 'ら', 'ラ', 0, 0, 1, 8, 36, '2026-05-14 20:03:03', NULL),
+(37, 'ri', 'り', 'リ', 0, 0, 2, 8, 37, '2026-05-14 20:03:03', NULL),
+(38, 'ru', 'る', 'ル', 0, 0, 3, 8, 38, '2026-05-14 20:03:03', NULL),
+(39, 're', 'れ', 'レ', 0, 0, 4, 8, 39, '2026-05-14 20:03:03', NULL),
+(40, 'ro', 'ろ', 'ロ', 0, 0, 5, 8, 40, '2026-05-14 20:03:03', NULL),
+(41, 'ya', 'や', 'ヤ', 0, 0, 1, 9, 41, '2026-05-14 20:03:03', NULL),
+(42, 'yu', 'ゆ', 'ユ', 0, 0, 3, 9, 42, '2026-05-14 20:03:03', NULL),
+(43, 'yo', 'よ', 'ヨ', 0, 0, 5, 9, 43, '2026-05-14 20:03:03', NULL),
+(44, 'wa', 'わ', 'ワ', 0, 0, 1, 10, 44, '2026-05-14 20:03:03', NULL),
+(45, 'wo', 'を', 'ヲ', 0, 0, 5, 10, 45, '2026-05-14 20:03:03', NULL),
+(46, 'n', 'ん', 'ン', 0, 0, 6, 11, 46, '2026-05-14 20:03:03', NULL),
+(47, 'ga', 'が', 'ガ', 1, 0, 1, 12, 47, '2026-05-14 20:03:03', NULL),
+(48, 'gi', 'ぎ', 'ギ', 1, 0, 2, 12, 48, '2026-05-14 20:03:03', NULL),
+(49, 'gu', 'ぐ', 'グ', 1, 0, 3, 12, 49, '2026-05-14 20:03:03', NULL),
+(50, 'ge', 'げ', 'ゲ', 1, 0, 4, 12, 50, '2026-05-14 20:03:03', NULL),
+(51, 'go', 'ご', 'ゴ', 1, 0, 5, 12, 51, '2026-05-14 20:03:03', NULL),
+(52, 'za', 'ざ', 'ザ', 1, 0, 1, 13, 52, '2026-05-14 20:03:03', NULL),
+(53, 'ji', 'じ', 'ジ', 1, 0, 2, 13, 53, '2026-05-14 20:03:03', NULL),
+(54, 'zu', 'ず', 'ズ', 1, 0, 3, 13, 54, '2026-05-14 20:03:03', NULL),
+(55, 'ze', 'ぜ', 'ゼ', 1, 0, 4, 13, 55, '2026-05-14 20:03:03', NULL),
+(56, 'zo', 'ぞ', 'ゾ', 1, 0, 5, 13, 56, '2026-05-14 20:03:03', NULL),
+(57, 'da', 'だ', 'ダ', 1, 0, 1, 14, 57, '2026-05-14 20:03:03', NULL),
+(58, 'ji', 'ぢ', 'ヂ', 1, 0, 2, 14, 58, '2026-05-14 20:03:03', NULL),
+(59, 'zu', 'づ', 'ヅ', 1, 0, 3, 14, 59, '2026-05-14 20:03:03', NULL),
+(60, 'de', 'で', 'デ', 1, 0, 4, 14, 60, '2026-05-14 20:03:03', NULL),
+(61, 'do', 'ど', 'ド', 1, 0, 5, 14, 61, '2026-05-14 20:03:03', NULL),
+(62, 'ba', 'ば', 'バ', 1, 0, 1, 15, 62, '2026-05-14 20:03:03', NULL),
+(63, 'bi', 'び', 'ビ', 1, 0, 2, 15, 63, '2026-05-14 20:03:03', NULL),
+(64, 'bu', 'ぶ', 'ブ', 1, 0, 3, 15, 64, '2026-05-14 20:03:03', NULL),
+(65, 'be', 'べ', 'ベ', 1, 0, 4, 15, 65, '2026-05-14 20:03:03', NULL),
+(66, 'bo', 'ぼ', 'ボ', 1, 0, 5, 15, 66, '2026-05-14 20:03:03', NULL),
+(67, 'pa', 'ぱ', 'パ', 1, 0, 1, 16, 67, '2026-05-14 20:03:03', NULL),
+(68, 'pi', 'ぴ', 'ピ', 1, 0, 2, 16, 68, '2026-05-14 20:03:03', NULL),
+(69, 'pu', 'ぷ', 'プ', 1, 0, 3, 16, 69, '2026-05-14 20:03:03', NULL),
+(70, 'pe', 'ぺ', 'ペ', 1, 0, 4, 16, 70, '2026-05-14 20:03:03', NULL),
+(71, 'po', 'ぽ', 'ポ', 1, 0, 5, 16, 71, '2026-05-14 20:03:03', NULL),
+(72, 'kya', 'きゃ', 'キャ', 0, 1, 1, 17, 72, '2026-05-14 20:03:03', NULL),
+(73, 'kyu', 'きゅ', 'キュ', 0, 1, 3, 17, 73, '2026-05-14 20:03:03', NULL),
+(74, 'kyo', 'きょ', 'キョ', 0, 1, 5, 17, 74, '2026-05-14 20:03:03', NULL),
+(75, 'sha', 'しゃ', 'シャ', 0, 1, 1, 18, 75, '2026-05-14 20:03:03', NULL),
+(76, 'shu', 'しゅ', 'シュ', 0, 1, 3, 18, 76, '2026-05-14 20:03:03', NULL),
+(77, 'sho', 'しょ', 'ショ', 0, 1, 5, 18, 77, '2026-05-14 20:03:03', NULL),
+(78, 'cha', 'ちゃ', 'チャ', 0, 1, 1, 19, 78, '2026-05-14 20:03:03', NULL),
+(79, 'chu', 'ちゅ', 'チュ', 0, 1, 3, 19, 79, '2026-05-14 20:03:03', NULL),
+(80, 'cho', 'ちょ', 'チョ', 0, 1, 5, 19, 80, '2026-05-14 20:03:03', NULL),
+(81, 'nya', 'にゃ', 'ニャ', 0, 1, 1, 20, 81, '2026-05-14 20:03:03', NULL),
+(82, 'nyu', 'にゅ', 'ニュ', 0, 1, 3, 20, 82, '2026-05-14 20:03:03', NULL),
+(83, 'nyo', 'にょ', 'ニョ', 0, 1, 5, 20, 83, '2026-05-14 20:03:03', NULL),
+(84, 'hya', 'ひゃ', 'ヒャ', 0, 1, 1, 21, 84, '2026-05-14 20:03:03', NULL),
+(85, 'hyu', 'ひゅ', 'ヒュ', 0, 1, 3, 21, 85, '2026-05-14 20:03:03', NULL),
+(86, 'hyo', 'ひょ', 'ヒョ', 0, 1, 5, 21, 86, '2026-05-14 20:03:03', NULL),
+(87, 'mya', 'みゃ', 'ミャ', 0, 1, 1, 22, 87, '2026-05-14 20:03:03', NULL),
+(88, 'myu', 'みゅ', 'ミュ', 0, 1, 3, 22, 88, '2026-05-14 20:03:03', NULL),
+(89, 'myo', 'みょ', 'ミョ', 0, 1, 5, 22, 89, '2026-05-14 20:03:03', NULL),
+(90, 'rya', 'りゃ', 'リャ', 0, 1, 1, 23, 90, '2026-05-14 20:03:03', NULL),
+(91, 'ryu', 'りゅ', 'リュ', 0, 1, 3, 23, 91, '2026-05-14 20:03:03', NULL),
+(92, 'ryo', 'りょ', 'リョ', 0, 1, 5, 23, 92, '2026-05-14 20:03:03', NULL),
+(93, 'gya', 'ぎゃ', 'ギャ', 0, 1, 1, 24, 93, '2026-05-14 20:03:03', NULL),
+(94, 'gyu', 'ぎゅ', 'ギュ', 0, 1, 3, 24, 94, '2026-05-14 20:03:03', NULL),
+(95, 'gyo', 'ぎょ', 'ギョ', 0, 1, 5, 24, 95, '2026-05-14 20:03:03', NULL),
+(96, 'ja', 'じゃ', 'ジャ', 0, 1, 1, 25, 96, '2026-05-14 20:03:03', NULL),
+(97, 'ju', 'じゅ', 'ジュ', 0, 1, 3, 25, 97, '2026-05-14 20:03:03', NULL),
+(98, 'jo', 'じょ', 'ジョ', 0, 1, 5, 25, 98, '2026-05-14 20:03:03', NULL),
+(99, 'bya', 'びゃ', 'ビャ', 0, 1, 1, 26, 99, '2026-05-14 20:03:03', NULL),
+(100, 'byu', 'びゅ', 'ビュ', 0, 1, 3, 26, 100, '2026-05-14 20:03:03', NULL),
+(101, 'byo', 'びょ', 'ビョ', 0, 1, 5, 26, 101, '2026-05-14 20:03:03', NULL),
+(102, 'pya', 'ぴゃ', 'ピャ', 0, 1, 1, 27, 102, '2026-05-14 20:03:03', NULL),
+(103, 'pyu', 'ぴゅ', 'ピュ', 0, 1, 3, 27, 103, '2026-05-14 20:03:03', NULL),
+(104, 'pyo', 'ぴょ', 'ピョ', 0, 1, 5, 27, 104, '2026-05-14 20:03:03', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `learning_paths`
+--
+
+CREATE TABLE `learning_paths` (
+  `id` int(11) NOT NULL,
+  `code` varchar(80) NOT NULL,
+  `title` varchar(120) NOT NULL,
+  `description` text DEFAULT NULL,
+  `kana_set` enum('hiragana','katakana','mixed') NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `learning_paths`
+--
+
+INSERT INTO `learning_paths` (`id`, `code`, `title`, `description`, `kana_set`, `sort_order`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'hiragana_base', 'Hiragana de base', 'Apprendre les hiragana de base, des voyelles jusqu’aux groupes Y / W / ん.', 'hiragana', 1, 1, '2026-05-14 22:02:04', NULL),
+(2, 'katakana_base', 'Katakana de base', 'Apprendre les katakana de base, des voyelles jusqu’aux groupes Y / W / ン.', 'katakana', 2, 1, '2026-05-14 22:02:04', NULL),
+(3, 'hiragana_variants', 'Variantes hiragana', 'Apprendre les hiragana avec dakuten et handakuten : groupes G, Z, D, B et P.', 'hiragana', 3, 1, '2026-05-14 22:02:04', NULL),
+(4, 'katakana_variants', 'Variantes katakana', 'Apprendre les katakana avec dakuten et handakuten : groupes G, Z, D, B et P.', 'katakana', 4, 1, '2026-05-14 22:02:04', NULL),
+(5, 'hiragana_combos', 'Combinaisons hiragana', 'Apprendre les combinaisons hiragana avec petits ゃ, ゅ et ょ.', 'hiragana', 5, 1, '2026-05-14 22:02:04', NULL),
+(6, 'katakana_combos', 'Combinaisons katakana', 'Apprendre les combinaisons katakana avec petits ャ, ュ et ョ.', 'katakana', 6, 1, '2026-05-14 22:02:04', NULL),
+(7, 'final_kana_review', 'Révision finale kana', 'Réviser tous les kana : hiragana, katakana, variantes et combinaisons.', 'mixed', 7, 1, '2026-05-14 22:02:04', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `missions`
+--
+
+CREATE TABLE `missions` (
+  `id` int(11) NOT NULL,
+  `path_id` int(11) NOT NULL,
+  `code` varchar(80) NOT NULL,
+  `title` varchar(120) NOT NULL,
+  `description` text DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `missions`
+--
+
+INSERT INTO `missions` (`id`, `path_id`, `code`, `title`, `description`, `sort_order`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 1, 'hira_base_vowels', 'Mission 1 — Les voyelles', 'Découvrir et maîtriser les voyelles hiragana.', 1, 1, '2026-05-14 22:27:59', NULL),
+(2, 1, 'hira_base_k', 'Mission 2 — Groupe K', 'Découvrir et maîtriser les hiragana du groupe K.', 2, 1, '2026-05-14 22:27:59', NULL),
+(3, 1, 'hira_base_s', 'Mission 3 — Groupe S', 'Découvrir et maîtriser les hiragana du groupe S.', 3, 1, '2026-05-14 22:27:59', NULL),
+(4, 1, 'hira_base_t', 'Mission 4 — Groupe T', 'Découvrir et maîtriser les hiragana du groupe T.', 4, 1, '2026-05-14 22:27:59', NULL),
+(5, 1, 'hira_base_n', 'Mission 5 — Groupe N', 'Découvrir et maîtriser les hiragana du groupe N.', 5, 1, '2026-05-14 22:27:59', NULL),
+(6, 1, 'hira_base_h', 'Mission 6 — Groupe H', 'Découvrir et maîtriser les hiragana du groupe H.', 6, 1, '2026-05-14 22:27:59', NULL),
+(7, 1, 'hira_base_m', 'Mission 7 — Groupe M', 'Découvrir et maîtriser les hiragana du groupe M.', 7, 1, '2026-05-14 22:27:59', NULL),
+(8, 1, 'hira_base_r', 'Mission 8 — Groupe R', 'Découvrir et maîtriser les hiragana du groupe R.', 8, 1, '2026-05-14 22:27:59', NULL),
+(9, 1, 'hira_base_y_w_n', 'Mission 9 — Groupes Y / W / ん', 'Découvrir et maîtriser les hiragana des groupes Y, W et ん.', 9, 1, '2026-05-14 22:27:59', NULL),
+(10, 1, 'hira_base_review', 'Mission 10 — Révision complète', 'Réviser tous les hiragana de base.', 10, 1, '2026-05-14 22:27:59', NULL),
+(11, 2, 'kata_base_vowels', 'Mission 1 — Les voyelles', 'Découvrir et maîtriser les voyelles katakana.', 1, 1, '2026-05-14 22:27:59', NULL),
+(12, 2, 'kata_base_k', 'Mission 2 — Groupe K', 'Découvrir et maîtriser les katakana du groupe K.', 2, 1, '2026-05-14 22:27:59', NULL),
+(13, 2, 'kata_base_s', 'Mission 3 — Groupe S', 'Découvrir et maîtriser les katakana du groupe S.', 3, 1, '2026-05-14 22:27:59', NULL),
+(14, 2, 'kata_base_t', 'Mission 4 — Groupe T', 'Découvrir et maîtriser les katakana du groupe T.', 4, 1, '2026-05-14 22:27:59', NULL),
+(15, 2, 'kata_base_n', 'Mission 5 — Groupe N', 'Découvrir et maîtriser les katakana du groupe N.', 5, 1, '2026-05-14 22:27:59', NULL),
+(16, 2, 'kata_base_h', 'Mission 6 — Groupe H', 'Découvrir et maîtriser les katakana du groupe H.', 6, 1, '2026-05-14 22:27:59', NULL),
+(17, 2, 'kata_base_m', 'Mission 7 — Groupe M', 'Découvrir et maîtriser les katakana du groupe M.', 7, 1, '2026-05-14 22:27:59', NULL),
+(18, 2, 'kata_base_r', 'Mission 8 — Groupe R', 'Découvrir et maîtriser les katakana du groupe R.', 8, 1, '2026-05-14 22:27:59', NULL),
+(19, 2, 'kata_base_y_w_n', 'Mission 9 — Groupes Y / W / ン', 'Découvrir et maîtriser les katakana des groupes Y, W et ン.', 9, 1, '2026-05-14 22:27:59', NULL),
+(20, 2, 'kata_base_review', 'Mission 10 — Révision complète', 'Réviser tous les katakana de base.', 10, 1, '2026-05-14 22:27:59', NULL),
+(21, 3, 'hira_var_g', 'Mission 1 — Groupe G', 'Découvrir et maîtriser les variantes hiragana du groupe G.', 1, 1, '2026-05-14 22:27:59', NULL),
+(22, 3, 'hira_var_z', 'Mission 2 — Groupe Z', 'Découvrir et maîtriser les variantes hiragana du groupe Z.', 2, 1, '2026-05-14 22:27:59', NULL),
+(23, 3, 'hira_var_d', 'Mission 3 — Groupe D', 'Découvrir et maîtriser les variantes hiragana du groupe D.', 3, 1, '2026-05-14 22:27:59', NULL),
+(24, 3, 'hira_var_b', 'Mission 4 — Groupe B', 'Découvrir et maîtriser les variantes hiragana du groupe B.', 4, 1, '2026-05-14 22:27:59', NULL),
+(25, 3, 'hira_var_p', 'Mission 5 — Groupe P', 'Découvrir et maîtriser les variantes hiragana du groupe P.', 5, 1, '2026-05-14 22:27:59', NULL),
+(26, 3, 'hira_var_review', 'Mission 6 — Révision variantes', 'Réviser toutes les variantes hiragana.', 6, 1, '2026-05-14 22:27:59', NULL),
+(27, 4, 'kata_var_g', 'Mission 1 — Groupe G', 'Découvrir et maîtriser les variantes katakana du groupe G.', 1, 1, '2026-05-14 22:27:59', NULL),
+(28, 4, 'kata_var_z', 'Mission 2 — Groupe Z', 'Découvrir et maîtriser les variantes katakana du groupe Z.', 2, 1, '2026-05-14 22:27:59', NULL),
+(29, 4, 'kata_var_d', 'Mission 3 — Groupe D', 'Découvrir et maîtriser les variantes katakana du groupe D.', 3, 1, '2026-05-14 22:27:59', NULL),
+(30, 4, 'kata_var_b', 'Mission 4 — Groupe B', 'Découvrir et maîtriser les variantes katakana du groupe B.', 4, 1, '2026-05-14 22:27:59', NULL),
+(31, 4, 'kata_var_p', 'Mission 5 — Groupe P', 'Découvrir et maîtriser les variantes katakana du groupe P.', 5, 1, '2026-05-14 22:27:59', NULL),
+(32, 4, 'kata_var_review', 'Mission 6 — Révision variantes', 'Réviser toutes les variantes katakana.', 6, 1, '2026-05-14 22:27:59', NULL),
+(33, 5, 'hira_combo_ky', 'Mission 1 — KY', 'Découvrir et maîtriser les combinaisons hiragana KY.', 1, 1, '2026-05-14 22:27:59', NULL),
+(34, 5, 'hira_combo_sh', 'Mission 2 — SH', 'Découvrir et maîtriser les combinaisons hiragana SH.', 2, 1, '2026-05-14 22:27:59', NULL),
+(35, 5, 'hira_combo_ch', 'Mission 3 — CH', 'Découvrir et maîtriser les combinaisons hiragana CH.', 3, 1, '2026-05-14 22:27:59', NULL),
+(36, 5, 'hira_combo_ny', 'Mission 4 — NY', 'Découvrir et maîtriser les combinaisons hiragana NY.', 4, 1, '2026-05-14 22:27:59', NULL),
+(37, 5, 'hira_combo_hy', 'Mission 5 — HY', 'Découvrir et maîtriser les combinaisons hiragana HY.', 5, 1, '2026-05-14 22:27:59', NULL),
+(38, 5, 'hira_combo_my', 'Mission 6 — MY', 'Découvrir et maîtriser les combinaisons hiragana MY.', 6, 1, '2026-05-14 22:27:59', NULL),
+(39, 5, 'hira_combo_ry', 'Mission 7 — RY', 'Découvrir et maîtriser les combinaisons hiragana RY.', 7, 1, '2026-05-14 22:27:59', NULL),
+(40, 5, 'hira_combo_gy', 'Mission 8 — GY', 'Découvrir et maîtriser les combinaisons hiragana GY.', 8, 1, '2026-05-14 22:27:59', NULL),
+(41, 5, 'hira_combo_j', 'Mission 9 — J', 'Découvrir et maîtriser les combinaisons hiragana J.', 9, 1, '2026-05-14 22:27:59', NULL),
+(42, 5, 'hira_combo_by_py', 'Mission 10 — BY / PY', 'Découvrir et maîtriser les combinaisons hiragana BY / PY.', 10, 1, '2026-05-14 22:27:59', NULL),
+(43, 5, 'hira_combo_review', 'Mission 11 — Révision combinaisons', 'Réviser toutes les combinaisons hiragana.', 11, 1, '2026-05-14 22:27:59', NULL),
+(44, 6, 'kata_combo_ky', 'Mission 1 — KY', 'Découvrir et maîtriser les combinaisons katakana KY.', 1, 1, '2026-05-14 22:27:59', NULL),
+(45, 6, 'kata_combo_sh', 'Mission 2 — SH', 'Découvrir et maîtriser les combinaisons katakana SH.', 2, 1, '2026-05-14 22:27:59', NULL),
+(46, 6, 'kata_combo_ch', 'Mission 3 — CH', 'Découvrir et maîtriser les combinaisons katakana CH.', 3, 1, '2026-05-14 22:27:59', NULL),
+(47, 6, 'kata_combo_ny', 'Mission 4 — NY', 'Découvrir et maîtriser les combinaisons katakana NY.', 4, 1, '2026-05-14 22:27:59', NULL),
+(48, 6, 'kata_combo_hy', 'Mission 5 — HY', 'Découvrir et maîtriser les combinaisons katakana HY.', 5, 1, '2026-05-14 22:27:59', NULL),
+(49, 6, 'kata_combo_my', 'Mission 6 — MY', 'Découvrir et maîtriser les combinaisons katakana MY.', 6, 1, '2026-05-14 22:27:59', NULL),
+(50, 6, 'kata_combo_ry', 'Mission 7 — RY', 'Découvrir et maîtriser les combinaisons katakana RY.', 7, 1, '2026-05-14 22:27:59', NULL),
+(51, 6, 'kata_combo_gy', 'Mission 8 — GY', 'Découvrir et maîtriser les combinaisons katakana GY.', 8, 1, '2026-05-14 22:27:59', NULL),
+(52, 6, 'kata_combo_j', 'Mission 9 — J', 'Découvrir et maîtriser les combinaisons katakana J.', 9, 1, '2026-05-14 22:27:59', NULL),
+(53, 6, 'kata_combo_by_py', 'Mission 10 — BY / PY', 'Découvrir et maîtriser les combinaisons katakana BY / PY.', 10, 1, '2026-05-14 22:27:59', NULL),
+(54, 6, 'kata_combo_review', 'Mission 11 — Révision combinaisons', 'Réviser toutes les combinaisons katakana.', 11, 1, '2026-05-14 22:27:59', NULL),
+(55, 7, 'final_base_mixed', 'Mission 1 — Bases hiragana + katakana', 'Réviser les kana de base en hiragana et katakana.', 1, 1, '2026-05-14 22:27:59', NULL),
+(56, 7, 'final_variants_mixed', 'Mission 2 — Variantes hiragana + katakana', 'Réviser les variantes en hiragana et katakana.', 2, 1, '2026-05-14 22:27:59', NULL),
+(57, 7, 'final_combos_mixed', 'Mission 3 — Combinaisons hiragana + katakana', 'Réviser les combinaisons en hiragana et katakana.', 3, 1, '2026-05-14 22:27:59', NULL),
+(58, 7, 'final_all_kana', 'Mission 4 — Tous les kana', 'Réviser tous les kana : bases, variantes et combinaisons.', 4, 1, '2026-05-14 22:27:59', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `mission_kana`
+--
+
+CREATE TABLE `mission_kana` (
+  `id` int(11) NOT NULL,
+  `mission_id` int(11) NOT NULL,
+  `kana_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `mission_kana`
+--
+
+INSERT INTO `mission_kana` (`id`, `mission_id`, `kana_id`) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 3),
+(4, 1, 4),
+(5, 1, 5),
+(8, 2, 6),
+(9, 2, 7),
+(10, 2, 8),
+(11, 2, 9),
+(12, 2, 10),
+(15, 3, 11),
+(16, 3, 12),
+(17, 3, 13),
+(18, 3, 14),
+(19, 3, 15),
+(22, 4, 16),
+(23, 4, 17),
+(24, 4, 18),
+(25, 4, 19),
+(26, 4, 20),
+(29, 5, 21),
+(30, 5, 22),
+(31, 5, 23),
+(32, 5, 24),
+(33, 5, 25),
+(36, 6, 26),
+(37, 6, 27),
+(38, 6, 28),
+(39, 6, 29),
+(40, 6, 30),
+(43, 7, 31),
+(44, 7, 32),
+(45, 7, 33),
+(46, 7, 34),
+(47, 7, 35),
+(50, 8, 36),
+(51, 8, 37),
+(52, 8, 38),
+(53, 8, 39),
+(54, 8, 40),
+(57, 9, 41),
+(58, 9, 42),
+(59, 9, 43),
+(60, 9, 44),
+(61, 9, 45),
+(62, 9, 46),
+(64, 10, 1),
+(65, 10, 2),
+(66, 10, 3),
+(67, 10, 4),
+(68, 10, 5),
+(69, 10, 6),
+(70, 10, 7),
+(71, 10, 8),
+(72, 10, 9),
+(73, 10, 10),
+(74, 10, 11),
+(75, 10, 12),
+(76, 10, 13),
+(77, 10, 14),
+(78, 10, 15),
+(79, 10, 16),
+(80, 10, 17),
+(81, 10, 18),
+(82, 10, 19),
+(83, 10, 20),
+(84, 10, 21),
+(85, 10, 22),
+(86, 10, 23),
+(87, 10, 24),
+(88, 10, 25),
+(89, 10, 26),
+(90, 10, 27),
+(91, 10, 28),
+(92, 10, 29),
+(93, 10, 30),
+(94, 10, 31),
+(95, 10, 32),
+(96, 10, 33),
+(97, 10, 34),
+(98, 10, 35),
+(99, 10, 36),
+(100, 10, 37),
+(101, 10, 38),
+(102, 10, 39),
+(103, 10, 40),
+(104, 10, 41),
+(105, 10, 42),
+(106, 10, 43),
+(107, 10, 44),
+(108, 10, 45),
+(109, 10, 46),
+(127, 11, 1),
+(128, 11, 2),
+(129, 11, 3),
+(130, 11, 4),
+(131, 11, 5),
+(134, 12, 6),
+(135, 12, 7),
+(136, 12, 8),
+(137, 12, 9),
+(138, 12, 10),
+(141, 13, 11),
+(142, 13, 12),
+(143, 13, 13),
+(144, 13, 14),
+(145, 13, 15),
+(148, 14, 16),
+(149, 14, 17),
+(150, 14, 18),
+(151, 14, 19),
+(152, 14, 20),
+(155, 15, 21),
+(156, 15, 22),
+(157, 15, 23),
+(158, 15, 24),
+(159, 15, 25),
+(162, 16, 26),
+(163, 16, 27),
+(164, 16, 28),
+(165, 16, 29),
+(166, 16, 30),
+(169, 17, 31),
+(170, 17, 32),
+(171, 17, 33),
+(172, 17, 34),
+(173, 17, 35),
+(176, 18, 36),
+(177, 18, 37),
+(178, 18, 38),
+(179, 18, 39),
+(180, 18, 40),
+(183, 19, 41),
+(184, 19, 42),
+(185, 19, 43),
+(186, 19, 44),
+(187, 19, 45),
+(188, 19, 46),
+(190, 20, 1),
+(191, 20, 2),
+(192, 20, 3),
+(193, 20, 4),
+(194, 20, 5),
+(195, 20, 6),
+(196, 20, 7),
+(197, 20, 8),
+(198, 20, 9),
+(199, 20, 10),
+(200, 20, 11),
+(201, 20, 12),
+(202, 20, 13),
+(203, 20, 14),
+(204, 20, 15),
+(205, 20, 16),
+(206, 20, 17),
+(207, 20, 18),
+(208, 20, 19),
+(209, 20, 20),
+(210, 20, 21),
+(211, 20, 22),
+(212, 20, 23),
+(213, 20, 24),
+(214, 20, 25),
+(215, 20, 26),
+(216, 20, 27),
+(217, 20, 28),
+(218, 20, 29),
+(219, 20, 30),
+(220, 20, 31),
+(221, 20, 32),
+(222, 20, 33),
+(223, 20, 34),
+(224, 20, 35),
+(225, 20, 36),
+(226, 20, 37),
+(227, 20, 38),
+(228, 20, 39),
+(229, 20, 40),
+(230, 20, 41),
+(231, 20, 42),
+(232, 20, 43),
+(233, 20, 44),
+(234, 20, 45),
+(235, 20, 46),
+(253, 21, 47),
+(254, 21, 48),
+(255, 21, 49),
+(256, 21, 50),
+(257, 21, 51),
+(260, 22, 52),
+(261, 22, 53),
+(262, 22, 54),
+(263, 22, 55),
+(264, 22, 56),
+(267, 23, 57),
+(268, 23, 58),
+(269, 23, 59),
+(270, 23, 60),
+(271, 23, 61),
+(274, 24, 62),
+(275, 24, 63),
+(276, 24, 64),
+(277, 24, 65),
+(278, 24, 66),
+(281, 25, 67),
+(282, 25, 68),
+(283, 25, 69),
+(284, 25, 70),
+(285, 25, 71),
+(288, 26, 47),
+(289, 26, 48),
+(290, 26, 49),
+(291, 26, 50),
+(292, 26, 51),
+(293, 26, 52),
+(294, 26, 53),
+(295, 26, 54),
+(296, 26, 55),
+(297, 26, 56),
+(298, 26, 57),
+(299, 26, 58),
+(300, 26, 59),
+(301, 26, 60),
+(302, 26, 61),
+(303, 26, 62),
+(304, 26, 63),
+(305, 26, 64),
+(306, 26, 65),
+(307, 26, 66),
+(308, 26, 67),
+(309, 26, 68),
+(310, 26, 69),
+(311, 26, 70),
+(312, 26, 71),
+(319, 27, 47),
+(320, 27, 48),
+(321, 27, 49),
+(322, 27, 50),
+(323, 27, 51),
+(326, 28, 52),
+(327, 28, 53),
+(328, 28, 54),
+(329, 28, 55),
+(330, 28, 56),
+(333, 29, 57),
+(334, 29, 58),
+(335, 29, 59),
+(336, 29, 60),
+(337, 29, 61),
+(340, 30, 62),
+(341, 30, 63),
+(342, 30, 64),
+(343, 30, 65),
+(344, 30, 66),
+(347, 31, 67),
+(348, 31, 68),
+(349, 31, 69),
+(350, 31, 70),
+(351, 31, 71),
+(354, 32, 47),
+(355, 32, 48),
+(356, 32, 49),
+(357, 32, 50),
+(358, 32, 51),
+(359, 32, 52),
+(360, 32, 53),
+(361, 32, 54),
+(362, 32, 55),
+(363, 32, 56),
+(364, 32, 57),
+(365, 32, 58),
+(366, 32, 59),
+(367, 32, 60),
+(368, 32, 61),
+(369, 32, 62),
+(370, 32, 63),
+(371, 32, 64),
+(372, 32, 65),
+(373, 32, 66),
+(374, 32, 67),
+(375, 32, 68),
+(376, 32, 69),
+(377, 32, 70),
+(378, 32, 71),
+(385, 33, 72),
+(386, 33, 73),
+(387, 33, 74),
+(388, 34, 75),
+(389, 34, 76),
+(390, 34, 77),
+(391, 35, 78),
+(392, 35, 79),
+(393, 35, 80),
+(394, 36, 81),
+(395, 36, 82),
+(396, 36, 83),
+(397, 37, 84),
+(398, 37, 85),
+(399, 37, 86),
+(400, 38, 87),
+(401, 38, 88),
+(402, 38, 89),
+(403, 39, 90),
+(404, 39, 91),
+(405, 39, 92),
+(406, 40, 93),
+(407, 40, 94),
+(408, 40, 95),
+(409, 41, 96),
+(410, 41, 97),
+(411, 41, 98),
+(412, 42, 99),
+(413, 42, 100),
+(414, 42, 101),
+(415, 42, 102),
+(416, 42, 103),
+(417, 42, 104),
+(419, 43, 72),
+(420, 43, 73),
+(421, 43, 74),
+(422, 43, 75),
+(423, 43, 76),
+(424, 43, 77),
+(425, 43, 78),
+(426, 43, 79),
+(427, 43, 80),
+(428, 43, 81),
+(429, 43, 82),
+(430, 43, 83),
+(431, 43, 84),
+(432, 43, 85),
+(433, 43, 86),
+(434, 43, 87),
+(435, 43, 88),
+(436, 43, 89),
+(437, 43, 90),
+(438, 43, 91),
+(439, 43, 92),
+(440, 43, 93),
+(441, 43, 94),
+(442, 43, 95),
+(443, 43, 96),
+(444, 43, 97),
+(445, 43, 98),
+(446, 43, 99),
+(447, 43, 100),
+(448, 43, 101),
+(449, 43, 102),
+(450, 43, 103),
+(451, 43, 104),
+(482, 44, 72),
+(483, 44, 73),
+(484, 44, 74),
+(485, 45, 75),
+(486, 45, 76),
+(487, 45, 77),
+(488, 46, 78),
+(489, 46, 79),
+(490, 46, 80),
+(491, 47, 81),
+(492, 47, 82),
+(493, 47, 83),
+(494, 48, 84),
+(495, 48, 85),
+(496, 48, 86),
+(497, 49, 87),
+(498, 49, 88),
+(499, 49, 89),
+(500, 50, 90),
+(501, 50, 91),
+(502, 50, 92),
+(503, 51, 93),
+(504, 51, 94),
+(505, 51, 95),
+(506, 52, 96),
+(507, 52, 97),
+(508, 52, 98),
+(509, 53, 99),
+(510, 53, 100),
+(511, 53, 101),
+(512, 53, 102),
+(513, 53, 103),
+(514, 53, 104),
+(516, 54, 72),
+(517, 54, 73),
+(518, 54, 74),
+(519, 54, 75),
+(520, 54, 76),
+(521, 54, 77),
+(522, 54, 78),
+(523, 54, 79),
+(524, 54, 80),
+(525, 54, 81),
+(526, 54, 82),
+(527, 54, 83),
+(528, 54, 84),
+(529, 54, 85),
+(530, 54, 86),
+(531, 54, 87),
+(532, 54, 88),
+(533, 54, 89),
+(534, 54, 90),
+(535, 54, 91),
+(536, 54, 92),
+(537, 54, 93),
+(538, 54, 94),
+(539, 54, 95),
+(540, 54, 96),
+(541, 54, 97),
+(542, 54, 98),
+(543, 54, 99),
+(544, 54, 100),
+(545, 54, 101),
+(546, 54, 102),
+(547, 54, 103),
+(548, 54, 104),
+(579, 55, 1),
+(580, 55, 2),
+(581, 55, 3),
+(582, 55, 4),
+(583, 55, 5),
+(584, 55, 6),
+(585, 55, 7),
+(586, 55, 8),
+(587, 55, 9),
+(588, 55, 10),
+(589, 55, 11),
+(590, 55, 12),
+(591, 55, 13),
+(592, 55, 14),
+(593, 55, 15),
+(594, 55, 16),
+(595, 55, 17),
+(596, 55, 18),
+(597, 55, 19),
+(598, 55, 20),
+(599, 55, 21),
+(600, 55, 22),
+(601, 55, 23),
+(602, 55, 24),
+(603, 55, 25),
+(604, 55, 26),
+(605, 55, 27),
+(606, 55, 28),
+(607, 55, 29),
+(608, 55, 30),
+(609, 55, 31),
+(610, 55, 32),
+(611, 55, 33),
+(612, 55, 34),
+(613, 55, 35),
+(614, 55, 36),
+(615, 55, 37),
+(616, 55, 38),
+(617, 55, 39),
+(618, 55, 40),
+(619, 55, 41),
+(620, 55, 42),
+(621, 55, 43),
+(622, 55, 44),
+(623, 55, 45),
+(624, 55, 46),
+(642, 56, 47),
+(643, 56, 48),
+(644, 56, 49),
+(645, 56, 50),
+(646, 56, 51),
+(647, 56, 52),
+(648, 56, 53),
+(649, 56, 54),
+(650, 56, 55),
+(651, 56, 56),
+(652, 56, 57),
+(653, 56, 58),
+(654, 56, 59),
+(655, 56, 60),
+(656, 56, 61),
+(657, 56, 62),
+(658, 56, 63),
+(659, 56, 64),
+(660, 56, 65),
+(661, 56, 66),
+(662, 56, 67),
+(663, 56, 68),
+(664, 56, 69),
+(665, 56, 70),
+(666, 56, 71),
+(673, 57, 72),
+(674, 57, 73),
+(675, 57, 74),
+(676, 57, 75),
+(677, 57, 76),
+(678, 57, 77),
+(679, 57, 78),
+(680, 57, 79),
+(681, 57, 80),
+(682, 57, 81),
+(683, 57, 82),
+(684, 57, 83),
+(685, 57, 84),
+(686, 57, 85),
+(687, 57, 86),
+(688, 57, 87),
+(689, 57, 88),
+(690, 57, 89),
+(691, 57, 90),
+(692, 57, 91),
+(693, 57, 92),
+(694, 57, 93),
+(695, 57, 94),
+(696, 57, 95),
+(697, 57, 96),
+(698, 57, 97),
+(699, 57, 98),
+(700, 57, 99),
+(701, 57, 100),
+(702, 57, 101),
+(703, 57, 102),
+(704, 57, 103),
+(705, 57, 104),
+(736, 58, 1),
+(737, 58, 2),
+(738, 58, 3),
+(739, 58, 4),
+(740, 58, 5),
+(741, 58, 6),
+(742, 58, 7),
+(743, 58, 8),
+(744, 58, 9),
+(745, 58, 10),
+(746, 58, 11),
+(747, 58, 12),
+(748, 58, 13),
+(749, 58, 14),
+(750, 58, 15),
+(751, 58, 16),
+(752, 58, 17),
+(753, 58, 18),
+(754, 58, 19),
+(755, 58, 20),
+(756, 58, 21),
+(757, 58, 22),
+(758, 58, 23),
+(759, 58, 24),
+(760, 58, 25),
+(761, 58, 26),
+(762, 58, 27),
+(763, 58, 28),
+(764, 58, 29),
+(765, 58, 30),
+(766, 58, 31),
+(767, 58, 32),
+(768, 58, 33),
+(769, 58, 34),
+(770, 58, 35),
+(771, 58, 36),
+(772, 58, 37),
+(773, 58, 38),
+(774, 58, 39),
+(775, 58, 40),
+(776, 58, 41),
+(777, 58, 42),
+(778, 58, 43),
+(779, 58, 44),
+(780, 58, 45),
+(781, 58, 46),
+(782, 58, 47),
+(783, 58, 48),
+(784, 58, 49),
+(785, 58, 50),
+(786, 58, 51),
+(787, 58, 52),
+(788, 58, 53),
+(789, 58, 54),
+(790, 58, 55),
+(791, 58, 56),
+(792, 58, 57),
+(793, 58, 58),
+(794, 58, 59),
+(795, 58, 60),
+(796, 58, 61),
+(797, 58, 62),
+(798, 58, 63),
+(799, 58, 64),
+(800, 58, 65),
+(801, 58, 66),
+(802, 58, 67),
+(803, 58, 68),
+(804, 58, 69),
+(805, 58, 70),
+(806, 58, 71),
+(807, 58, 72),
+(808, 58, 73),
+(809, 58, 74),
+(810, 58, 75),
+(811, 58, 76),
+(812, 58, 77),
+(813, 58, 78),
+(814, 58, 79),
+(815, 58, 80),
+(816, 58, 81),
+(817, 58, 82),
+(818, 58, 83),
+(819, 58, 84),
+(820, 58, 85),
+(821, 58, 86),
+(822, 58, 87),
+(823, 58, 88),
+(824, 58, 89),
+(825, 58, 90),
+(826, 58, 91),
+(827, 58, 92),
+(828, 58, 93),
+(829, 58, 94),
+(830, 58, 95),
+(831, 58, 96),
+(832, 58, 97),
+(833, 58, 98),
+(834, 58, 99),
+(835, 58, 100),
+(836, 58, 101),
+(837, 58, 102),
+(838, 58, 103),
+(839, 58, 104);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `objectives`
+--
+
+CREATE TABLE `objectives` (
+  `id` int(11) NOT NULL,
+  `mission_id` int(11) NOT NULL,
+  `code` varchar(100) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `objective_type` enum('discovery','quiz','written','evaluation') NOT NULL,
+  `quiz_direction` enum('kana_to_romaji','romaji_to_kana','mixed') DEFAULT NULL,
+  `required_success_count` int(11) NOT NULL DEFAULT 1,
+  `required_score` int(11) NOT NULL DEFAULT 100,
+  `question_count_mode` enum('fixed','one_per_character') NOT NULL DEFAULT 'fixed',
+  `question_count` int(11) DEFAULT NULL,
+  `character_scope` enum('current_mission','current_and_previous_missions','current_path','completed_paths') NOT NULL DEFAULT 'current_mission',
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `objectives`
+--
+
+INSERT INTO `objectives` (`id`, `mission_id`, `code`, `title`, `objective_type`, `quiz_direction`, `required_success_count`, `required_score`, `question_count_mode`, `question_count`, `character_scope`, `sort_order`, `created_at`, `updated_at`) VALUES
+(1, 1, 'hira_base_vowels_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(2, 1, 'hira_base_vowels_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(3, 1, 'hira_base_vowels_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(4, 1, 'hira_base_vowels_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(5, 1, 'hira_base_vowels_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(6, 2, 'hira_base_k_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(7, 2, 'hira_base_k_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(8, 2, 'hira_base_k_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(9, 2, 'hira_base_k_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(10, 2, 'hira_base_k_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(11, 3, 'hira_base_s_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(12, 3, 'hira_base_s_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(13, 3, 'hira_base_s_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(14, 3, 'hira_base_s_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(15, 3, 'hira_base_s_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(16, 4, 'hira_base_t_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(17, 4, 'hira_base_t_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(18, 4, 'hira_base_t_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(19, 4, 'hira_base_t_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(20, 4, 'hira_base_t_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(21, 5, 'hira_base_n_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(22, 5, 'hira_base_n_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(23, 5, 'hira_base_n_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(24, 5, 'hira_base_n_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(25, 5, 'hira_base_n_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(26, 6, 'hira_base_h_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(27, 6, 'hira_base_h_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(28, 6, 'hira_base_h_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(29, 6, 'hira_base_h_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(30, 6, 'hira_base_h_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(31, 7, 'hira_base_m_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(32, 7, 'hira_base_m_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(33, 7, 'hira_base_m_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(34, 7, 'hira_base_m_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(35, 7, 'hira_base_m_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(36, 8, 'hira_base_r_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(37, 8, 'hira_base_r_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(38, 8, 'hira_base_r_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(39, 8, 'hira_base_r_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(40, 8, 'hira_base_r_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(41, 9, 'hira_base_y_w_n_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(42, 9, 'hira_base_y_w_n_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(43, 9, 'hira_base_y_w_n_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(44, 9, 'hira_base_y_w_n_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(45, 9, 'hira_base_y_w_n_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(46, 10, 'hira_base_review_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 1, '2026-05-14 22:27:59', NULL),
+(47, 10, 'hira_base_review_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'one_per_character', NULL, 'current_path', 2, '2026-05-14 22:27:59', NULL),
+(48, 10, 'hira_base_review_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 3, '2026-05-14 22:27:59', NULL),
+(49, 10, 'hira_base_review_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 1, 100, 'one_per_character', NULL, 'current_path', 4, '2026-05-14 22:27:59', NULL),
+(50, 11, 'kata_base_vowels_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(51, 11, 'kata_base_vowels_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(52, 11, 'kata_base_vowels_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(53, 11, 'kata_base_vowels_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(54, 11, 'kata_base_vowels_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(55, 12, 'kata_base_k_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(56, 12, 'kata_base_k_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(57, 12, 'kata_base_k_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(58, 12, 'kata_base_k_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(59, 12, 'kata_base_k_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(60, 13, 'kata_base_s_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(61, 13, 'kata_base_s_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(62, 13, 'kata_base_s_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(63, 13, 'kata_base_s_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(64, 13, 'kata_base_s_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(65, 14, 'kata_base_t_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(66, 14, 'kata_base_t_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(67, 14, 'kata_base_t_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(68, 14, 'kata_base_t_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(69, 14, 'kata_base_t_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(70, 15, 'kata_base_n_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(71, 15, 'kata_base_n_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(72, 15, 'kata_base_n_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(73, 15, 'kata_base_n_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(74, 15, 'kata_base_n_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(75, 16, 'kata_base_h_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(76, 16, 'kata_base_h_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(77, 16, 'kata_base_h_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(78, 16, 'kata_base_h_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(79, 16, 'kata_base_h_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(80, 17, 'kata_base_m_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(81, 17, 'kata_base_m_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(82, 17, 'kata_base_m_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(83, 17, 'kata_base_m_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(84, 17, 'kata_base_m_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(85, 18, 'kata_base_r_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(86, 18, 'kata_base_r_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(87, 18, 'kata_base_r_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(88, 18, 'kata_base_r_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(89, 18, 'kata_base_r_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(90, 19, 'kata_base_y_w_n_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(91, 19, 'kata_base_y_w_n_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(92, 19, 'kata_base_y_w_n_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(93, 19, 'kata_base_y_w_n_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(94, 19, 'kata_base_y_w_n_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(95, 20, 'kata_base_review_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 1, '2026-05-14 22:27:59', NULL),
+(96, 20, 'kata_base_review_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'one_per_character', NULL, 'current_path', 2, '2026-05-14 22:27:59', NULL),
+(97, 20, 'kata_base_review_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 3, '2026-05-14 22:27:59', NULL),
+(98, 20, 'kata_base_review_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 1, 100, 'one_per_character', NULL, 'current_path', 4, '2026-05-14 22:27:59', NULL),
+(99, 21, 'hira_var_g_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(100, 21, 'hira_var_g_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(101, 21, 'hira_var_g_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(102, 21, 'hira_var_g_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(103, 21, 'hira_var_g_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(104, 22, 'hira_var_z_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(105, 22, 'hira_var_z_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(106, 22, 'hira_var_z_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(107, 22, 'hira_var_z_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(108, 22, 'hira_var_z_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(109, 23, 'hira_var_d_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(110, 23, 'hira_var_d_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(111, 23, 'hira_var_d_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(112, 23, 'hira_var_d_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(113, 23, 'hira_var_d_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(114, 24, 'hira_var_b_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(115, 24, 'hira_var_b_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(116, 24, 'hira_var_b_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(117, 24, 'hira_var_b_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(118, 24, 'hira_var_b_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(119, 25, 'hira_var_p_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(120, 25, 'hira_var_p_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(121, 25, 'hira_var_p_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(122, 25, 'hira_var_p_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(123, 25, 'hira_var_p_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(124, 26, 'hira_var_review_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 1, '2026-05-14 22:27:59', NULL),
+(125, 26, 'hira_var_review_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'one_per_character', NULL, 'current_path', 2, '2026-05-14 22:27:59', NULL),
+(126, 26, 'hira_var_review_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 3, '2026-05-14 22:27:59', NULL),
+(127, 26, 'hira_var_review_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 1, 100, 'one_per_character', NULL, 'current_path', 4, '2026-05-14 22:27:59', NULL),
+(128, 27, 'kata_var_g_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(129, 27, 'kata_var_g_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(130, 27, 'kata_var_g_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(131, 27, 'kata_var_g_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(132, 27, 'kata_var_g_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(133, 28, 'kata_var_z_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(134, 28, 'kata_var_z_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(135, 28, 'kata_var_z_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(136, 28, 'kata_var_z_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(137, 28, 'kata_var_z_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(138, 29, 'kata_var_d_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(139, 29, 'kata_var_d_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(140, 29, 'kata_var_d_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(141, 29, 'kata_var_d_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(142, 29, 'kata_var_d_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(143, 30, 'kata_var_b_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(144, 30, 'kata_var_b_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(145, 30, 'kata_var_b_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(146, 30, 'kata_var_b_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(147, 30, 'kata_var_b_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(148, 31, 'kata_var_p_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(149, 31, 'kata_var_p_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(150, 31, 'kata_var_p_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(151, 31, 'kata_var_p_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(152, 31, 'kata_var_p_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(153, 32, 'kata_var_review_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 1, '2026-05-14 22:27:59', NULL),
+(154, 32, 'kata_var_review_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'one_per_character', NULL, 'current_path', 2, '2026-05-14 22:27:59', NULL),
+(155, 32, 'kata_var_review_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 3, '2026-05-14 22:27:59', NULL),
+(156, 32, 'kata_var_review_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 1, 100, 'one_per_character', NULL, 'current_path', 4, '2026-05-14 22:27:59', NULL),
+(157, 33, 'hira_combo_ky_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(158, 33, 'hira_combo_ky_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(159, 33, 'hira_combo_ky_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(160, 33, 'hira_combo_ky_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(161, 33, 'hira_combo_ky_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(162, 34, 'hira_combo_sh_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(163, 34, 'hira_combo_sh_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(164, 34, 'hira_combo_sh_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(165, 34, 'hira_combo_sh_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(166, 34, 'hira_combo_sh_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(167, 35, 'hira_combo_ch_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(168, 35, 'hira_combo_ch_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(169, 35, 'hira_combo_ch_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(170, 35, 'hira_combo_ch_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(171, 35, 'hira_combo_ch_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(172, 36, 'hira_combo_ny_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(173, 36, 'hira_combo_ny_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(174, 36, 'hira_combo_ny_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(175, 36, 'hira_combo_ny_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(176, 36, 'hira_combo_ny_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(177, 37, 'hira_combo_hy_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(178, 37, 'hira_combo_hy_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(179, 37, 'hira_combo_hy_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(180, 37, 'hira_combo_hy_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(181, 37, 'hira_combo_hy_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(182, 38, 'hira_combo_my_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(183, 38, 'hira_combo_my_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(184, 38, 'hira_combo_my_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(185, 38, 'hira_combo_my_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(186, 38, 'hira_combo_my_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(187, 39, 'hira_combo_ry_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(188, 39, 'hira_combo_ry_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(189, 39, 'hira_combo_ry_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(190, 39, 'hira_combo_ry_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(191, 39, 'hira_combo_ry_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(192, 40, 'hira_combo_gy_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(193, 40, 'hira_combo_gy_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(194, 40, 'hira_combo_gy_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(195, 40, 'hira_combo_gy_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(196, 40, 'hira_combo_gy_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(197, 41, 'hira_combo_j_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(198, 41, 'hira_combo_j_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(199, 41, 'hira_combo_j_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(200, 41, 'hira_combo_j_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(201, 41, 'hira_combo_j_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(202, 42, 'hira_combo_by_py_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(203, 42, 'hira_combo_by_py_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(204, 42, 'hira_combo_by_py_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(205, 42, 'hira_combo_by_py_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(206, 42, 'hira_combo_by_py_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(207, 43, 'hira_combo_review_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 1, '2026-05-14 22:27:59', NULL),
+(208, 43, 'hira_combo_review_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'one_per_character', NULL, 'current_path', 2, '2026-05-14 22:27:59', NULL),
+(209, 43, 'hira_combo_review_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 3, '2026-05-14 22:27:59', NULL),
+(210, 43, 'hira_combo_review_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 1, 100, 'one_per_character', NULL, 'current_path', 4, '2026-05-14 22:27:59', NULL),
+(211, 44, 'kata_combo_ky_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(212, 44, 'kata_combo_ky_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(213, 44, 'kata_combo_ky_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(214, 44, 'kata_combo_ky_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(215, 44, 'kata_combo_ky_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(216, 45, 'kata_combo_sh_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(217, 45, 'kata_combo_sh_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(218, 45, 'kata_combo_sh_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(219, 45, 'kata_combo_sh_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(220, 45, 'kata_combo_sh_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(221, 46, 'kata_combo_ch_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(222, 46, 'kata_combo_ch_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(223, 46, 'kata_combo_ch_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(224, 46, 'kata_combo_ch_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(225, 46, 'kata_combo_ch_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(226, 47, 'kata_combo_ny_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(227, 47, 'kata_combo_ny_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(228, 47, 'kata_combo_ny_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(229, 47, 'kata_combo_ny_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(230, 47, 'kata_combo_ny_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(231, 48, 'kata_combo_hy_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(232, 48, 'kata_combo_hy_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(233, 48, 'kata_combo_hy_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(234, 48, 'kata_combo_hy_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(235, 48, 'kata_combo_hy_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(236, 49, 'kata_combo_my_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(237, 49, 'kata_combo_my_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(238, 49, 'kata_combo_my_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(239, 49, 'kata_combo_my_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(240, 49, 'kata_combo_my_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(241, 50, 'kata_combo_ry_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(242, 50, 'kata_combo_ry_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(243, 50, 'kata_combo_ry_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(244, 50, 'kata_combo_ry_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(245, 50, 'kata_combo_ry_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(246, 51, 'kata_combo_gy_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(247, 51, 'kata_combo_gy_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(248, 51, 'kata_combo_gy_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(249, 51, 'kata_combo_gy_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(250, 51, 'kata_combo_gy_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(251, 52, 'kata_combo_j_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(252, 52, 'kata_combo_j_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(253, 52, 'kata_combo_j_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(254, 52, 'kata_combo_j_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(255, 52, 'kata_combo_j_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(256, 53, 'kata_combo_by_py_discovery', 'Découverte', 'discovery', NULL, 1, 100, 'fixed', 0, 'current_mission', 1, '2026-05-14 22:27:59', NULL),
+(257, 53, 'kata_combo_by_py_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 2, '2026-05-14 22:27:59', NULL),
+(258, 53, 'kata_combo_by_py_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'fixed', 20, 'current_mission', 3, '2026-05-14 22:27:59', NULL),
+(259, 53, 'kata_combo_by_py_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'fixed', 20, 'current_mission', 4, '2026-05-14 22:27:59', NULL),
+(260, 53, 'kata_combo_by_py_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 2, 100, 'one_per_character', NULL, 'current_and_previous_missions', 5, '2026-05-14 22:27:59', NULL),
+(261, 54, 'kata_combo_review_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 1, '2026-05-14 22:27:59', NULL),
+(262, 54, 'kata_combo_review_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'one_per_character', NULL, 'current_path', 2, '2026-05-14 22:27:59', NULL),
+(263, 54, 'kata_combo_review_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'current_path', 3, '2026-05-14 22:27:59', NULL),
+(264, 54, 'kata_combo_review_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 1, 100, 'one_per_character', NULL, 'current_path', 4, '2026-05-14 22:27:59', NULL),
+(265, 55, 'final_base_mixed_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'completed_paths', 1, '2026-05-14 22:27:59', NULL),
+(266, 55, 'final_base_mixed_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'one_per_character', NULL, 'completed_paths', 2, '2026-05-14 22:27:59', NULL),
+(267, 55, 'final_base_mixed_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'completed_paths', 3, '2026-05-14 22:27:59', NULL),
+(268, 55, 'final_base_mixed_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 1, 100, 'one_per_character', NULL, 'completed_paths', 4, '2026-05-14 22:27:59', NULL),
+(269, 56, 'final_variants_mixed_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'completed_paths', 1, '2026-05-14 22:27:59', NULL),
+(270, 56, 'final_variants_mixed_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'one_per_character', NULL, 'completed_paths', 2, '2026-05-14 22:27:59', NULL),
+(271, 56, 'final_variants_mixed_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'completed_paths', 3, '2026-05-14 22:27:59', NULL),
+(272, 56, 'final_variants_mixed_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 1, 100, 'one_per_character', NULL, 'completed_paths', 4, '2026-05-14 22:27:59', NULL),
+(273, 57, 'final_combos_mixed_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'completed_paths', 1, '2026-05-14 22:27:59', NULL),
+(274, 57, 'final_combos_mixed_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'one_per_character', NULL, 'completed_paths', 2, '2026-05-14 22:27:59', NULL),
+(275, 57, 'final_combos_mixed_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'completed_paths', 3, '2026-05-14 22:27:59', NULL),
+(276, 57, 'final_combos_mixed_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 1, 100, 'one_per_character', NULL, 'completed_paths', 4, '2026-05-14 22:27:59', NULL),
+(277, 58, 'final_all_kana_kana_to_romaji', 'Reconnaître les kana', 'quiz', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'completed_paths', 1, '2026-05-14 22:27:59', NULL),
+(278, 58, 'final_all_kana_romaji_to_kana', 'Retrouver les kana', 'quiz', 'romaji_to_kana', 3, 100, 'one_per_character', NULL, 'completed_paths', 2, '2026-05-14 22:27:59', NULL),
+(279, 58, 'final_all_kana_written', 'Écrire les réponses', 'written', 'kana_to_romaji', 3, 100, 'one_per_character', NULL, 'completed_paths', 3, '2026-05-14 22:27:59', NULL),
+(280, 58, 'final_all_kana_evaluation', 'Évaluation finale', 'evaluation', 'mixed', 1, 100, 'one_per_character', NULL, 'completed_paths', 4, '2026-05-14 22:27:59', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `quiz_answers`
+--
+
+CREATE TABLE `quiz_answers` (
+  `id` int(11) NOT NULL,
+  `session_id` int(11) NOT NULL,
+  `kana_id` int(11) NOT NULL,
+  `question_order` int(11) NOT NULL,
+  `displayed_value` varchar(20) NOT NULL,
+  `expected_answer` varchar(20) NOT NULL,
+  `options_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`options_json`)),
+  `user_answer` varchar(50) DEFAULT NULL,
+  `is_correct` tinyint(1) NOT NULL DEFAULT 0,
+  `response_time_ms` int(11) DEFAULT NULL,
+  `answered_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `quiz_answers`
+--
+
+INSERT INTO `quiz_answers` (`id`, `session_id`, `kana_id`, `question_order`, `displayed_value`, `expected_answer`, `options_json`, `user_answer`, `is_correct`, `response_time_ms`, `answered_at`) VALUES
+(1, 1, 4, 1, 'え', 'e', '[\"o\",\"i\",\"e\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:32'),
+(2, 1, 2, 2, 'い', 'i', '[\"u\",\"i\",\"o\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:32'),
+(3, 1, 2, 3, 'い', 'i', '[\"u\",\"a\",\"o\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(4, 1, 2, 4, 'い', 'i', '[\"i\",\"e\",\"o\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(5, 1, 4, 5, 'え', 'e', '[\"e\",\"o\",\"u\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(6, 1, 2, 6, 'い', 'i', '[\"e\",\"a\",\"u\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(7, 1, 2, 7, 'い', 'i', '[\"a\",\"o\",\"e\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(8, 1, 4, 8, 'え', 'e', '[\"e\",\"o\",\"a\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(9, 1, 2, 9, 'い', 'i', '[\"u\",\"o\",\"e\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(10, 1, 1, 10, 'あ', 'a', '[\"a\",\"e\",\"o\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(11, 1, 2, 11, 'い', 'i', '[\"i\",\"u\",\"e\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(12, 1, 1, 12, 'あ', 'a', '[\"a\",\"u\",\"i\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(13, 1, 3, 13, 'う', 'u', '[\"u\",\"o\",\"e\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(14, 1, 4, 14, 'え', 'e', '[\"e\",\"u\",\"a\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(15, 1, 1, 15, 'あ', 'a', '[\"e\",\"i\",\"u\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(16, 1, 3, 16, 'う', 'u', '[\"o\",\"u\",\"e\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(17, 1, 2, 17, 'い', 'i', '[\"a\",\"o\",\"i\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(18, 1, 4, 18, 'え', 'e', '[\"a\",\"o\",\"u\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(19, 1, 4, 19, 'え', 'e', '[\"o\",\"u\",\"a\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(20, 1, 3, 20, 'う', 'u', '[\"i\",\"e\",\"u\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:33'),
+(21, 2, 4, 1, 'え', 'e', '[\"e\",\"a\",\"o\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(22, 2, 1, 2, 'あ', 'a', '[\"a\",\"i\",\"o\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(23, 2, 3, 3, 'う', 'u', '[\"u\",\"o\",\"a\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(24, 2, 5, 4, 'お', 'o', '[\"u\",\"e\",\"o\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(25, 2, 2, 5, 'い', 'i', '[\"a\",\"i\",\"u\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(26, 2, 5, 6, 'お', 'o', '[\"i\",\"u\",\"o\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(27, 2, 1, 7, 'あ', 'a', '[\"o\",\"u\",\"i\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(28, 2, 1, 8, 'あ', 'a', '[\"o\",\"i\",\"e\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(29, 2, 1, 9, 'あ', 'a', '[\"u\",\"a\",\"e\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(30, 2, 1, 10, 'あ', 'a', '[\"i\",\"o\",\"a\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(31, 2, 1, 11, 'あ', 'a', '[\"u\",\"o\",\"i\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(32, 2, 4, 12, 'え', 'e', '[\"a\",\"i\",\"o\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(33, 2, 5, 13, 'お', 'o', '[\"u\",\"a\",\"i\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(34, 2, 5, 14, 'お', 'o', '[\"o\",\"a\",\"e\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(35, 2, 3, 15, 'う', 'u', '[\"e\",\"o\",\"u\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(36, 2, 5, 16, 'お', 'o', '[\"i\",\"e\",\"a\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(37, 2, 5, 17, 'お', 'o', '[\"o\",\"e\",\"a\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(38, 2, 2, 18, 'い', 'i', '[\"o\",\"u\",\"e\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(39, 2, 3, 19, 'う', 'u', '[\"u\",\"i\",\"a\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(40, 2, 1, 20, 'あ', 'a', '[\"a\",\"i\",\"e\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:43'),
+(41, 3, 2, 1, 'い', 'i', '[\"e\",\"o\",\"u\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(42, 3, 4, 2, 'え', 'e', '[\"e\",\"a\",\"u\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(43, 3, 1, 3, 'あ', 'a', '[\"o\",\"i\",\"e\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(44, 3, 4, 4, 'え', 'e', '[\"o\",\"i\",\"e\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(45, 3, 4, 5, 'え', 'e', '[\"i\",\"o\",\"e\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(46, 3, 4, 6, 'え', 'e', '[\"o\",\"e\",\"u\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(47, 3, 2, 7, 'い', 'i', '[\"o\",\"e\",\"a\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(48, 3, 5, 8, 'お', 'o', '[\"i\",\"a\",\"e\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(49, 3, 5, 9, 'お', 'o', '[\"a\",\"u\",\"e\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(50, 3, 1, 10, 'あ', 'a', '[\"o\",\"a\",\"u\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(51, 3, 2, 11, 'い', 'i', '[\"a\",\"o\",\"e\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(52, 3, 4, 12, 'え', 'e', '[\"o\",\"a\",\"i\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(53, 3, 5, 13, 'お', 'o', '[\"e\",\"u\",\"o\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(54, 3, 3, 14, 'う', 'u', '[\"a\",\"e\",\"u\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(55, 3, 3, 15, 'う', 'u', '[\"e\",\"i\",\"u\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(56, 3, 5, 16, 'お', 'o', '[\"a\",\"i\",\"u\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(57, 3, 5, 17, 'お', 'o', '[\"u\",\"e\",\"i\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(58, 3, 2, 18, 'い', 'i', '[\"i\",\"o\",\"e\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(59, 3, 4, 19, 'え', 'e', '[\"i\",\"a\",\"e\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(60, 3, 5, 20, 'お', 'o', '[\"i\",\"u\",\"o\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:50'),
+(61, 4, 1, 1, 'あ', 'a', '[\"e\",\"u\",\"o\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(62, 4, 1, 2, 'あ', 'a', '[\"a\",\"e\",\"u\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(63, 4, 4, 3, 'え', 'e', '[\"o\",\"a\",\"i\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(64, 4, 2, 4, 'い', 'i', '[\"e\",\"i\",\"a\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(65, 4, 4, 5, 'え', 'e', '[\"e\",\"i\",\"a\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(66, 4, 5, 6, 'お', 'o', '[\"a\",\"u\",\"o\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(67, 4, 5, 7, 'お', 'o', '[\"o\",\"e\",\"a\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(68, 4, 2, 8, 'い', 'i', '[\"o\",\"a\",\"u\",\"i\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(69, 4, 3, 9, 'う', 'u', '[\"a\",\"u\",\"e\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(70, 4, 5, 10, 'お', 'o', '[\"a\",\"i\",\"o\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(71, 4, 3, 11, 'う', 'u', '[\"i\",\"e\",\"u\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(72, 4, 5, 12, 'お', 'o', '[\"e\",\"u\",\"i\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(73, 4, 2, 13, 'い', 'i', '[\"a\",\"e\",\"i\",\"o\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(74, 4, 1, 14, 'あ', 'a', '[\"o\",\"a\",\"u\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(75, 4, 2, 15, 'い', 'i', '[\"o\",\"i\",\"u\",\"a\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(76, 4, 1, 16, 'あ', 'a', '[\"i\",\"a\",\"o\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(77, 4, 3, 17, 'う', 'u', '[\"i\",\"o\",\"u\",\"e\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(78, 4, 2, 18, 'い', 'i', '[\"e\",\"a\",\"i\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(79, 4, 5, 19, 'お', 'o', '[\"i\",\"e\",\"o\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(80, 4, 4, 20, 'え', 'e', '[\"o\",\"a\",\"e\",\"u\"]', NULL, 0, NULL, '2026-05-15 17:18:58'),
+(81, 5, 3, 1, 'う', 'u', '[\"o\",\"u\",\"e\",\"a\"]', 'u', 1, NULL, '2026-05-15 17:22:18'),
+(82, 5, 4, 2, 'え', 'e', '[\"e\",\"a\",\"o\",\"i\"]', 'e', 1, NULL, '2026-05-15 17:22:21'),
+(83, 5, 2, 3, 'い', 'i', '[\"u\",\"i\",\"e\",\"o\"]', 'i', 1, NULL, '2026-05-15 17:22:22'),
+(84, 5, 5, 4, 'お', 'o', '[\"o\",\"a\",\"u\",\"i\"]', 'o', 1, NULL, '2026-05-15 17:22:24'),
+(85, 5, 3, 5, 'う', 'u', '[\"a\",\"e\",\"i\",\"u\"]', 'u', 1, NULL, '2026-05-15 17:22:32'),
+(86, 5, 1, 6, 'あ', 'a', '[\"i\",\"e\",\"a\",\"o\"]', 'a', 1, NULL, '2026-05-15 17:22:33'),
+(87, 5, 4, 7, 'え', 'e', '[\"i\",\"e\",\"u\",\"a\"]', 'e', 1, NULL, '2026-05-15 17:22:35'),
+(88, 5, 3, 8, 'う', 'u', '[\"i\",\"o\",\"a\",\"u\"]', 'u', 1, NULL, '2026-05-15 17:22:36'),
+(89, 5, 1, 9, 'あ', 'a', '[\"o\",\"a\",\"u\",\"i\"]', 'a', 1, NULL, '2026-05-15 17:22:38'),
+(90, 5, 1, 10, 'あ', 'a', '[\"e\",\"o\",\"a\",\"u\"]', 'a', 1, NULL, '2026-05-15 17:22:40'),
+(91, 5, 4, 11, 'え', 'e', '[\"e\",\"o\",\"a\",\"i\"]', 'e', 1, NULL, '2026-05-15 17:22:43'),
+(92, 5, 1, 12, 'あ', 'a', '[\"u\",\"i\",\"o\",\"a\"]', 'a', 1, NULL, '2026-05-15 17:22:45'),
+(93, 5, 1, 13, 'あ', 'a', '[\"u\",\"o\",\"a\",\"e\"]', 'a', 1, NULL, '2026-05-15 17:22:46'),
+(94, 5, 1, 14, 'あ', 'a', '[\"i\",\"o\",\"a\",\"u\"]', 'a', 1, NULL, '2026-05-15 17:22:48'),
+(95, 5, 1, 15, 'あ', 'a', '[\"a\",\"o\",\"u\",\"i\"]', 'u', 0, NULL, '2026-05-15 17:22:49'),
+(96, 5, 3, 16, 'う', 'u', '[\"e\",\"u\",\"a\",\"i\"]', 'u', 1, NULL, '2026-05-15 17:22:51'),
+(97, 5, 4, 17, 'え', 'e', '[\"o\",\"e\",\"i\",\"a\"]', 'e', 1, NULL, '2026-05-15 17:22:53'),
+(98, 5, 5, 18, 'お', 'o', '[\"a\",\"u\",\"i\",\"o\"]', 'o', 1, NULL, '2026-05-15 17:22:54'),
+(99, 5, 2, 19, 'い', 'i', '[\"e\",\"u\",\"a\",\"i\"]', 'i', 1, NULL, '2026-05-15 17:22:55'),
+(100, 5, 2, 20, 'い', 'i', '[\"e\",\"a\",\"i\",\"o\"]', 'i', 1, NULL, '2026-05-15 17:22:58'),
+(101, 6, 1, 1, 'あ', 'a', '[\"e\",\"u\",\"a\",\"o\"]', 'a', 1, NULL, '2026-05-15 17:23:11'),
+(102, 6, 4, 2, 'え', 'e', '[\"a\",\"e\",\"u\",\"o\"]', 'e', 1, NULL, '2026-05-15 17:23:12'),
+(103, 6, 3, 3, 'う', 'u', '[\"a\",\"o\",\"i\",\"u\"]', 'u', 1, NULL, '2026-05-15 17:23:13'),
+(104, 6, 3, 4, 'う', 'u', '[\"u\",\"e\",\"o\",\"i\"]', 'u', 1, NULL, '2026-05-15 17:23:15'),
+(105, 6, 1, 5, 'あ', 'a', '[\"e\",\"o\",\"a\",\"u\"]', 'a', 1, NULL, '2026-05-15 17:23:16'),
+(106, 6, 3, 6, 'う', 'u', '[\"o\",\"u\",\"e\",\"i\"]', 'u', 1, NULL, '2026-05-15 17:23:18'),
+(107, 6, 1, 7, 'あ', 'a', '[\"e\",\"u\",\"a\",\"o\"]', 'a', 1, NULL, '2026-05-15 17:23:20'),
+(108, 6, 3, 8, 'う', 'u', '[\"i\",\"o\",\"u\",\"a\"]', 'u', 1, NULL, '2026-05-15 17:23:22'),
+(109, 6, 3, 9, 'う', 'u', '[\"a\",\"u\",\"e\",\"o\"]', 'u', 1, NULL, '2026-05-15 17:23:24'),
+(110, 6, 4, 10, 'え', 'e', '[\"i\",\"a\",\"e\",\"u\"]', 'e', 1, NULL, '2026-05-15 17:23:26'),
+(111, 6, 5, 11, 'お', 'o', '[\"i\",\"o\",\"u\",\"a\"]', 'o', 1, NULL, '2026-05-15 17:23:28'),
+(112, 6, 1, 12, 'あ', 'a', '[\"u\",\"e\",\"i\",\"a\"]', 'a', 1, NULL, '2026-05-15 17:23:30'),
+(113, 6, 1, 13, 'あ', 'a', '[\"a\",\"i\",\"e\",\"o\"]', 'a', 1, NULL, '2026-05-15 17:23:31'),
+(114, 6, 5, 14, 'お', 'o', '[\"u\",\"o\",\"e\",\"i\"]', 'o', 1, NULL, '2026-05-15 17:23:35'),
+(115, 6, 4, 15, 'え', 'e', '[\"a\",\"o\",\"e\",\"u\"]', 'e', 1, NULL, '2026-05-15 17:23:37'),
+(116, 6, 3, 16, 'う', 'u', '[\"a\",\"e\",\"i\",\"u\"]', 'u', 1, NULL, '2026-05-15 17:23:40'),
+(117, 6, 1, 17, 'あ', 'a', '[\"e\",\"u\",\"o\",\"a\"]', 'a', 1, NULL, '2026-05-15 17:23:43'),
+(118, 6, 2, 18, 'い', 'i', '[\"i\",\"o\",\"a\",\"e\"]', 'i', 1, NULL, '2026-05-15 17:23:44'),
+(119, 6, 5, 19, 'お', 'o', '[\"u\",\"i\",\"e\",\"o\"]', 'o', 1, NULL, '2026-05-15 17:23:46'),
+(120, 6, 1, 20, 'あ', 'a', '[\"e\",\"i\",\"a\",\"o\"]', 'a', 1, NULL, '2026-05-15 17:23:48'),
+(121, 7, 1, 1, 'あ', 'a', '[\"u\",\"i\",\"a\",\"o\"]', 'a', 1, NULL, '2026-05-15 17:29:09'),
+(122, 7, 1, 2, 'あ', 'a', '[\"u\",\"i\",\"e\",\"a\"]', 'a', 1, NULL, '2026-05-15 17:29:11'),
+(123, 7, 4, 3, 'え', 'e', '[\"i\",\"o\",\"a\",\"e\"]', 'e', 1, NULL, '2026-05-15 17:29:12'),
+(124, 7, 2, 4, 'い', 'i', '[\"a\",\"e\",\"i\",\"u\"]', 'i', 1, NULL, '2026-05-15 17:29:14'),
+(125, 7, 5, 5, 'お', 'o', '[\"i\",\"e\",\"o\",\"u\"]', 'o', 1, NULL, '2026-05-15 17:29:16'),
+(126, 7, 4, 6, 'え', 'e', '[\"i\",\"e\",\"o\",\"a\"]', 'e', 1, NULL, '2026-05-15 17:29:18'),
+(127, 7, 4, 7, 'え', 'e', '[\"a\",\"e\",\"o\",\"u\"]', 'e', 1, NULL, '2026-05-15 17:29:20'),
+(128, 7, 1, 8, 'あ', 'a', '[\"e\",\"i\",\"a\",\"u\"]', 'a', 1, NULL, '2026-05-15 17:29:22'),
+(129, 7, 4, 9, 'え', 'e', '[\"i\",\"u\",\"e\",\"a\"]', 'e', 1, NULL, '2026-05-15 17:29:24'),
+(130, 7, 4, 10, 'え', 'e', '[\"o\",\"u\",\"i\",\"e\"]', 'e', 1, NULL, '2026-05-15 17:29:26'),
+(131, 7, 4, 11, 'え', 'e', '[\"o\",\"u\",\"a\",\"e\"]', 'e', 1, NULL, '2026-05-15 17:29:28'),
+(132, 7, 4, 12, 'え', 'e', '[\"o\",\"a\",\"i\",\"e\"]', 'e', 1, NULL, '2026-05-15 17:29:29'),
+(133, 7, 2, 13, 'い', 'i', '[\"i\",\"u\",\"o\",\"a\"]', 'i', 1, NULL, '2026-05-15 17:29:30'),
+(134, 7, 4, 14, 'え', 'e', '[\"e\",\"o\",\"i\",\"u\"]', 'e', 1, NULL, '2026-05-15 17:29:32'),
+(135, 7, 1, 15, 'あ', 'a', '[\"e\",\"a\",\"o\",\"i\"]', 'a', 1, NULL, '2026-05-15 17:29:34'),
+(136, 7, 3, 16, 'う', 'u', '[\"a\",\"u\",\"e\",\"i\"]', 'u', 1, NULL, '2026-05-15 17:29:35'),
+(137, 7, 4, 17, 'え', 'e', '[\"e\",\"a\",\"u\",\"o\"]', 'e', 1, NULL, '2026-05-15 17:29:38'),
+(138, 7, 2, 18, 'い', 'i', '[\"i\",\"o\",\"u\",\"e\"]', 'i', 1, NULL, '2026-05-15 17:29:40'),
+(139, 7, 4, 19, 'え', 'e', '[\"o\",\"a\",\"e\",\"i\"]', 'e', 1, NULL, '2026-05-15 17:29:42'),
+(140, 7, 4, 20, 'え', 'e', '[\"o\",\"a\",\"u\",\"e\"]', 'e', 1, NULL, '2026-05-15 17:29:45'),
+(141, 8, 1, 1, 'あ', 'a', '[\"a\",\"o\",\"e\",\"i\"]', 'a', 1, NULL, '2026-05-15 17:29:51'),
+(142, 8, 3, 2, 'う', 'u', '[\"i\",\"u\",\"e\",\"a\"]', 'u', 1, NULL, '2026-05-15 17:29:53'),
+(143, 8, 2, 3, 'い', 'i', '[\"a\",\"u\",\"i\",\"o\"]', 'i', 1, NULL, '2026-05-15 17:29:54'),
+(144, 8, 4, 4, 'え', 'e', '[\"u\",\"o\",\"e\",\"i\"]', 'e', 1, NULL, '2026-05-15 17:29:56'),
+(145, 8, 2, 5, 'い', 'i', '[\"a\",\"e\",\"u\",\"i\"]', 'i', 1, NULL, '2026-05-15 17:29:57'),
+(146, 8, 2, 6, 'い', 'i', '[\"a\",\"u\",\"e\",\"i\"]', 'i', 1, NULL, '2026-05-15 17:29:58'),
+(147, 8, 4, 7, 'え', 'e', '[\"e\",\"u\",\"i\",\"o\"]', 'e', 1, NULL, '2026-05-15 17:29:59'),
+(148, 8, 5, 8, 'お', 'o', '[\"i\",\"a\",\"e\",\"o\"]', 'o', 1, NULL, '2026-05-15 17:30:01'),
+(149, 8, 3, 9, 'う', 'u', '[\"e\",\"a\",\"u\",\"i\"]', 'u', 1, NULL, '2026-05-15 17:30:02'),
+(150, 8, 2, 10, 'い', 'i', '[\"o\",\"a\",\"e\",\"i\"]', 'i', 1, NULL, '2026-05-15 17:30:03'),
+(151, 8, 1, 11, 'あ', 'a', '[\"i\",\"e\",\"a\",\"u\"]', 'a', 1, NULL, '2026-05-15 17:30:05'),
+(152, 8, 5, 12, 'お', 'o', '[\"u\",\"a\",\"e\",\"o\"]', 'o', 1, NULL, '2026-05-15 17:30:06'),
+(153, 8, 2, 13, 'い', 'i', '[\"e\",\"a\",\"i\",\"o\"]', 'i', 1, NULL, '2026-05-15 17:30:07'),
+(154, 8, 5, 14, 'お', 'o', '[\"o\",\"a\",\"e\",\"u\"]', 'o', 1, NULL, '2026-05-15 17:30:10'),
+(155, 8, 3, 15, 'う', 'u', '[\"i\",\"a\",\"u\",\"e\"]', 'u', 1, NULL, '2026-05-15 17:30:11'),
+(156, 8, 1, 16, 'あ', 'a', '[\"e\",\"o\",\"a\",\"i\"]', 'a', 1, NULL, '2026-05-15 17:30:13'),
+(157, 8, 4, 17, 'え', 'e', '[\"i\",\"u\",\"e\",\"a\"]', 'e', 1, NULL, '2026-05-15 17:30:15'),
+(158, 8, 4, 18, 'え', 'e', '[\"i\",\"a\",\"e\",\"o\"]', 'e', 1, NULL, '2026-05-15 17:30:16'),
+(159, 8, 5, 19, 'お', 'o', '[\"o\",\"u\",\"a\",\"i\"]', 'o', 1, NULL, '2026-05-15 17:30:19'),
+(160, 8, 1, 20, 'あ', 'a', '[\"e\",\"o\",\"a\",\"u\"]', 'a', 1, NULL, '2026-05-15 17:30:21'),
+(161, 9, 2, 1, 'i', 'い', '[\"あ\",\"お\",\"え\",\"い\"]', 'い', 1, NULL, '2026-05-15 17:30:28'),
+(162, 9, 2, 2, 'i', 'い', '[\"え\",\"う\",\"い\",\"お\"]', 'い', 1, NULL, '2026-05-15 17:30:31'),
+(163, 9, 3, 3, 'u', 'う', '[\"う\",\"お\",\"あ\",\"い\"]', 'う', 1, NULL, '2026-05-15 17:30:37'),
+(164, 9, 4, 4, 'e', 'え', '[\"い\",\"え\",\"お\",\"う\"]', 'え', 1, NULL, '2026-05-15 17:30:42'),
+(165, 9, 1, 5, 'a', 'あ', '[\"え\",\"お\",\"あ\",\"い\"]', 'あ', 1, NULL, '2026-05-15 17:30:44'),
+(166, 9, 4, 6, 'e', 'え', '[\"あ\",\"い\",\"え\",\"お\"]', 'え', 1, NULL, '2026-05-15 17:30:47'),
+(167, 9, 5, 7, 'o', 'お', '[\"あ\",\"お\",\"え\",\"う\"]', 'お', 1, NULL, '2026-05-15 17:30:50'),
+(168, 9, 5, 8, 'o', 'お', '[\"あ\",\"い\",\"う\",\"お\"]', 'お', 1, NULL, '2026-05-15 17:30:59'),
+(169, 9, 5, 9, 'o', 'お', '[\"う\",\"お\",\"い\",\"あ\"]', 'お', 1, NULL, '2026-05-15 17:31:09'),
+(170, 9, 4, 10, 'e', 'え', '[\"あ\",\"お\",\"え\",\"い\"]', 'え', 1, NULL, '2026-05-15 17:31:10'),
+(171, 9, 3, 11, 'u', 'う', '[\"お\",\"え\",\"あ\",\"う\"]', 'う', 1, NULL, '2026-05-15 17:31:12'),
+(172, 9, 4, 12, 'e', 'え', '[\"え\",\"あ\",\"い\",\"う\"]', 'え', 1, NULL, '2026-05-15 17:31:15'),
+(173, 9, 5, 13, 'o', 'お', '[\"え\",\"う\",\"い\",\"お\"]', 'お', 1, NULL, '2026-05-15 17:31:17'),
+(174, 9, 2, 14, 'i', 'い', '[\"い\",\"う\",\"え\",\"お\"]', 'い', 1, NULL, '2026-05-15 17:31:19'),
+(175, 9, 2, 15, 'i', 'い', '[\"え\",\"お\",\"い\",\"う\"]', 'い', 1, NULL, '2026-05-15 17:31:26'),
+(176, 9, 4, 16, 'e', 'え', '[\"あ\",\"う\",\"お\",\"え\"]', 'え', 1, NULL, '2026-05-15 17:31:29'),
+(177, 9, 4, 17, 'e', 'え', '[\"い\",\"え\",\"う\",\"あ\"]', 'え', 1, NULL, '2026-05-15 17:31:32'),
+(178, 9, 1, 18, 'a', 'あ', '[\"お\",\"え\",\"い\",\"あ\"]', 'あ', 1, NULL, '2026-05-15 17:31:34'),
+(179, 9, 3, 19, 'u', 'う', '[\"い\",\"う\",\"え\",\"あ\"]', 'う', 1, NULL, '2026-05-15 17:31:38'),
+(180, 9, 3, 20, 'u', 'う', '[\"お\",\"あ\",\"う\",\"え\"]', 'う', 1, NULL, '2026-05-15 17:31:40'),
+(181, 10, 4, 1, 'e', 'え', '[\"お\",\"い\",\"え\",\"あ\"]', 'え', 1, NULL, '2026-05-15 17:32:53'),
+(182, 10, 2, 2, 'i', 'い', '[\"い\",\"お\",\"え\",\"あ\"]', 'い', 1, NULL, '2026-05-15 17:32:54'),
+(183, 10, 5, 3, 'o', 'お', '[\"え\",\"う\",\"お\",\"あ\"]', 'お', 1, NULL, '2026-05-15 17:32:56'),
+(184, 10, 5, 4, 'o', 'お', '[\"い\",\"う\",\"あ\",\"お\"]', 'お', 1, NULL, '2026-05-15 17:32:58'),
+(185, 10, 4, 5, 'e', 'え', '[\"お\",\"え\",\"あ\",\"う\"]', 'え', 1, NULL, '2026-05-15 17:33:00'),
+(186, 10, 1, 6, 'a', 'あ', '[\"い\",\"お\",\"う\",\"あ\"]', 'あ', 1, NULL, '2026-05-15 17:33:02'),
+(187, 10, 2, 7, 'i', 'い', '[\"お\",\"う\",\"い\",\"え\"]', 'い', 1, NULL, '2026-05-15 17:33:03'),
+(188, 10, 3, 8, 'u', 'う', '[\"え\",\"い\",\"あ\",\"う\"]', 'う', 1, NULL, '2026-05-15 17:33:06'),
+(189, 10, 1, 9, 'a', 'あ', '[\"い\",\"う\",\"え\",\"あ\"]', 'あ', 1, NULL, '2026-05-15 17:33:08'),
+(190, 10, 4, 10, 'e', 'え', '[\"え\",\"い\",\"う\",\"お\"]', 'え', 1, NULL, '2026-05-15 17:33:10'),
+(191, 10, 5, 11, 'o', 'お', '[\"う\",\"お\",\"え\",\"あ\"]', 'お', 1, NULL, '2026-05-15 17:33:13'),
+(192, 10, 4, 12, 'e', 'え', '[\"あ\",\"い\",\"う\",\"え\"]', 'え', 1, NULL, '2026-05-15 17:33:16'),
+(193, 10, 2, 13, 'i', 'い', '[\"い\",\"う\",\"え\",\"お\"]', 'い', 1, NULL, '2026-05-15 17:33:17'),
+(194, 10, 5, 14, 'o', 'お', '[\"お\",\"い\",\"あ\",\"う\"]', 'お', 1, NULL, '2026-05-15 17:33:20'),
+(195, 10, 5, 15, 'o', 'お', '[\"あ\",\"え\",\"い\",\"お\"]', 'お', 1, NULL, '2026-05-15 17:33:22'),
+(196, 10, 4, 16, 'e', 'え', '[\"え\",\"お\",\"う\",\"い\"]', 'え', 1, NULL, '2026-05-15 17:33:24'),
+(197, 10, 5, 17, 'o', 'お', '[\"あ\",\"い\",\"う\",\"お\"]', 'お', 1, NULL, '2026-05-15 17:33:27'),
+(198, 10, 1, 18, 'a', 'あ', '[\"お\",\"い\",\"え\",\"あ\"]', 'あ', 1, NULL, '2026-05-15 17:33:29'),
+(199, 10, 5, 19, 'o', 'お', '[\"あ\",\"え\",\"い\",\"お\"]', 'お', 1, NULL, '2026-05-15 17:33:31'),
+(200, 10, 3, 20, 'u', 'う', '[\"い\",\"う\",\"お\",\"あ\"]', 'う', 1, NULL, '2026-05-15 17:33:34'),
+(201, 11, 1, 1, 'a', 'あ', '[\"あ\",\"い\",\"う\",\"え\"]', 'あ', 1, NULL, '2026-05-15 17:33:40'),
+(202, 11, 3, 2, 'u', 'う', '[\"う\",\"い\",\"お\",\"え\"]', 'う', 1, NULL, '2026-05-15 17:33:44'),
+(203, 11, 5, 3, 'o', 'お', '[\"え\",\"お\",\"い\",\"あ\"]', 'お', 1, NULL, '2026-05-15 17:33:46'),
+(204, 11, 1, 4, 'a', 'あ', '[\"あ\",\"え\",\"う\",\"お\"]', 'あ', 1, NULL, '2026-05-15 17:33:48'),
+(205, 11, 4, 5, 'e', 'え', '[\"え\",\"お\",\"う\",\"い\"]', 'え', 1, NULL, '2026-05-15 17:33:56'),
+(206, 11, 3, 6, 'u', 'う', '[\"え\",\"う\",\"あ\",\"い\"]', 'う', 1, NULL, '2026-05-15 17:33:59'),
+(207, 11, 3, 7, 'u', 'う', '[\"う\",\"え\",\"い\",\"あ\"]', 'う', 1, NULL, '2026-05-15 17:34:02'),
+(208, 11, 2, 8, 'i', 'い', '[\"う\",\"あ\",\"い\",\"お\"]', 'い', 1, NULL, '2026-05-15 17:34:03'),
+(209, 11, 3, 9, 'u', 'う', '[\"お\",\"え\",\"う\",\"あ\"]', 'う', 1, NULL, '2026-05-15 17:34:10'),
+(210, 11, 2, 10, 'i', 'い', '[\"あ\",\"い\",\"え\",\"お\"]', 'い', 1, NULL, '2026-05-15 17:34:11'),
+(211, 11, 1, 11, 'a', 'あ', '[\"お\",\"い\",\"あ\",\"う\"]', 'あ', 1, NULL, '2026-05-15 17:34:13'),
+(212, 11, 3, 12, 'u', 'う', '[\"お\",\"あ\",\"え\",\"う\"]', 'う', 1, NULL, '2026-05-15 17:34:16'),
+(213, 11, 5, 13, 'o', 'お', '[\"お\",\"う\",\"あ\",\"え\"]', 'お', 1, NULL, '2026-05-15 17:34:18'),
+(214, 11, 5, 14, 'o', 'お', '[\"お\",\"う\",\"い\",\"え\"]', 'お', 1, NULL, '2026-05-15 17:34:20'),
+(215, 11, 2, 15, 'i', 'い', '[\"い\",\"お\",\"え\",\"あ\"]', 'い', 1, NULL, '2026-05-15 17:34:22'),
+(216, 11, 5, 16, 'o', 'お', '[\"え\",\"お\",\"う\",\"い\"]', 'お', 1, NULL, '2026-05-15 17:34:25'),
+(217, 11, 2, 17, 'i', 'い', '[\"い\",\"あ\",\"お\",\"え\"]', 'い', 1, NULL, '2026-05-15 17:34:26'),
+(218, 11, 2, 18, 'i', 'い', '[\"い\",\"う\",\"あ\",\"え\"]', 'い', 1, NULL, '2026-05-15 17:34:29'),
+(219, 11, 5, 19, 'o', 'お', '[\"い\",\"お\",\"う\",\"え\"]', 'お', 1, NULL, '2026-05-15 17:34:31'),
+(220, 11, 3, 20, 'u', 'う', '[\"い\",\"う\",\"え\",\"あ\"]', 'う', 1, NULL, '2026-05-15 17:34:36'),
+(221, 12, 5, 1, 'お', 'o', '[]', 'o', 1, NULL, '2026-05-15 17:34:43'),
+(222, 12, 4, 2, 'え', 'e', '[]', 'e', 1, NULL, '2026-05-15 17:34:45'),
+(223, 12, 3, 3, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:34:47'),
+(224, 12, 1, 4, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:34:48'),
+(225, 12, 4, 5, 'え', 'e', '[]', 'e', 1, NULL, '2026-05-15 17:34:49'),
+(226, 12, 1, 6, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:34:51'),
+(227, 12, 3, 7, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:34:52'),
+(228, 12, 1, 8, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:34:53'),
+(229, 12, 2, 9, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:34:54'),
+(230, 12, 2, 10, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:34:56'),
+(231, 12, 2, 11, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:34:57'),
+(232, 12, 3, 12, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:34:58'),
+(233, 12, 4, 13, 'え', 'e', '[]', 'e', 1, NULL, '2026-05-15 17:34:59'),
+(234, 12, 1, 14, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:35:01'),
+(235, 12, 2, 15, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:35:02'),
+(236, 12, 5, 16, 'お', 'o', '[]', 'o', 1, NULL, '2026-05-15 17:35:03'),
+(237, 12, 1, 17, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:35:04'),
+(238, 12, 1, 18, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:35:06'),
+(239, 12, 3, 19, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:35:07'),
+(240, 12, 4, 20, 'え', 'e', '[]', 'e', 1, NULL, '2026-05-15 17:35:08'),
+(241, 13, 2, 1, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:35:14'),
+(242, 13, 2, 2, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:35:15'),
+(243, 13, 4, 3, 'え', 'e', '[]', 'e', 1, NULL, '2026-05-15 17:35:18'),
+(244, 13, 4, 4, 'え', 'e', '[]', 'e', 1, NULL, '2026-05-15 17:35:19'),
+(245, 13, 2, 5, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:35:21'),
+(246, 13, 5, 6, 'お', 'o', '[]', 'o', 1, NULL, '2026-05-15 17:35:22'),
+(247, 13, 1, 7, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:35:23'),
+(248, 13, 4, 8, 'え', 'e', '[]', 'e', 1, NULL, '2026-05-15 17:35:25'),
+(249, 13, 3, 9, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:35:26'),
+(250, 13, 1, 10, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:35:27'),
+(251, 13, 4, 11, 'え', 'e', '[]', 'e', 1, NULL, '2026-05-15 17:35:29'),
+(252, 13, 5, 12, 'お', 'o', '[]', 'o', 1, NULL, '2026-05-15 17:35:30'),
+(253, 13, 2, 13, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:35:31'),
+(254, 13, 2, 14, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:35:35'),
+(255, 13, 1, 15, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:35:39'),
+(256, 13, 4, 16, 'え', 'e', '[]', 'e', 1, NULL, '2026-05-15 17:35:40'),
+(257, 13, 5, 17, 'お', 'o', '[]', 'o', 1, NULL, '2026-05-15 17:35:42'),
+(258, 13, 2, 18, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:35:43'),
+(259, 13, 1, 19, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:35:44'),
+(260, 13, 3, 20, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:35:46'),
+(261, 14, 5, 1, 'お', 'o', '[]', 'o', 1, NULL, '2026-05-15 17:35:56'),
+(262, 14, 4, 2, 'え', 'e', '[]', 'e', 1, NULL, '2026-05-15 17:35:59'),
+(263, 14, 2, 3, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:36:00'),
+(264, 14, 5, 4, 'お', 'o', '[]', 'o', 1, NULL, '2026-05-15 17:36:01'),
+(265, 14, 1, 5, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:36:03'),
+(266, 14, 3, 6, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:36:05'),
+(267, 14, 1, 7, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:36:06'),
+(268, 14, 3, 8, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:36:07'),
+(269, 14, 3, 9, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:36:10'),
+(270, 14, 1, 10, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:36:11'),
+(271, 14, 2, 11, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:36:12'),
+(272, 14, 2, 12, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:36:14'),
+(273, 14, 3, 13, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:36:15'),
+(274, 14, 5, 14, 'お', 'o', '[]', 'o', 1, NULL, '2026-05-15 17:36:16'),
+(275, 14, 3, 15, 'う', 'u', '[]', 'u', 1, NULL, '2026-05-15 17:36:18'),
+(276, 14, 2, 16, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:36:20'),
+(277, 14, 1, 17, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:36:21'),
+(278, 14, 1, 18, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:36:22'),
+(279, 14, 1, 19, 'あ', 'a', '[]', 'a', 1, NULL, '2026-05-15 17:36:23'),
+(280, 14, 2, 20, 'い', 'i', '[]', 'i', 1, NULL, '2026-05-15 17:36:24'),
+(281, 15, 4, 1, 'え', 'e', '[\"o\",\"e\",\"i\",\"a\"]', 'e', 1, NULL, '2026-05-15 17:36:38'),
+(282, 15, 5, 2, 'お', 'o', '[\"e\",\"o\",\"u\",\"i\"]', 'o', 1, NULL, '2026-05-15 17:36:40'),
+(283, 15, 2, 3, 'い', 'i', '[\"a\",\"e\",\"i\",\"u\"]', 'i', 1, NULL, '2026-05-15 17:36:41'),
+(284, 15, 1, 4, 'あ', 'a', '[\"a\",\"e\",\"o\",\"u\"]', 'a', 1, NULL, '2026-05-15 17:36:42'),
+(285, 15, 3, 5, 'う', 'u', '[\"i\",\"a\",\"u\",\"e\"]', 'u', 1, NULL, '2026-05-15 17:36:45'),
+(286, 16, 5, 1, 'お', 'o', '[\"o\",\"a\",\"i\",\"u\"]', 'o', 1, NULL, '2026-05-15 17:36:54'),
+(287, 16, 2, 2, 'い', 'i', '[\"e\",\"o\",\"a\",\"i\"]', 'i', 1, NULL, '2026-05-15 17:36:56'),
+(288, 16, 3, 3, 'う', 'u', '[\"a\",\"o\",\"u\",\"e\"]', 'u', 1, NULL, '2026-05-15 17:36:57'),
+(289, 16, 1, 4, 'あ', 'a', '[\"o\",\"u\",\"e\",\"a\"]', 'a', 1, NULL, '2026-05-15 17:37:00'),
+(290, 16, 4, 5, 'え', 'e', '[\"u\",\"e\",\"i\",\"o\"]', 'e', 1, NULL, '2026-05-15 17:37:01'),
+(291, 17, 10, 1, 'こ', 'ko', '[\"ko\",\"ku\",\"ke\",\"ka\"]', 'ka', 0, NULL, '2026-05-15 17:59:12'),
+(292, 17, 10, 2, 'こ', 'ko', '[\"ku\",\"ki\",\"ko\",\"ke\"]', 'ko', 1, NULL, '2026-05-15 17:59:20'),
+(293, 17, 9, 3, 'け', 'ke', '[\"ka\",\"ke\",\"ku\",\"ki\"]', 'ke', 1, NULL, '2026-05-15 17:59:23'),
+(294, 17, 7, 4, 'き', 'ki', '[\"ko\",\"ku\",\"ka\",\"ki\"]', 'ka', 0, NULL, '2026-05-15 17:59:26'),
+(295, 17, 6, 5, 'か', 'ka', '[\"ku\",\"ke\",\"ko\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 17:59:30'),
+(296, 17, 9, 6, 'け', 'ke', '[\"ka\",\"ko\",\"ku\",\"ke\"]', 'ke', 1, NULL, '2026-05-15 17:59:32'),
+(297, 17, 8, 7, 'く', 'ku', '[\"ke\",\"ka\",\"ko\",\"ku\"]', 'ku', 1, NULL, '2026-05-15 17:59:34'),
+(298, 17, 6, 8, 'か', 'ka', '[\"ko\",\"ku\",\"ke\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 17:59:36'),
+(299, 17, 9, 9, 'け', 'ke', '[\"ki\",\"ka\",\"ke\",\"ko\"]', 'ke', 1, NULL, '2026-05-15 17:59:38'),
+(300, 17, 10, 10, 'こ', 'ko', '[\"ku\",\"ki\",\"ko\",\"ka\"]', 'ko', 1, NULL, '2026-05-15 17:59:40'),
+(301, 17, 8, 11, 'く', 'ku', '[\"ku\",\"ke\",\"ka\",\"ki\"]', 'ku', 1, NULL, '2026-05-15 17:59:42'),
+(302, 17, 10, 12, 'こ', 'ko', '[\"ku\",\"ka\",\"ki\",\"ko\"]', 'ko', 1, NULL, '2026-05-15 17:59:46'),
+(303, 17, 8, 13, 'く', 'ku', '[\"ku\",\"ka\",\"ko\",\"ke\"]', 'ku', 1, NULL, '2026-05-15 17:59:48'),
+(304, 17, 10, 14, 'こ', 'ko', '[\"ke\",\"ko\",\"ka\",\"ki\"]', 'ko', 1, NULL, '2026-05-15 17:59:51'),
+(305, 17, 8, 15, 'く', 'ku', '[\"ka\",\"ku\",\"ki\",\"ke\"]', 'ku', 1, NULL, '2026-05-15 17:59:53'),
+(306, 17, 10, 16, 'こ', 'ko', '[\"ko\",\"ka\",\"ke\",\"ki\"]', 'ke', 0, NULL, '2026-05-15 17:59:56'),
+(307, 17, 10, 17, 'こ', 'ko', '[\"ko\",\"ki\",\"ka\",\"ku\"]', 'ki', 0, NULL, '2026-05-15 17:59:59'),
+(308, 17, 10, 18, 'こ', 'ko', '[\"ko\",\"ku\",\"ki\",\"ka\"]', 'ko', 1, NULL, '2026-05-15 17:59:59'),
+(309, 17, 10, 19, 'こ', 'ko', '[\"ki\",\"ke\",\"ko\",\"ku\"]', 'ku', 0, NULL, '2026-05-15 18:00:01'),
+(310, 17, 6, 20, 'か', 'ka', '[\"ko\",\"ke\",\"ka\",\"ki\"]', 'ko', 0, NULL, '2026-05-15 18:00:02'),
+(311, 18, 7, 1, 'き', 'ki', '[\"ku\",\"ki\",\"ke\",\"ko\"]', 'ki', 1, NULL, '2026-05-15 18:09:11'),
+(312, 18, 9, 2, 'け', 'ke', '[\"ka\",\"ku\",\"ki\",\"ke\"]', 'ke', 1, NULL, '2026-05-15 18:09:13'),
+(313, 18, 9, 3, 'け', 'ke', '[\"ki\",\"ka\",\"ke\",\"ko\"]', 'ke', 1, NULL, '2026-05-15 18:09:15'),
+(314, 18, 9, 4, 'け', 'ke', '[\"ku\",\"ke\",\"ka\",\"ki\"]', 'ke', 1, NULL, '2026-05-15 18:09:16'),
+(315, 18, 9, 5, 'け', 'ke', '[\"ki\",\"ku\",\"ke\",\"ka\"]', 'ke', 1, NULL, '2026-05-15 18:09:18'),
+(316, 18, 10, 6, 'こ', 'ko', '[\"ko\",\"ki\",\"ke\",\"ka\"]', 'ko', 1, NULL, '2026-05-15 18:09:20'),
+(317, 18, 9, 7, 'け', 'ke', '[\"ke\",\"ku\",\"ki\",\"ko\"]', 'ke', 1, NULL, '2026-05-15 18:09:22'),
+(318, 18, 9, 8, 'け', 'ke', '[\"ka\",\"ko\",\"ke\",\"ku\"]', 'ke', 1, NULL, '2026-05-15 18:09:24'),
+(319, 18, 10, 9, 'こ', 'ko', '[\"ku\",\"ka\",\"ke\",\"ko\"]', 'ko', 1, NULL, '2026-05-15 18:09:25'),
+(320, 18, 6, 10, 'か', 'ka', '[\"ko\",\"ke\",\"ka\",\"ku\"]', 'ka', 1, NULL, '2026-05-15 18:09:27'),
+(321, 18, 10, 11, 'こ', 'ko', '[\"ki\",\"ko\",\"ka\",\"ku\"]', 'ko', 1, NULL, '2026-05-15 18:09:29'),
+(322, 18, 10, 12, 'こ', 'ko', '[\"ku\",\"ki\",\"ke\",\"ko\"]', 'ko', 1, NULL, '2026-05-15 18:09:30'),
+(323, 18, 9, 13, 'け', 'ke', '[\"ki\",\"ka\",\"ke\",\"ku\"]', 'ke', 1, NULL, '2026-05-15 18:09:32'),
+(324, 18, 8, 14, 'く', 'ku', '[\"ki\",\"ke\",\"ku\",\"ko\"]', 'ku', 1, NULL, '2026-05-15 18:09:33'),
+(325, 18, 10, 15, 'こ', 'ko', '[\"ko\",\"ka\",\"ku\",\"ki\"]', 'ko', 1, NULL, '2026-05-15 18:09:36'),
+(326, 18, 6, 16, 'か', 'ka', '[\"ka\",\"ki\",\"ko\",\"ke\"]', 'ka', 1, NULL, '2026-05-15 18:09:38'),
+(327, 18, 7, 17, 'き', 'ki', '[\"ki\",\"ke\",\"ko\",\"ku\"]', 'ki', 1, NULL, '2026-05-15 18:09:40'),
+(328, 18, 7, 18, 'き', 'ki', '[\"ka\",\"ke\",\"ko\",\"ki\"]', 'ka', 0, NULL, '2026-05-15 18:09:43'),
+(329, 18, 9, 19, 'け', 'ke', '[\"ki\",\"ke\",\"ko\",\"ku\"]', 'ke', 1, NULL, '2026-05-15 18:09:49'),
+(330, 18, 10, 20, 'こ', 'ko', '[\"ku\",\"ka\",\"ko\",\"ke\"]', 'ko', 1, NULL, '2026-05-15 18:09:51'),
+(331, 19, 7, 1, 'き', 'ki', '[\"ki\",\"ka\",\"ke\",\"ko\"]', 'ki', 1, NULL, '2026-05-15 18:10:14'),
+(332, 19, 6, 2, 'か', 'ka', '[\"ke\",\"ka\",\"ki\",\"ku\"]', 'ka', 1, NULL, '2026-05-15 18:10:16'),
+(333, 19, 7, 3, 'き', 'ki', '[\"ku\",\"ko\",\"ke\",\"ki\"]', 'ki', 1, NULL, '2026-05-15 18:10:18'),
+(334, 19, 8, 4, 'く', 'ku', '[\"ke\",\"ku\",\"ki\",\"ka\"]', 'ku', 1, NULL, '2026-05-15 18:10:20'),
+(335, 19, 10, 5, 'こ', 'ko', '[\"ka\",\"ki\",\"ku\",\"ko\"]', 'ko', 1, NULL, '2026-05-15 18:10:21'),
+(336, 19, 9, 6, 'け', 'ke', '[\"ko\",\"ku\",\"ke\",\"ki\"]', 'ke', 1, NULL, '2026-05-15 18:10:23'),
+(337, 19, 7, 7, 'き', 'ki', '[\"ki\",\"ku\",\"ke\",\"ko\"]', 'ki', 1, NULL, '2026-05-15 18:10:25'),
+(338, 19, 10, 8, 'こ', 'ko', '[\"ka\",\"ke\",\"ki\",\"ko\"]', 'ko', 1, NULL, '2026-05-15 18:10:27'),
+(339, 19, 7, 9, 'き', 'ki', '[\"ko\",\"ku\",\"ka\",\"ki\"]', 'ki', 1, NULL, '2026-05-15 18:10:29'),
+(340, 19, 7, 10, 'き', 'ki', '[\"ku\",\"ka\",\"ki\",\"ko\"]', 'ki', 1, NULL, '2026-05-15 18:10:32'),
+(341, 19, 10, 11, 'こ', 'ko', '[\"ku\",\"ke\",\"ko\",\"ka\"]', 'ko', 1, NULL, '2026-05-15 18:10:34'),
+(342, 19, 7, 12, 'き', 'ki', '[\"ki\",\"ko\",\"ka\",\"ke\"]', 'ka', 0, NULL, '2026-05-15 18:10:36'),
+(343, 19, 9, 13, 'け', 'ke', '[\"ko\",\"ke\",\"ku\",\"ki\"]', 'ke', 1, NULL, '2026-05-15 18:10:38'),
+(344, 19, 6, 14, 'か', 'ka', '[\"ku\",\"ka\",\"ki\",\"ko\"]', 'ki', 0, NULL, '2026-05-15 18:10:39'),
+(345, 19, 9, 15, 'け', 'ke', '[\"ko\",\"ki\",\"ku\",\"ke\"]', 'ko', 0, NULL, '2026-05-15 18:10:39'),
+(346, 19, 8, 16, 'く', 'ku', '[\"ka\",\"ko\",\"ku\",\"ke\"]', 'ke', 0, NULL, '2026-05-15 18:10:40'),
+(347, 19, 7, 17, 'き', 'ki', '[\"ki\",\"ke\",\"ko\",\"ku\"]', 'ke', 0, NULL, '2026-05-15 18:10:40'),
+(348, 19, 6, 18, 'か', 'ka', '[\"ku\",\"ko\",\"ki\",\"ka\"]', 'ki', 0, NULL, '2026-05-15 18:10:40'),
+(349, 19, 6, 19, 'か', 'ka', '[\"ke\",\"ka\",\"ku\",\"ki\"]', 'ke', 0, NULL, '2026-05-15 18:10:41'),
+(350, 19, 10, 20, 'こ', 'ko', '[\"ka\",\"ko\",\"ki\",\"ku\"]', 'ku', 0, NULL, '2026-05-15 18:10:41'),
+(351, 20, 9, 1, 'け', 'ke', '[\"ko\",\"ki\",\"ka\",\"ke\"]', 'ke', 1, NULL, '2026-05-15 18:10:46'),
+(352, 20, 6, 2, 'か', 'ka', '[\"ka\",\"ke\",\"ku\",\"ko\"]', 'ka', 1, NULL, '2026-05-15 18:10:49'),
+(353, 20, 7, 3, 'き', 'ki', '[\"ku\",\"ke\",\"ki\",\"ka\"]', 'ki', 1, NULL, '2026-05-15 18:10:50'),
+(354, 20, 9, 4, 'け', 'ke', '[\"ki\",\"ke\",\"ka\",\"ko\"]', 'ke', 1, NULL, '2026-05-15 18:10:52'),
+(355, 20, 10, 5, 'こ', 'ko', '[\"ki\",\"ko\",\"ka\",\"ku\"]', 'ko', 1, NULL, '2026-05-15 18:10:53'),
+(356, 20, 6, 6, 'か', 'ka', '[\"ke\",\"ki\",\"ko\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 18:10:56'),
+(357, 20, 6, 7, 'か', 'ka', '[\"ke\",\"ku\",\"ko\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 18:10:57'),
+(358, 20, 10, 8, 'こ', 'ko', '[\"ke\",\"ku\",\"ko\",\"ka\"]', 'ko', 1, NULL, '2026-05-15 18:11:00'),
+(359, 20, 8, 9, 'く', 'ku', '[\"ku\",\"ke\",\"ko\",\"ka\"]', 'ku', 1, NULL, '2026-05-15 18:11:01'),
+(360, 20, 9, 10, 'け', 'ke', '[\"ki\",\"ku\",\"ke\",\"ko\"]', 'ke', 1, NULL, '2026-05-15 18:11:03'),
+(361, 20, 9, 11, 'け', 'ke', '[\"ku\",\"ke\",\"ko\",\"ki\"]', 'ke', 1, NULL, '2026-05-15 18:11:05'),
+(362, 20, 9, 12, 'け', 'ke', '[\"ka\",\"ke\",\"ki\",\"ku\"]', 'ke', 1, NULL, '2026-05-15 18:11:06'),
+(363, 20, 9, 13, 'け', 'ke', '[\"ki\",\"ka\",\"ku\",\"ke\"]', 'ke', 1, NULL, '2026-05-15 18:11:09'),
+(364, 20, 9, 14, 'け', 'ke', '[\"ku\",\"ke\",\"ko\",\"ki\"]', 'ke', 1, NULL, '2026-05-15 18:11:11'),
+(365, 20, 10, 15, 'こ', 'ko', '[\"ko\",\"ki\",\"ke\",\"ku\"]', 'ko', 1, NULL, '2026-05-15 18:11:13'),
+(366, 20, 7, 16, 'き', 'ki', '[\"ke\",\"ki\",\"ku\",\"ko\"]', 'ki', 1, NULL, '2026-05-15 18:11:15'),
+(367, 20, 10, 17, 'こ', 'ko', '[\"ke\",\"ku\",\"ka\",\"ko\"]', 'ko', 1, NULL, '2026-05-15 18:11:17'),
+(368, 20, 7, 18, 'き', 'ki', '[\"ku\",\"ke\",\"ki\",\"ko\"]', 'ki', 1, NULL, '2026-05-15 18:11:19'),
+(369, 20, 10, 19, 'こ', 'ko', '[\"ko\",\"ka\",\"ku\",\"ki\"]', 'ko', 1, NULL, '2026-05-15 18:11:22'),
+(370, 20, 7, 20, 'き', 'ki', '[\"ku\",\"ki\",\"ke\",\"ka\"]', 'ki', 1, NULL, '2026-05-15 18:11:25'),
+(371, 21, 7, 1, 'き', 'ki', '[\"ka\",\"ke\",\"ki\",\"ku\"]', 'ki', 1, NULL, '2026-05-15 18:11:37'),
+(372, 21, 6, 2, 'か', 'ka', '[\"ke\",\"ka\",\"ku\",\"ki\"]', 'ka', 1, NULL, '2026-05-15 18:11:38'),
+(373, 21, 10, 3, 'こ', 'ko', '[\"ke\",\"ko\",\"ki\",\"ku\"]', 'ko', 1, NULL, '2026-05-15 18:11:40'),
+(374, 21, 8, 4, 'く', 'ku', '[\"ko\",\"ku\",\"ke\",\"ka\"]', 'ku', 1, NULL, '2026-05-15 18:11:42'),
+(375, 21, 6, 5, 'か', 'ka', '[\"ka\",\"ku\",\"ko\",\"ke\"]', 'ka', 1, NULL, '2026-05-15 18:11:43'),
+(376, 21, 7, 6, 'き', 'ki', '[\"ki\",\"ka\",\"ko\",\"ku\"]', 'ki', 1, NULL, '2026-05-15 18:11:47'),
+(377, 21, 8, 7, 'く', 'ku', '[\"ka\",\"ko\",\"ke\",\"ku\"]', 'ku', 1, NULL, '2026-05-15 18:11:50'),
+(378, 21, 7, 8, 'き', 'ki', '[\"ke\",\"ku\",\"ko\",\"ki\"]', 'ki', 1, NULL, '2026-05-15 18:11:53'),
+(379, 21, 10, 9, 'こ', 'ko', '[\"ke\",\"ko\",\"ku\",\"ki\"]', 'ko', 1, NULL, '2026-05-15 18:11:54'),
+(380, 21, 6, 10, 'か', 'ka', '[\"ku\",\"ko\",\"ki\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 18:11:56'),
+(381, 21, 6, 11, 'か', 'ka', '[\"ko\",\"ki\",\"ku\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 18:11:57'),
+(382, 21, 10, 12, 'こ', 'ko', '[\"ka\",\"ku\",\"ko\",\"ki\"]', 'ko', 1, NULL, '2026-05-15 18:11:59'),
+(383, 21, 9, 13, 'け', 'ke', '[\"ko\",\"ka\",\"ke\",\"ku\"]', 'ke', 1, NULL, '2026-05-15 18:12:01'),
+(384, 21, 10, 14, 'こ', 'ko', '[\"ke\",\"ko\",\"ki\",\"ka\"]', 'ko', 1, NULL, '2026-05-15 18:12:03'),
+(385, 21, 10, 15, 'こ', 'ko', '[\"ke\",\"ku\",\"ka\",\"ko\"]', 'ko', 1, NULL, '2026-05-15 18:12:09'),
+(386, 21, 6, 16, 'か', 'ka', '[\"ku\",\"ki\",\"ko\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 18:12:10'),
+(387, 21, 8, 17, 'く', 'ku', '[\"ke\",\"ka\",\"ko\",\"ku\"]', 'ku', 1, NULL, '2026-05-15 18:12:13'),
+(388, 21, 6, 18, 'か', 'ka', '[\"ka\",\"ke\",\"ko\",\"ki\"]', 'ka', 1, NULL, '2026-05-15 18:12:15'),
+(389, 21, 10, 19, 'こ', 'ko', '[\"ku\",\"ko\",\"ki\",\"ke\"]', 'ko', 1, NULL, '2026-05-15 18:12:17'),
+(390, 21, 8, 20, 'く', 'ku', '[\"ki\",\"ku\",\"ka\",\"ke\"]', 'ku', 1, NULL, '2026-05-15 18:12:19'),
+(391, 22, 8, 1, 'く', 'ku', '[\"ka\",\"ke\",\"ku\",\"ki\"]', 'ku', 1, NULL, '2026-05-15 18:12:25'),
+(392, 22, 8, 2, 'く', 'ku', '[\"ko\",\"ku\",\"ka\",\"ke\"]', 'ku', 1, NULL, '2026-05-15 18:12:27'),
+(393, 22, 6, 3, 'か', 'ka', '[\"ko\",\"ke\",\"ki\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 18:12:31'),
+(394, 22, 7, 4, 'き', 'ki', '[\"ke\",\"ka\",\"ki\",\"ko\"]', 'ki', 1, NULL, '2026-05-15 18:12:34'),
+(395, 22, 10, 5, 'こ', 'ko', '[\"ki\",\"ka\",\"ko\",\"ke\"]', 'ko', 1, NULL, '2026-05-15 18:12:36'),
+(396, 22, 6, 6, 'か', 'ka', '[\"ki\",\"ke\",\"ku\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 18:12:38'),
+(397, 22, 6, 7, 'か', 'ka', '[\"ki\",\"ku\",\"ko\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 18:12:39'),
+(398, 22, 10, 8, 'こ', 'ko', '[\"ka\",\"ki\",\"ku\",\"ko\"]', 'ki', 0, NULL, '2026-05-15 18:12:42'),
+(399, 22, 8, 9, 'く', 'ku', '[\"ka\",\"ku\",\"ki\",\"ko\"]', 'ku', 1, NULL, '2026-05-15 18:12:44'),
+(400, 22, 8, 10, 'く', 'ku', '[\"ka\",\"ki\",\"ke\",\"ku\"]', 'ke', 0, NULL, '2026-05-15 18:12:45'),
+(401, 22, 8, 11, 'く', 'ku', '[\"ku\",\"ke\",\"ki\",\"ko\"]', 'ke', 0, NULL, '2026-05-15 18:12:45'),
+(402, 22, 10, 12, 'こ', 'ko', '[\"ka\",\"ko\",\"ku\",\"ki\"]', 'ki', 0, NULL, '2026-05-15 18:12:46'),
+(403, 22, 8, 13, 'く', 'ku', '[\"ke\",\"ko\",\"ku\",\"ka\"]', 'ke', 0, NULL, '2026-05-15 18:12:46'),
+(404, 22, 10, 14, 'こ', 'ko', '[\"ko\",\"ku\",\"ka\",\"ke\"]', 'ka', 0, NULL, '2026-05-15 18:12:46'),
+(405, 22, 7, 15, 'き', 'ki', '[\"ki\",\"ke\",\"ku\",\"ko\"]', 'ke', 0, NULL, '2026-05-15 18:12:47'),
+(406, 22, 8, 16, 'く', 'ku', '[\"ka\",\"ke\",\"ku\",\"ki\"]', 'ki', 0, NULL, '2026-05-15 18:12:47'),
+(407, 22, 7, 17, 'き', 'ki', '[\"ku\",\"ka\",\"ki\",\"ko\"]', 'ku', 0, NULL, '2026-05-15 18:12:47'),
+(408, 22, 6, 18, 'か', 'ka', '[\"ku\",\"ki\",\"ka\",\"ke\"]', 'ka', 1, NULL, '2026-05-15 18:12:48'),
+(409, 22, 9, 19, 'け', 'ke', '[\"ku\",\"ko\",\"ki\",\"ke\"]', 'ke', 1, NULL, '2026-05-15 18:12:48'),
+(410, 22, 9, 20, 'け', 'ke', '[\"ki\",\"ko\",\"ka\",\"ke\"]', 'ko', 0, NULL, '2026-05-15 18:12:49'),
+(411, 23, 7, 1, 'き', 'ki', '[\"ka\",\"ku\",\"ki\",\"ko\"]', 'ki', 1, NULL, '2026-05-15 18:13:00'),
+(412, 23, 7, 2, 'き', 'ki', '[\"ku\",\"ko\",\"ki\",\"ke\"]', 'ki', 1, NULL, '2026-05-15 18:13:02'),
+(413, 23, 6, 3, 'か', 'ka', '[\"ka\",\"ki\",\"ko\",\"ke\"]', 'ka', 1, NULL, '2026-05-15 18:13:03'),
+(414, 23, 6, 4, 'か', 'ka', '[\"ku\",\"ki\",\"ko\",\"ka\"]', 'ka', 1, NULL, '2026-05-15 18:13:05'),
+(415, 23, 8, 5, 'く', 'ku', '[\"ka\",\"ku\",\"ko\",\"ke\"]', 'ku', 1, NULL, '2026-05-15 18:13:07'),
+(416, 23, 8, 6, 'く', 'ku', '[\"ko\",\"ka\",\"ki\",\"ku\"]', 'ku', 1, NULL, '2026-05-15 18:13:08'),
+(417, 23, 6, 7, 'か', 'ka', '[\"ki\",\"ka\",\"ko\",\"ke\"]', 'ka', 1, NULL, '2026-05-15 18:13:09'),
+(418, 23, 6, 8, 'か', 'ka', '[\"ka\",\"ko\",\"ki\",\"ke\"]', 'ka', 1, NULL, '2026-05-15 18:13:11'),
+(419, 23, 9, 9, 'け', 'ke', '[\"ku\",\"ke\",\"ka\",\"ki\"]', 'ke', 1, NULL, '2026-05-15 18:13:13'),
+(420, 23, 7, 10, 'き', 'ki', '[\"ki\",\"ka\",\"ku\",\"ke\"]', 'ki', 1, NULL, '2026-05-15 18:13:16'),
+(421, 23, 10, 11, 'こ', 'ko', '[\"ko\",\"ka\",\"ki\",\"ke\"]', 'ko', 1, NULL, '2026-05-15 18:13:19'),
+(422, 23, 10, 12, 'こ', 'ko', '[\"ki\",\"ka\",\"ke\",\"ko\"]', 'ko', 1, NULL, '2026-05-15 18:13:21'),
+(423, 23, 9, 13, 'け', 'ke', '[\"ke\",\"ku\",\"ko\",\"ki\"]', 'ke', 1, NULL, '2026-05-15 18:13:23'),
+(424, 23, 10, 14, 'こ', 'ko', '[\"ki\",\"ko\",\"ka\",\"ke\"]', 'ko', 1, NULL, '2026-05-15 18:13:27'),
+(425, 23, 9, 15, 'け', 'ke', '[\"ki\",\"ku\",\"ka\",\"ke\"]', 'ke', 1, NULL, '2026-05-15 18:13:29'),
+(426, 23, 9, 16, 'け', 'ke', '[\"ki\",\"ku\",\"ke\",\"ko\"]', 'ke', 1, NULL, '2026-05-15 18:13:32'),
+(427, 23, 10, 17, 'こ', 'ko', '[\"ko\",\"ki\",\"ke\",\"ku\"]', 'ko', 1, NULL, '2026-05-15 18:13:35'),
+(428, 23, 7, 18, 'き', 'ki', '[\"ko\",\"ki\",\"ku\",\"ka\"]', 'ki', 1, NULL, '2026-05-15 18:13:36'),
+(429, 23, 6, 19, 'か', 'ka', '[\"ka\",\"ku\",\"ki\",\"ke\"]', 'ka', 1, NULL, '2026-05-15 18:13:38'),
+(430, 23, 7, 20, 'き', 'ki', '[\"ki\",\"ka\",\"ku\",\"ko\"]', 'ki', 1, NULL, '2026-05-15 18:13:40'),
+(431, 24, 6, 1, 'ka', 'か', '[\"き\",\"か\",\"く\",\"け\"]', 'き', 0, NULL, '2026-05-15 18:29:31'),
+(432, 24, 10, 2, 'ko', 'こ', '[\"こ\",\"け\",\"く\",\"き\"]', 'け', 0, NULL, '2026-05-15 18:29:33'),
+(433, 24, 7, 3, 'ki', 'き', '[\"き\",\"か\",\"く\",\"け\"]', 'き', 1, NULL, '2026-05-15 18:29:33'),
+(434, 24, 10, 4, 'ko', 'こ', '[\"か\",\"こ\",\"け\",\"き\"]', 'き', 0, NULL, '2026-05-15 18:29:34'),
+(435, 24, 8, 5, 'ku', 'く', '[\"く\",\"き\",\"け\",\"か\"]', 'く', 1, NULL, '2026-05-15 18:29:34'),
+(436, 24, 7, 6, 'ki', 'き', '[\"こ\",\"か\",\"く\",\"き\"]', 'か', 0, NULL, '2026-05-15 18:29:35'),
+(437, 24, 9, 7, 'ke', 'け', '[\"く\",\"き\",\"け\",\"か\"]', 'き', 0, NULL, '2026-05-15 18:29:35'),
+(438, 24, 10, 8, 'ko', 'こ', '[\"け\",\"こ\",\"か\",\"く\"]', 'こ', 1, NULL, '2026-05-15 18:29:35'),
+(439, 24, 7, 9, 'ki', 'き', '[\"く\",\"こ\",\"か\",\"き\"]', 'か', 0, NULL, '2026-05-15 18:29:36'),
+(440, 24, 8, 10, 'ku', 'く', '[\"き\",\"か\",\"け\",\"く\"]', 'か', 0, NULL, '2026-05-15 18:29:36'),
+(441, 24, 9, 11, 'ke', 'け', '[\"か\",\"こ\",\"き\",\"け\"]', 'か', 0, NULL, '2026-05-15 18:29:37'),
+(442, 24, 6, 12, 'ka', 'か', '[\"け\",\"く\",\"き\",\"か\"]', 'け', 0, NULL, '2026-05-15 18:29:37'),
+(443, 24, 10, 13, 'ko', 'こ', '[\"か\",\"こ\",\"く\",\"き\"]', 'か', 0, NULL, '2026-05-15 18:29:37'),
+(444, 24, 10, 14, 'ko', 'こ', '[\"く\",\"き\",\"こ\",\"け\"]', 'く', 0, NULL, '2026-05-15 18:29:37'),
+(445, 24, 10, 15, 'ko', 'こ', '[\"け\",\"く\",\"こ\",\"き\"]', 'け', 0, NULL, '2026-05-15 18:29:37'),
+(446, 24, 8, 16, 'ku', 'く', '[\"こ\",\"け\",\"き\",\"く\"]', 'こ', 0, NULL, '2026-05-15 18:29:38'),
+(447, 24, 8, 17, 'ku', 'く', '[\"か\",\"く\",\"き\",\"け\"]', 'か', 0, NULL, '2026-05-15 18:29:38'),
+(448, 24, 7, 18, 'ki', 'き', '[\"く\",\"こ\",\"き\",\"か\"]', 'く', 0, NULL, '2026-05-15 18:29:38'),
+(449, 24, 9, 19, 'ke', 'け', '[\"け\",\"こ\",\"き\",\"か\"]', 'け', 1, NULL, '2026-05-15 18:29:38'),
+(450, 24, 7, 20, 'ki', 'き', '[\"き\",\"か\",\"こ\",\"け\"]', 'こ', 0, NULL, '2026-05-15 18:29:39'),
+(451, 25, 6, 1, 'ka', 'か', '[\"き\",\"か\",\"け\",\"こ\"]', 'か', 1, NULL, '2026-05-15 18:29:43'),
+(452, 25, 10, 2, 'ko', 'こ', '[\"こ\",\"け\",\"き\",\"く\"]', 'こ', 1, NULL, '2026-05-15 18:29:43'),
+(453, 25, 10, 3, 'ko', 'こ', '[\"こ\",\"き\",\"く\",\"け\"]', 'く', 0, NULL, '2026-05-15 18:29:44'),
+(454, 25, 7, 4, 'ki', 'き', '[\"く\",\"か\",\"き\",\"け\"]', 'き', 1, NULL, '2026-05-15 18:29:44'),
+(455, 25, 9, 5, 'ke', 'け', '[\"か\",\"け\",\"く\",\"き\"]', 'け', 1, NULL, '2026-05-15 18:29:45'),
+(456, 25, 7, 6, 'ki', 'き', '[\"こ\",\"け\",\"き\",\"く\"]', 'こ', 0, NULL, '2026-05-15 18:29:46'),
+(457, 25, 8, 7, 'ku', 'く', '[\"け\",\"き\",\"か\",\"く\"]', 'く', 1, NULL, '2026-05-15 18:29:47'),
+(458, 25, 9, 8, 'ke', 'け', '[\"け\",\"か\",\"き\",\"こ\"]', 'こ', 0, NULL, '2026-05-15 18:29:48'),
+(459, 25, 6, 9, 'ka', 'か', '[\"か\",\"こ\",\"け\",\"き\"]', 'か', 1, NULL, '2026-05-15 18:29:49'),
+(460, 25, 10, 10, 'ko', 'こ', '[\"こ\",\"け\",\"か\",\"く\"]', 'く', 0, NULL, '2026-05-15 18:29:50'),
+(461, 25, 10, 11, 'ko', 'こ', '[\"く\",\"か\",\"こ\",\"き\"]', 'く', 0, NULL, '2026-05-15 18:29:50'),
+(462, 25, 10, 12, 'ko', 'こ', '[\"き\",\"け\",\"か\",\"こ\"]', 'か', 0, NULL, '2026-05-15 18:29:51'),
+(463, 25, 8, 13, 'ku', 'く', '[\"く\",\"か\",\"き\",\"け\"]', 'か', 0, NULL, '2026-05-15 18:29:51'),
+(464, 25, 8, 14, 'ku', 'く', '[\"く\",\"き\",\"こ\",\"か\"]', 'く', 1, NULL, '2026-05-15 18:29:51'),
+(465, 25, 7, 15, 'ki', 'き', '[\"か\",\"き\",\"こ\",\"く\"]', 'く', 0, NULL, '2026-05-15 18:29:52'),
+(466, 25, 7, 16, 'ki', 'き', '[\"く\",\"か\",\"き\",\"こ\"]', 'き', 1, NULL, '2026-05-15 18:29:53'),
+(467, 26, 10, 1, 'ko', 'こ', '[\"こ\",\"け\",\"く\",\"き\"]', 'こ', 1, NULL, '2026-05-15 18:30:00'),
+(468, 26, 7, 2, 'ki', 'き', '[\"こ\",\"き\",\"く\",\"け\"]', 'き', 1, NULL, '2026-05-15 18:30:03'),
+(469, 26, 9, 3, 'ke', 'け', '[\"け\",\"く\",\"か\",\"き\"]', 'け', 1, NULL, '2026-05-15 18:30:05'),
+(470, 26, 10, 4, 'ko', 'こ', '[\"こ\",\"き\",\"く\",\"け\"]', 'こ', 1, NULL, '2026-05-15 18:30:06'),
+(471, 26, 10, 5, 'ko', 'こ', '[\"こ\",\"か\",\"き\",\"け\"]', 'こ', 1, NULL, '2026-05-15 18:30:09'),
+(472, 26, 10, 6, 'ko', 'こ', '[\"き\",\"こ\",\"か\",\"く\"]', 'こ', 1, NULL, '2026-05-15 18:30:11'),
+(473, 26, 8, 7, 'ku', 'く', '[\"こ\",\"き\",\"く\",\"か\"]', 'く', 1, NULL, '2026-05-15 18:30:13'),
+(474, 26, 7, 8, 'ki', 'き', '[\"か\",\"き\",\"く\",\"け\"]', 'き', 1, NULL, '2026-05-15 18:30:15');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `quiz_sessions`
+--
+
+CREATE TABLE `quiz_sessions` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `mode` enum('free','mission','review','evaluation') NOT NULL,
+  `source_type` enum('free','mission','objective','review','evaluation') NOT NULL DEFAULT 'free',
+  `source_id` int(11) DEFAULT NULL,
+  `kana_set` enum('hiragana','katakana','mixed') NOT NULL,
+  `direction` enum('kana_to_romaji','romaji_to_kana','written','mixed') NOT NULL,
+  `total_questions` int(11) NOT NULL DEFAULT 0,
+  `correct_answers` int(11) NOT NULL DEFAULT 0,
+  `score_percent` int(11) NOT NULL DEFAULT 0,
+  `settings_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`settings_json`)),
+  `started_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `completed_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `quiz_sessions`
+--
+
+INSERT INTO `quiz_sessions` (`id`, `user_id`, `mode`, `source_type`, `source_id`, `kana_set`, `direction`, `total_questions`, `correct_answers`, `score_percent`, `settings_json`, `started_at`, `completed_at`) VALUES
+(1, 2, 'mission', 'objective', 2, 'hiragana', 'kana_to_romaji', 20, 0, 0, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_kana_to_romaji\"}', '2026-05-15 17:18:32', NULL),
+(2, 2, 'mission', 'objective', 2, 'hiragana', 'kana_to_romaji', 20, 0, 0, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_kana_to_romaji\"}', '2026-05-15 17:18:43', NULL),
+(3, 2, 'mission', 'objective', 2, 'hiragana', 'kana_to_romaji', 20, 0, 0, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_kana_to_romaji\"}', '2026-05-15 17:18:50', NULL),
+(4, 2, 'mission', 'objective', 2, 'hiragana', 'kana_to_romaji', 20, 0, 0, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_kana_to_romaji\"}', '2026-05-15 17:18:58', NULL),
+(5, 2, 'mission', 'objective', 2, 'hiragana', 'kana_to_romaji', 20, 19, 95, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_kana_to_romaji\"}', '2026-05-15 17:22:13', '2026-05-15 17:22:58'),
+(6, 2, 'mission', 'objective', 2, 'hiragana', 'kana_to_romaji', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_kana_to_romaji\"}', '2026-05-15 17:23:09', '2026-05-15 17:23:48'),
+(7, 2, 'mission', 'objective', 2, 'hiragana', 'kana_to_romaji', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_kana_to_romaji\",\"objective_type\":\"quiz\"}', '2026-05-15 17:29:07', '2026-05-15 17:29:45'),
+(8, 2, 'mission', 'objective', 2, 'hiragana', 'kana_to_romaji', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_kana_to_romaji\",\"objective_type\":\"quiz\"}', '2026-05-15 17:29:49', '2026-05-15 17:30:21'),
+(9, 2, 'mission', 'objective', 3, 'hiragana', 'romaji_to_kana', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_romaji_to_kana\",\"objective_type\":\"quiz\"}', '2026-05-15 17:30:26', '2026-05-15 17:31:40'),
+(10, 2, 'mission', 'objective', 3, 'hiragana', 'romaji_to_kana', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_romaji_to_kana\",\"objective_type\":\"quiz\"}', '2026-05-15 17:32:50', '2026-05-15 17:33:34'),
+(11, 2, 'mission', 'objective', 3, 'hiragana', 'romaji_to_kana', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_romaji_to_kana\",\"objective_type\":\"quiz\"}', '2026-05-15 17:33:39', '2026-05-15 17:34:36'),
+(12, 2, 'mission', 'objective', 4, 'hiragana', 'written', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_written\",\"objective_type\":\"written\"}', '2026-05-15 17:34:41', '2026-05-15 17:35:08'),
+(13, 2, 'mission', 'objective', 4, 'hiragana', 'written', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_written\",\"objective_type\":\"written\"}', '2026-05-15 17:35:13', '2026-05-15 17:35:46'),
+(14, 2, 'mission', 'objective', 4, 'hiragana', 'written', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_vowels_written\",\"objective_type\":\"written\"}', '2026-05-15 17:35:54', '2026-05-15 17:36:24'),
+(15, 2, 'mission', 'objective', 5, 'hiragana', 'mixed', 5, 5, 100, '{\"question_count_mode\":\"one_per_character\",\"character_scope\":\"current_and_previous_missions\",\"objective_code\":\"hira_base_vowels_evaluation\",\"objective_type\":\"evaluation\"}', '2026-05-15 17:36:30', '2026-05-15 17:36:45'),
+(16, 2, 'mission', 'objective', 5, 'hiragana', 'mixed', 5, 5, 100, '{\"question_count_mode\":\"one_per_character\",\"character_scope\":\"current_and_previous_missions\",\"objective_code\":\"hira_base_vowels_evaluation\",\"objective_type\":\"evaluation\"}', '2026-05-15 17:36:52', '2026-05-15 17:37:01'),
+(17, 2, 'mission', 'objective', 7, 'hiragana', 'kana_to_romaji', 20, 14, 70, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_k_kana_to_romaji\",\"objective_type\":\"quiz\"}', '2026-05-15 17:59:03', '2026-05-15 18:00:02'),
+(18, 2, 'mission', 'objective', 7, 'hiragana', 'kana_to_romaji', 20, 19, 95, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_k_kana_to_romaji\",\"objective_type\":\"quiz\"}', '2026-05-15 18:09:07', '2026-05-15 18:09:51'),
+(19, 2, 'mission', 'objective', 7, 'hiragana', 'kana_to_romaji', 20, 12, 60, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_k_kana_to_romaji\",\"objective_type\":\"quiz\"}', '2026-05-15 18:10:11', '2026-05-15 18:10:41'),
+(20, 2, 'mission', 'objective', 7, 'hiragana', 'kana_to_romaji', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_k_kana_to_romaji\",\"objective_type\":\"quiz\"}', '2026-05-15 18:10:44', '2026-05-15 18:11:25'),
+(21, 2, 'mission', 'objective', 7, 'hiragana', 'kana_to_romaji', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_k_kana_to_romaji\",\"objective_type\":\"quiz\"}', '2026-05-15 18:11:32', '2026-05-15 18:12:19'),
+(22, 2, 'mission', 'objective', 7, 'hiragana', 'kana_to_romaji', 20, 10, 50, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_k_kana_to_romaji\",\"objective_type\":\"quiz\"}', '2026-05-15 18:12:21', '2026-05-15 18:12:49'),
+(23, 2, 'mission', 'objective', 7, 'hiragana', 'kana_to_romaji', 20, 20, 100, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_k_kana_to_romaji\",\"objective_type\":\"quiz\"}', '2026-05-15 18:12:56', '2026-05-15 18:13:40'),
+(24, 2, 'mission', 'objective', 8, 'hiragana', 'romaji_to_kana', 20, 4, 20, '{\"question_count_mode\":\"fixed\",\"character_scope\":\"current_mission\",\"objective_code\":\"hira_base_k_romaji_to_kana\",\"objective_type\":\"quiz\"}', '2026-05-15 18:29:23', '2026-05-15 18:29:39'),
+(25, 2, 'review', 'review', 24, 'hiragana', 'romaji_to_kana', 16, 8, 50, '{\"review_type\":\"wrong_answers\",\"source_session_id\":24}', '2026-05-15 18:29:41', '2026-05-15 18:29:53'),
+(26, 2, 'review', 'review', 25, 'hiragana', 'romaji_to_kana', 8, 8, 100, '{\"review_type\":\"wrong_answers\",\"source_session_id\":25}', '2026-05-15 18:29:56', '2026-05-15 18:30:15');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `email` varchar(190) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `username` varchar(80) NOT NULL,
+  `learning_mode` enum('guided','free') NOT NULL DEFAULT 'guided',
+  `theme_preference` enum('light','dark','system') NOT NULL DEFAULT 'system',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `password_hash`, `username`, `learning_mode`, `theme_preference`, `created_at`, `updated_at`) VALUES
+(2, 'a.froissart05@gmail.com', '$2y$10$nX7Guki2HWz3dE1VlzknU.P.X4Q0GX44H3BuXhbSvtCrQfxYfHAnm', 'xanes', 'guided', 'system', '2026-05-15 00:24:19', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_badges`
+--
+
+CREATE TABLE `user_badges` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `badge_id` int(11) NOT NULL,
+  `unlocked_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_kana_stats`
+--
+
+CREATE TABLE `user_kana_stats` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `kana_id` int(11) NOT NULL,
+  `kana_set` enum('hiragana','katakana') NOT NULL,
+  `seen_count` int(11) NOT NULL DEFAULT 0,
+  `correct_count` int(11) NOT NULL DEFAULT 0,
+  `wrong_count` int(11) NOT NULL DEFAULT 0,
+  `current_streak` int(11) NOT NULL DEFAULT 0,
+  `best_streak` int(11) NOT NULL DEFAULT 0,
+  `mastery_score` int(11) NOT NULL DEFAULT 0,
+  `last_seen_at` datetime DEFAULT NULL,
+  `last_wrong_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_missions`
+--
+
+CREATE TABLE `user_missions` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `mission_id` int(11) NOT NULL,
+  `status` enum('locked','available','in_progress','completed') NOT NULL DEFAULT 'available',
+  `attempts_count` int(11) NOT NULL DEFAULT 0,
+  `completed_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `user_missions`
+--
+
+INSERT INTO `user_missions` (`id`, `user_id`, `mission_id`, `status`, `attempts_count`, `completed_at`, `updated_at`) VALUES
+(11, 2, 1, 'completed', 3, '2026-05-15 17:55:40', '2026-05-15 17:55:40'),
+(12, 2, 2, 'in_progress', 1, NULL, '2026-05-15 17:58:51'),
+(13, 2, 3, 'locked', 0, NULL, NULL),
+(14, 2, 4, 'locked', 0, NULL, NULL),
+(15, 2, 5, 'locked', 0, NULL, NULL),
+(16, 2, 6, 'locked', 0, NULL, NULL),
+(17, 2, 7, 'locked', 0, NULL, NULL),
+(18, 2, 8, 'locked', 0, NULL, NULL),
+(19, 2, 9, 'locked', 0, NULL, NULL),
+(20, 2, 10, 'locked', 0, NULL, NULL),
+(31, 2, 11, 'available', 0, NULL, NULL),
+(32, 2, 12, 'locked', 0, NULL, NULL),
+(33, 2, 13, 'locked', 0, NULL, NULL),
+(34, 2, 14, 'locked', 0, NULL, NULL),
+(35, 2, 15, 'locked', 0, NULL, NULL),
+(36, 2, 16, 'locked', 0, NULL, NULL),
+(37, 2, 17, 'locked', 0, NULL, NULL),
+(38, 2, 18, 'locked', 0, NULL, NULL),
+(39, 2, 19, 'locked', 0, NULL, NULL),
+(40, 2, 20, 'locked', 0, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_objectives`
+--
+
+CREATE TABLE `user_objectives` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `objective_id` int(11) NOT NULL,
+  `status` enum('locked','available','in_progress','completed') NOT NULL DEFAULT 'available',
+  `attempts_count` int(11) NOT NULL DEFAULT 0,
+  `success_count` int(11) NOT NULL DEFAULT 0,
+  `best_score` int(11) DEFAULT NULL,
+  `completed_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `user_objectives`
+--
+
+INSERT INTO `user_objectives` (`id`, `user_id`, `objective_id`, `status`, `attempts_count`, `success_count`, `best_score`, `completed_at`, `updated_at`) VALUES
+(6, 2, 1, 'completed', 3, 1, 100, '2026-05-15 17:55:04', '2026-05-15 17:55:04'),
+(7, 2, 2, 'completed', 4, 3, 100, '2026-05-15 17:30:21', '2026-05-15 17:30:21'),
+(8, 2, 3, 'completed', 3, 3, 100, '2026-05-15 17:34:36', '2026-05-15 17:34:36'),
+(9, 2, 4, 'completed', 3, 3, 100, '2026-05-15 17:36:24', '2026-05-15 17:36:24'),
+(10, 2, 5, 'completed', 2, 2, 100, '2026-05-15 17:37:01', '2026-05-15 17:37:01'),
+(16, 2, 50, 'available', 0, 0, NULL, NULL, NULL),
+(17, 2, 51, 'locked', 0, 0, NULL, NULL, NULL),
+(18, 2, 52, 'locked', 0, 0, NULL, NULL, NULL),
+(19, 2, 53, 'locked', 0, 0, NULL, NULL, NULL),
+(20, 2, 54, 'locked', 0, 0, NULL, NULL, NULL),
+(42, 2, 6, 'completed', 1, 1, 100, '2026-05-15 17:58:51', '2026-05-15 17:58:51'),
+(43, 2, 7, 'completed', 7, 3, 100, '2026-05-15 18:13:40', '2026-05-15 18:13:40'),
+(44, 2, 8, 'available', 1, 0, 20, NULL, '2026-05-15 18:29:39');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_paths`
+--
+
+CREATE TABLE `user_paths` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `path_id` int(11) NOT NULL,
+  `status` enum('locked','available','in_progress','completed') NOT NULL DEFAULT 'available',
+  `current_mission_id` int(11) DEFAULT NULL,
+  `completed_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `user_paths`
+--
+
+INSERT INTO `user_paths` (`id`, `user_id`, `path_id`, `status`, `current_mission_id`, `completed_at`, `updated_at`) VALUES
+(2, 2, 1, 'in_progress', 2, NULL, '2026-05-15 17:58:38'),
+(4, 2, 2, 'in_progress', 11, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `vowel_groups`
+--
+
+CREATE TABLE `vowel_groups` (
+  `id` int(11) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `label` varchar(30) NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `vowel_groups`
+--
+
+INSERT INTO `vowel_groups` (`id`, `code`, `label`, `sort_order`) VALUES
+(1, 'A', 'a', 1),
+(2, 'I', 'i', 2),
+(3, 'U', 'u', 3),
+(4, 'E', 'e', 4),
+(5, 'O', 'o', 5),
+(6, 'NONE', 'aucun', 99);
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `badges`
+--
+ALTER TABLE `badges`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
+-- Index pour la table `consonant_groups`
+--
+ALTER TABLE `consonant_groups`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
+-- Index pour la table `kana`
+--
+ALTER TABLE `kana`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_kana_vowel_group` (`vowel_group_id`),
+  ADD KEY `idx_kana_sort` (`sort_order`),
+  ADD KEY `idx_kana_groups` (`consonant_group_id`,`vowel_group_id`);
+
+--
+-- Index pour la table `learning_paths`
+--
+ALTER TABLE `learning_paths`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
+-- Index pour la table `missions`
+--
+ALTER TABLE `missions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `idx_missions_path_sort` (`path_id`,`sort_order`);
+
+--
+-- Index pour la table `mission_kana`
+--
+ALTER TABLE `mission_kana`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_mission_kana` (`mission_id`,`kana_id`),
+  ADD KEY `fk_mission_kana_kana` (`kana_id`);
+
+--
+-- Index pour la table `objectives`
+--
+ALTER TABLE `objectives`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `idx_objectives_mission_sort` (`mission_id`,`sort_order`);
+
+--
+-- Index pour la table `quiz_answers`
+--
+ALTER TABLE `quiz_answers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_quiz_answers_kana` (`kana_id`),
+  ADD KEY `idx_quiz_answers_session` (`session_id`);
+
+--
+-- Index pour la table `quiz_sessions`
+--
+ALTER TABLE `quiz_sessions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_quiz_sessions_user_completed` (`user_id`,`completed_at`);
+
+--
+-- Index pour la table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Index pour la table `user_badges`
+--
+ALTER TABLE `user_badges`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_user_badge` (`user_id`,`badge_id`),
+  ADD KEY `fk_user_badges_badge` (`badge_id`);
+
+--
+-- Index pour la table `user_kana_stats`
+--
+ALTER TABLE `user_kana_stats`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_user_kana_set` (`user_id`,`kana_id`,`kana_set`),
+  ADD KEY `fk_user_kana_stats_kana` (`kana_id`),
+  ADD KEY `idx_user_kana_stats_user_score` (`user_id`,`mastery_score`);
+
+--
+-- Index pour la table `user_missions`
+--
+ALTER TABLE `user_missions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_user_mission` (`user_id`,`mission_id`),
+  ADD KEY `fk_user_missions_mission` (`mission_id`);
+
+--
+-- Index pour la table `user_objectives`
+--
+ALTER TABLE `user_objectives`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_user_objective` (`user_id`,`objective_id`),
+  ADD KEY `fk_user_objectives_objective` (`objective_id`);
+
+--
+-- Index pour la table `user_paths`
+--
+ALTER TABLE `user_paths`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_user_path` (`user_id`,`path_id`),
+  ADD KEY `fk_user_paths_path` (`path_id`),
+  ADD KEY `fk_user_paths_current_mission` (`current_mission_id`);
+
+--
+-- Index pour la table `vowel_groups`
+--
+ALTER TABLE `vowel_groups`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `badges`
+--
+ALTER TABLE `badges`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT pour la table `consonant_groups`
+--
+ALTER TABLE `consonant_groups`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT pour la table `kana`
+--
+ALTER TABLE `kana`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+
+--
+-- AUTO_INCREMENT pour la table `learning_paths`
+--
+ALTER TABLE `learning_paths`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT pour la table `missions`
+--
+ALTER TABLE `missions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+
+--
+-- AUTO_INCREMENT pour la table `mission_kana`
+--
+ALTER TABLE `mission_kana`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=840;
+
+--
+-- AUTO_INCREMENT pour la table `objectives`
+--
+ALTER TABLE `objectives`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=281;
+
+--
+-- AUTO_INCREMENT pour la table `quiz_answers`
+--
+ALTER TABLE `quiz_answers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=475;
+
+--
+-- AUTO_INCREMENT pour la table `quiz_sessions`
+--
+ALTER TABLE `quiz_sessions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT pour la table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT pour la table `user_badges`
+--
+ALTER TABLE `user_badges`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `user_kana_stats`
+--
+ALTER TABLE `user_kana_stats`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `user_missions`
+--
+ALTER TABLE `user_missions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+
+--
+-- AUTO_INCREMENT pour la table `user_objectives`
+--
+ALTER TABLE `user_objectives`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT pour la table `user_paths`
+--
+ALTER TABLE `user_paths`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT pour la table `vowel_groups`
+--
+ALTER TABLE `vowel_groups`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `kana`
+--
+ALTER TABLE `kana`
+  ADD CONSTRAINT `fk_kana_consonant_group` FOREIGN KEY (`consonant_group_id`) REFERENCES `consonant_groups` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_kana_vowel_group` FOREIGN KEY (`vowel_group_id`) REFERENCES `vowel_groups` (`id`) ON DELETE SET NULL;
+
+--
+-- Contraintes pour la table `missions`
+--
+ALTER TABLE `missions`
+  ADD CONSTRAINT `fk_missions_path` FOREIGN KEY (`path_id`) REFERENCES `learning_paths` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `mission_kana`
+--
+ALTER TABLE `mission_kana`
+  ADD CONSTRAINT `fk_mission_kana_kana` FOREIGN KEY (`kana_id`) REFERENCES `kana` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_mission_kana_mission` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `objectives`
+--
+ALTER TABLE `objectives`
+  ADD CONSTRAINT `fk_objectives_mission` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `quiz_answers`
+--
+ALTER TABLE `quiz_answers`
+  ADD CONSTRAINT `fk_quiz_answers_kana` FOREIGN KEY (`kana_id`) REFERENCES `kana` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_quiz_answers_session` FOREIGN KEY (`session_id`) REFERENCES `quiz_sessions` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `quiz_sessions`
+--
+ALTER TABLE `quiz_sessions`
+  ADD CONSTRAINT `fk_quiz_sessions_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Contraintes pour la table `user_badges`
+--
+ALTER TABLE `user_badges`
+  ADD CONSTRAINT `fk_user_badges_badge` FOREIGN KEY (`badge_id`) REFERENCES `badges` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_badges_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `user_kana_stats`
+--
+ALTER TABLE `user_kana_stats`
+  ADD CONSTRAINT `fk_user_kana_stats_kana` FOREIGN KEY (`kana_id`) REFERENCES `kana` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_kana_stats_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `user_missions`
+--
+ALTER TABLE `user_missions`
+  ADD CONSTRAINT `fk_user_missions_mission` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_missions_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `user_objectives`
+--
+ALTER TABLE `user_objectives`
+  ADD CONSTRAINT `fk_user_objectives_objective` FOREIGN KEY (`objective_id`) REFERENCES `objectives` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_objectives_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `user_paths`
+--
+ALTER TABLE `user_paths`
+  ADD CONSTRAINT `fk_user_paths_current_mission` FOREIGN KEY (`current_mission_id`) REFERENCES `missions` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_user_paths_path` FOREIGN KEY (`path_id`) REFERENCES `learning_paths` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_paths_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
