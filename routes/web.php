@@ -43,6 +43,7 @@ $router->post('/missions/{id}/discovery/complete', [MissionController::class, 'c
 $router->post('/quiz/start', [QuizController::class, 'start']);
 $router->get('/quiz/{id}', [QuizController::class, 'play']);
 $router->post('/quiz/{id}/answer', [QuizController::class, 'answer']);
+$router->get('/quiz/{id}/feedback/{answerId}', [QuizController::class, 'feedback']);
 $router->get('/quiz/{id}/results', [QuizController::class, 'results']);
 $router->post('/quiz/{id}/retry-errors', [QuizController::class, 'retryErrors']);
 

@@ -695,6 +695,46 @@ private function getLatestCompletedSessionId(int $userId): ?int
     return $session ? (int) $session['id'] : null;
 }
 
+public function getAnswerForFeedback(int $userId, int $sessionId, int $answerId): ?array
+{
+    $pdo = Database::connection();
+
+    $stmt = $pdo->prepare(
+        'SELECT
+            qa.*,
+            qs.user_id AS session_user_id,
+            qs.total_questions,
+            k.hira,
+            k.kata,
+            k.romaji
+         FROM quiz_answers qa
+         INNER JOIN quiz_sessions qs ON qs.id = qa.session_id
+         INNER JOIN kana k ON k.id = qa.kana_id
+         WHERE qa.id = :answer_id
+           AND qa.session_id = :session_id
+           AND qs.user_id = :user_id
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        'answer_id' => $answerId,
+        'session_id' => $sessionId,
+        'user_id' => $userId,
+    ]);
+
+    $answer = $stmt->fetch();
+
+    if (!$answer) {
+        return null;
+    }
+
+    if ($answer['user_answer'] === null) {
+        return null;
+    }
+
+    return $answer;
+}
+
 public function getSessionAnswers(int $sessionId): array
 {
     $pdo = Database::connection();

@@ -1337,3 +1337,35 @@ input:focus {
         border-radius: 18px;
     }
 }
+
+.quiz-feedback-card {
+    display: grid;
+    gap: 14px;
+}
+
+.quiz-feedback-lines {
+    display: grid;
+    gap: 6px;
+}
+
+.quiz-feedback-lines p {
+    margin: 0;
+}
+
+.quiz-feedback-kana {
+    color: var(--color-muted);
+    font-size: 0.92rem;
+}
+
+.quiz-quit-link {
+    justify-self: center;
+    color: var(--color-muted);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.92rem;
+}
+
+.quiz-quit-link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
