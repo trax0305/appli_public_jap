@@ -12,6 +12,7 @@ use App\Controllers\MissionController;
 use App\Controllers\PathController;
 use App\Controllers\QuizController;
 use App\Controllers\StatsController;
+use App\Controllers\ReviewController;
 
 $router = new Router();
 
@@ -50,19 +51,8 @@ $router->get('/free-practice', function () {
     ]);
 });
 
-$router->get('/review', function () {
-    View::render('dashboard.index', [
-        'title' => 'Révision',
-        'dashboard' => [
-            'user' => ['username' => 'Test'],
-            'mode' => 'guided_without_path',
-            'current_path' => null,
-            'current_mission' => null,
-            'progress' => null,
-            'last_session' => null,
-        ],
-    ]);
-});
+$router->get('/review', [ReviewController::class, 'index']);
+$router->post('/review/start', [ReviewController::class, 'start']);
 
 $router->get('/stats', [StatsController::class, 'index']);
 

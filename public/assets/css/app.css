@@ -1090,3 +1090,71 @@ input:focus {
         width: 100%;
     }
 }
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.review-kana-list {
+    display: grid;
+    gap: 10px;
+}
+
+.review-kana-item {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 10px;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 10px 12px;
+    background: #fff;
+}
+
+.review-kana-symbol {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(217, 74, 61, 0.1);
+    font-family: "Noto Sans JP", system-ui, sans-serif;
+    font-size: 1.55rem;
+    font-weight: 800;
+}
+
+.review-kana-item p {
+    margin: 4px 0 0;
+    font-size: 0.9rem;
+}
+
+.review-action-card {
+    margin-top: 16px;
+}
+
+.review-empty-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+@media (max-width: 920px) {
+    .review-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 620px) {
+    .review-empty-actions {
+        display: grid;
+    }
+
+    .review-empty-actions .button {
+        width: 100%;
+    }
+}
