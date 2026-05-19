@@ -115,6 +115,100 @@ final class QuizGeneratorService
         }
     }
 
+
+    public function startSmartReviewQuiz(int $userId, array $selectedKana, string $direction, string $kanaSet): int
+    {
+        if ($selectedKana === []) {
+            throw new \RuntimeException('Aucun kana sélectionné pour la révision.');
+        }
+
+        $pdo = Database::connection();
+
+        $questions = $this->generateQuestions(
+            $selectedKana,
+            count($selectedKana),
+            $direction,
+            $kanaSet
+        );
+
+        $pdo->beginTransaction();
+
+        try {
+            $stmt = $pdo->prepare(
+                'INSERT INTO quiz_sessions (
+                    user_id,
+                    mode,
+                    source_type,
+                    source_id,
+                    kana_set,
+                    direction,
+                    total_questions,
+                    settings_json
+                ) VALUES (
+                    :user_id,
+                    :mode,
+                    :source_type,
+                    :source_id,
+                    :kana_set,
+                    :direction,
+                    :total_questions,
+                    :settings_json
+                )'
+            );
+
+            $stmt->execute([
+                'user_id' => $userId,
+                'mode' => 'review',
+                'source_type' => 'review',
+                'source_id' => null,
+                'kana_set' => $kanaSet,
+                'direction' => $direction,
+                'total_questions' => count($questions),
+                'settings_json' => json_encode([
+                    'review_type' => 'smart_review',
+                ], JSON_UNESCAPED_UNICODE),
+            ]);
+
+            $sessionId = (int) $pdo->lastInsertId();
+
+            $stmt = $pdo->prepare(
+                'INSERT INTO quiz_answers (
+                    session_id,
+                    kana_id,
+                    question_order,
+                    displayed_value,
+                    expected_answer,
+                    options_json
+                ) VALUES (
+                    :session_id,
+                    :kana_id,
+                    :question_order,
+                    :displayed_value,
+                    :expected_answer,
+                    :options_json
+                )'
+            );
+
+            foreach ($questions as $index => $question) {
+                $stmt->execute([
+                    'session_id' => $sessionId,
+                    'kana_id' => (int) $question['kana_id'],
+                    'question_order' => $index + 1,
+                    'displayed_value' => $question['displayed_value'],
+                    'expected_answer' => $question['expected_answer'],
+                    'options_json' => json_encode($question['options'], JSON_UNESCAPED_UNICODE),
+                ]);
+            }
+
+            $pdo->commit();
+
+            return $sessionId;
+        } catch (\Throwable $exception) {
+            $pdo->rollBack();
+            throw $exception;
+        }
+    }
+
     private function resolveDirection(array $objective): string
     {
         if (
