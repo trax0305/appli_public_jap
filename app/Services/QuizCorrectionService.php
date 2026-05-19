@@ -6,6 +6,8 @@ namespace App\Services;
 
 use App\Core\Database;
 use App\Services\StatsService;
+use App\Services\BadgeService;
+use App\Core\Session;
 
 final class QuizCorrectionService
 {
@@ -164,6 +166,13 @@ final class QuizCorrectionService
         ]);
 
         $this->updateObjectiveProgress($sessionId, $score);
+
+        $session = $this->getSession($sessionId);
+
+        if ($session !== null && isset($session['user_id']) && $session['user_id'] !== null) {
+            $newBadges = (new BadgeService())->checkQuizBadges((int) $session['user_id']);
+            $this->storeNewBadgesForSession($sessionId, $newBadges);
+        }
     }
 
     private function updateObjectiveProgress(int $sessionId, int $score): void
@@ -260,6 +269,10 @@ final class QuizCorrectionService
         ]);
 
         $this->unlockNextObjective($userId, $objective);
+
+        $objectiveBadges = (new BadgeService())->checkObjectiveBadges($userId, $objective);
+        $this->appendNewBadgesForUser($userId, $objectiveBadges);
+
         $this->completeMissionIfNeeded($userId, (int) $objective['mission_id']);
     }
 
@@ -470,6 +483,13 @@ private function completePath(int $userId, int $pathId): void
     ]);
 
     $this->unlockNextPathIfNeeded($userId, $pathId);
+
+    $pathCode = $this->getPathCode($pathId);
+
+    if ($pathCode !== null) {
+        $pathBadges = (new BadgeService())->checkPathBadges($userId, $pathCode);
+        $this->appendNewBadgesForUser($userId, $pathBadges);
+    }
 }
 
 private function unlockNextPathIfNeeded(int $userId, int $completedPathId): void
@@ -585,6 +605,94 @@ private function unlockNextPathIfNeeded(int $userId, int $completedPathId): void
         $pdo->rollBack();
         throw $exception;
     }
+}
+
+
+private function getPathCode(int $pathId): ?string
+{
+    $pdo = Database::connection();
+
+    $stmt = $pdo->prepare(
+        'SELECT code
+         FROM learning_paths
+         WHERE id = :id
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        'id' => $pathId,
+    ]);
+
+    $path = $stmt->fetch();
+
+    return $path ? (string) $path['code'] : null;
+}
+
+private function storeNewBadgesForSession(int $sessionId, array $badges): void
+{
+    if ($badges === []) {
+        return;
+    }
+
+    Session::put('new_badges_quiz_' . $sessionId, $badges);
+}
+
+private function appendNewBadgesForUser(int $userId, array $badges): void
+{
+    if ($badges === []) {
+        return;
+    }
+
+    $sessionId = $this->getLatestCompletedSessionId($userId);
+
+    if ($sessionId === null) {
+        return;
+    }
+
+    $existing = Session::get('new_badges_quiz_' . $sessionId, []);
+
+    if (!is_array($existing)) {
+        $existing = [];
+    }
+
+    $merged = array_merge($existing, $badges);
+    $unique = [];
+    $seen = [];
+
+    foreach ($merged as $badge) {
+        $code = (string) ($badge['code'] ?? '');
+
+        if ($code === '' || isset($seen[$code])) {
+            continue;
+        }
+
+        $seen[$code] = true;
+        $unique[] = $badge;
+    }
+
+    Session::put('new_badges_quiz_' . $sessionId, $unique);
+}
+
+private function getLatestCompletedSessionId(int $userId): ?int
+{
+    $pdo = Database::connection();
+
+    $stmt = $pdo->prepare(
+        'SELECT id
+         FROM quiz_sessions
+         WHERE user_id = :user_id
+           AND completed_at IS NOT NULL
+         ORDER BY completed_at DESC, id DESC
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        'user_id' => $userId,
+    ]);
+
+    $session = $stmt->fetch();
+
+    return $session ? (int) $session['id'] : null;
 }
 
 public function getSessionAnswers(int $sessionId): array

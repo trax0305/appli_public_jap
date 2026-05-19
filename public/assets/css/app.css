@@ -1221,3 +1221,45 @@ input:focus {
         grid-template-columns: 1fr;
     }
 }
+
+.result-badges {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.result-badge-list {
+    display: grid;
+    gap: 10px;
+}
+
+.result-badge-card {
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    background: #fff;
+    padding: 12px 14px;
+}
+
+.result-badge-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.result-badge-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(217, 74, 61, 0.12);
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.result-badge-card p {
+    margin: 6px 0 0;
+}
