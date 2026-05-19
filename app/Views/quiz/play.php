@@ -1,19 +1,4 @@
 <section class="quiz-shell">
-
-<?php if (!empty($feedback)): ?>
-    <?php if ($feedback['is_correct']): ?>
-        <div class="quiz-feedback quiz-feedback-success">
-            <strong>Bonne réponse</strong>
-        </div>
-    <?php else: ?>
-        <div class="quiz-feedback quiz-feedback-error">
-            <strong>Pas encore</strong>
-            <span>Tu as répondu : <?= e($feedback['user_answer']) ?></span>
-            <span>Bonne réponse : <?= e($feedback['expected_answer']) ?></span>
-        </div>
-    <?php endif; ?>
-<?php endif; ?>
-
     <div class="quiz-progress">
         Question <?= e((string) $question['question_order']) ?>
         /

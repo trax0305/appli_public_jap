@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Core\Database;
+use App\Services\StatsService;
+use App\Services\BadgeService;
+use App\Core\Session;
 
 final class QuizCorrectionService
 {
@@ -74,6 +77,14 @@ final class QuizCorrectionService
         throw new \RuntimeException('Question introuvable.');
     }
 
+    if ($answer['user_answer'] !== null) {
+        return [
+            'is_correct' => (int) $answer['is_correct'] === 1,
+            'user_answer' => (string) $answer['user_answer'],
+            'expected_answer' => $answer['expected_answer'],
+        ];
+    }
+
     $session = $this->getSession($sessionId);
 
     if ($session !== null && $session['direction'] === 'written') {
@@ -90,11 +101,22 @@ final class QuizCorrectionService
          WHERE id = :id'
     );
 
+    $trimmedAnswer = trim($userAnswer);
+
     $stmt->execute([
-        'user_answer' => trim($userAnswer),
+        'user_answer' => $trimmedAnswer,
         'is_correct' => $isCorrect ? 1 : 0,
         'id' => $answerId,
     ]);
+
+    $statsService = new StatsService();
+    $statsService->recordKanaAnswer(
+        isset($session['user_id']) ? (int) $session['user_id'] : null,
+        $sessionId,
+        (int) $answer['kana_id'],
+        $isCorrect,
+        (string) $answer['displayed_value']
+    );
 
     if ($this->getCurrentQuestion($sessionId) === null) {
         $this->completeSession($sessionId);
@@ -102,7 +124,7 @@ final class QuizCorrectionService
 
     return [
         'is_correct' => $isCorrect,
-        'user_answer' => trim($userAnswer),
+        'user_answer' => $trimmedAnswer,
         'expected_answer' => $answer['expected_answer'],
     ];
 }
@@ -144,6 +166,13 @@ final class QuizCorrectionService
         ]);
 
         $this->updateObjectiveProgress($sessionId, $score);
+
+        $session = $this->getSession($sessionId);
+
+        if ($session !== null && isset($session['user_id']) && $session['user_id'] !== null) {
+            $newBadges = (new BadgeService())->checkQuizBadges((int) $session['user_id']);
+            $this->storeNewBadgesForSession($sessionId, $newBadges);
+        }
     }
 
     private function updateObjectiveProgress(int $sessionId, int $score): void
@@ -240,6 +269,10 @@ final class QuizCorrectionService
         ]);
 
         $this->unlockNextObjective($userId, $objective);
+
+        $objectiveBadges = (new BadgeService())->checkObjectiveBadges($userId, $objective);
+        $this->appendNewBadgesForUser($userId, $objectiveBadges);
+
         $this->completeMissionIfNeeded($userId, (int) $objective['mission_id']);
     }
 
@@ -448,6 +481,258 @@ private function completePath(int $userId, int $pathId): void
         'user_id' => $userId,
         'path_id' => $pathId,
     ]);
+
+    $this->unlockNextPathIfNeeded($userId, $pathId);
+
+    $pathCode = $this->getPathCode($pathId);
+
+    if ($pathCode !== null) {
+        $pathBadges = (new BadgeService())->checkPathBadges($userId, $pathCode);
+        $this->appendNewBadgesForUser($userId, $pathBadges);
+    }
+}
+
+private function unlockNextPathIfNeeded(int $userId, int $completedPathId): void
+{
+    $pdo = Database::connection();
+
+    $stmt = $pdo->prepare(
+        'SELECT *
+         FROM learning_paths
+         WHERE id = :id
+           AND is_active = 1
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        'id' => $completedPathId,
+    ]);
+
+    $currentPath = $stmt->fetch();
+
+    if (!$currentPath) {
+        return;
+    }
+
+    $stmt = $pdo->prepare(
+        'SELECT *
+         FROM learning_paths
+         WHERE is_active = 1
+           AND sort_order > :sort_order
+         ORDER BY sort_order ASC
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        'sort_order' => (int) $currentPath['sort_order'],
+    ]);
+
+    $nextPath = $stmt->fetch();
+
+    if (!$nextPath) {
+        return;
+    }
+
+    $stmt = $pdo->prepare(
+        'SELECT *
+         FROM missions
+         WHERE path_id = :path_id
+           AND is_active = 1
+         ORDER BY sort_order ASC'
+    );
+
+    $stmt->execute([
+        'path_id' => (int) $nextPath['id'],
+    ]);
+
+    $missions = $stmt->fetchAll();
+
+    if ($missions === []) {
+        return;
+    }
+
+    $firstMission = $missions[0];
+
+    $pdo->beginTransaction();
+
+    try {
+        $stmt = $pdo->prepare(
+            'INSERT INTO user_paths (user_id, path_id, status, current_mission_id)
+             VALUES (:user_id, :path_id, "available", :current_mission_id)
+             ON DUPLICATE KEY UPDATE
+                status = CASE
+                    WHEN status IN ("in_progress", "completed") THEN status
+                    WHEN status IN ("locked", "available") THEN "available"
+                    ELSE status
+                END,
+                current_mission_id = CASE
+                    WHEN status IN ("in_progress", "completed") THEN current_mission_id
+                    ELSE VALUES(current_mission_id)
+                END'
+        );
+
+        $stmt->execute([
+            'user_id' => $userId,
+            'path_id' => (int) $nextPath['id'],
+            'current_mission_id' => (int) $firstMission['id'],
+        ]);
+
+        foreach ($missions as $index => $mission) {
+            $targetStatus = $index === 0 ? 'available' : 'locked';
+
+            $stmt = $pdo->prepare(
+                'INSERT INTO user_missions (user_id, mission_id, status)
+                 VALUES (:user_id, :mission_id, :status)
+                 ON DUPLICATE KEY UPDATE
+                    status = CASE
+                        WHEN status IN ("in_progress", "completed") THEN status
+                        WHEN :status = "available" AND status = "locked" THEN "available"
+                        ELSE status
+                    END'
+            );
+
+            $stmt->execute([
+                'user_id' => $userId,
+                'mission_id' => (int) $mission['id'],
+                'status' => $targetStatus,
+            ]);
+        }
+
+        $this->initializeFirstObjectiveForMission($userId, (int) $firstMission['id']);
+
+        $pdo->commit();
+    } catch (\Throwable $exception) {
+        $pdo->rollBack();
+        throw $exception;
+    }
+}
+
+
+private function getPathCode(int $pathId): ?string
+{
+    $pdo = Database::connection();
+
+    $stmt = $pdo->prepare(
+        'SELECT code
+         FROM learning_paths
+         WHERE id = :id
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        'id' => $pathId,
+    ]);
+
+    $path = $stmt->fetch();
+
+    return $path ? (string) $path['code'] : null;
+}
+
+private function storeNewBadgesForSession(int $sessionId, array $badges): void
+{
+    if ($badges === []) {
+        return;
+    }
+
+    Session::put('new_badges_quiz_' . $sessionId, $badges);
+}
+
+private function appendNewBadgesForUser(int $userId, array $badges): void
+{
+    if ($badges === []) {
+        return;
+    }
+
+    $sessionId = $this->getLatestCompletedSessionId($userId);
+
+    if ($sessionId === null) {
+        return;
+    }
+
+    $existing = Session::get('new_badges_quiz_' . $sessionId, []);
+
+    if (!is_array($existing)) {
+        $existing = [];
+    }
+
+    $merged = array_merge($existing, $badges);
+    $unique = [];
+    $seen = [];
+
+    foreach ($merged as $badge) {
+        $code = (string) ($badge['code'] ?? '');
+
+        if ($code === '' || isset($seen[$code])) {
+            continue;
+        }
+
+        $seen[$code] = true;
+        $unique[] = $badge;
+    }
+
+    Session::put('new_badges_quiz_' . $sessionId, $unique);
+}
+
+private function getLatestCompletedSessionId(int $userId): ?int
+{
+    $pdo = Database::connection();
+
+    $stmt = $pdo->prepare(
+        'SELECT id
+         FROM quiz_sessions
+         WHERE user_id = :user_id
+           AND completed_at IS NOT NULL
+         ORDER BY completed_at DESC, id DESC
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        'user_id' => $userId,
+    ]);
+
+    $session = $stmt->fetch();
+
+    return $session ? (int) $session['id'] : null;
+}
+
+public function getAnswerForFeedback(int $userId, int $sessionId, int $answerId): ?array
+{
+    $pdo = Database::connection();
+
+    $stmt = $pdo->prepare(
+        'SELECT
+            qa.*,
+            qs.user_id AS session_user_id,
+            qs.total_questions,
+            k.hira,
+            k.kata,
+            k.romaji
+         FROM quiz_answers qa
+         INNER JOIN quiz_sessions qs ON qs.id = qa.session_id
+         INNER JOIN kana k ON k.id = qa.kana_id
+         WHERE qa.id = :answer_id
+           AND qa.session_id = :session_id
+           AND qs.user_id = :user_id
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        'answer_id' => $answerId,
+        'session_id' => $sessionId,
+        'user_id' => $userId,
+    ]);
+
+    $answer = $stmt->fetch();
+
+    if (!$answer) {
+        return null;
+    }
+
+    if ($answer['user_answer'] === null) {
+        return null;
+    }
+
+    return $answer;
 }
 
 public function getSessionAnswers(int $sessionId): array
