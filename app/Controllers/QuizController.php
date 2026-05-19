@@ -34,19 +34,18 @@ final class QuizController
 
     public function play(string $id): void
     {
-        AuthMiddleware::requireAuth();
-
         $sessionId = (int) $id;
 
         $service = new QuizCorrectionService();
         $session = $service->getSession($sessionId);
-        $question = $service->getCurrentQuestion($sessionId);
 
-        if ($session === null) {
+        if (!$this->canAccessSession($session)) {
             http_response_code(404);
             echo 'Quiz introuvable';
             return;
         }
+
+        $question = $service->getCurrentQuestion($sessionId);
 
         if ($question === null) {
             redirect('/quiz/' . $sessionId . '/results');
@@ -62,9 +61,15 @@ final class QuizController
 
     public function answer(string $id): void
     {
-        AuthMiddleware::requireAuth();
-
         $sessionId = (int) $id;
+        $service = new QuizCorrectionService();
+        $session = $service->getSession($sessionId);
+
+        if (!$this->canAccessSession($session)) {
+            http_response_code(404);
+            echo 'Quiz introuvable';
+            return;
+        }
 
         if (!Csrf::check($_POST['_csrf'] ?? null)) {
             Session::flash('error', 'Session expirée. Réessaie.');
@@ -74,7 +79,6 @@ final class QuizController
         $answerId = (int) ($_POST['answer_id'] ?? 0);
         $userAnswer = (string) ($_POST['answer'] ?? '');
 
-        $service = new QuizCorrectionService();
         $service->answerQuestion($sessionId, $answerId, $userAnswer);
 
         redirect('/quiz/' . $sessionId . '/feedback/' . $answerId);
@@ -83,20 +87,17 @@ final class QuizController
 
     public function feedback(string $sessionId, string $answerId): void
     {
-        AuthMiddleware::requireAuth();
-
         $sessionIdInt = (int) $sessionId;
         $answerIdInt = (int) $answerId;
-        $userId = (int) Session::get('user_id');
 
         $service = new QuizCorrectionService();
         $session = $service->getSession($sessionIdInt);
 
-        if ($session === null || (int) ($session['user_id'] ?? 0) !== $userId) {
+        if (!$this->canAccessSession($session)) {
             redirect('/quiz/' . $sessionIdInt);
         }
 
-        $answer = $service->getAnswerForFeedback($userId, $sessionIdInt, $answerIdInt);
+        $answer = $service->getAnswerForFeedback($sessionIdInt, $answerIdInt);
 
         if ($answer === null) {
             redirect('/quiz/' . $sessionIdInt);
@@ -111,13 +112,21 @@ final class QuizController
 
     public function results(string $id): void
     {
-        AuthMiddleware::requireAuth();
-
         $sessionId = (int) $id;
-        $userId = (int) Session::get('user_id');
+
+        $correctionService = new QuizCorrectionService();
+        $session = $correctionService->getSession($sessionId);
+
+        if (!$this->canAccessSession($session)) {
+            http_response_code(404);
+            echo 'Quiz introuvable';
+            return;
+        }
 
         $resultService = new QuizResultService();
-        $resultContext = $resultService->buildResultContext($userId, $sessionId);
+        $resultContext = ($session['user_id'] === null)
+            ? $resultService->buildGuestResultContext($sessionId)
+            : $resultService->buildResultContext((int) Session::get('user_id'), $sessionId);
 
         if ($resultContext === null) {
             http_response_code(404);
@@ -161,4 +170,19 @@ final class QuizController
 
     redirect('/quiz/' . $newSessionId);
 }
+
+    private function canAccessSession(?array $session): bool
+    {
+        if ($session === null) {
+            return false;
+        }
+
+        $currentUserId = Session::get('user_id');
+
+        if ($currentUserId === null) {
+            return $session['user_id'] === null;
+        }
+
+        return $session['user_id'] !== null && (int) $session['user_id'] === (int) $currentUserId;
+    }
 }

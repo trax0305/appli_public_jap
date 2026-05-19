@@ -19,6 +19,7 @@ $router = new Router();
 
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/guest', [HomeController::class, 'guestEntry']);
+$router->post('/guest/free-practice/start', [HomeController::class, 'startGuestFreePractice']);
 
 $router->get('/dashboard', [DashboardController::class, 'index']);
 

@@ -11,28 +11,9 @@ $correctAnswers = (int) ($session['correct_answers'] ?? 0);
 $totalQuestions = (int) ($session['total_questions'] ?? 0);
 $mode = (string) ($session['mode'] ?? 'mission');
 $sourceType = (string) ($session['source_type'] ?? 'objective');
+$isGuest = !empty($resultContext['is_guest']) || $session['user_id'] === null;
 ?>
 
-
-<?php if (!empty($newBadges)): ?>
-    <section class="result-badges">
-        <p class="eyebrow">Badge débloqué</p>
-
-        <div class="result-badge-list">
-            <?php foreach ($newBadges as $badge): ?>
-                <article class="result-badge-card">
-                    <div class="result-badge-title-row">
-                        <strong><?= e((string) ($badge['title'] ?? 'Badge')) ?></strong>
-                        <?php if (!empty($badge['icon'])): ?>
-                            <span class="result-badge-icon"><?= e((string) $badge['icon']) ?></span>
-                        <?php endif; ?>
-                    </div>
-                    <p><?= e((string) ($badge['description'] ?? '')) ?></p>
-                </article>
-            <?php endforeach; ?>
-        </div>
-    </section>
-<?php endif; ?>
 
 <section class="result-card">
     <p class="eyebrow">Résultat</p>
@@ -45,6 +26,20 @@ $sourceType = (string) ($session['source_type'] ?? 'objective');
     </p>
 </section>
 
+<?php if ($isGuest): ?>
+    <section class="card result-context-card">
+        <p class="eyebrow">Mode invité</p>
+        <h2>Bien joué !</h2>
+        <p>Crée un compte gratuit pour sauvegarder ta progression, tes stats et tes badges.</p>
+
+        <div class="result-actions">
+            <a class="button button-primary" href="/register">Créer mon compte</a>
+            <a class="button button-secondary" href="/guest">Continuer en mode invité</a>
+        </div>
+    </section>
+<?php endif; ?>
+
+<?php if (!$isGuest): ?>
 <?php if ($objective !== null): ?>
     <section class="card result-context-card">
         <p class="eyebrow">Objectif</p>
@@ -154,6 +149,7 @@ $sourceType = (string) ($session['source_type'] ?? 'objective');
 
     <a class="button button-secondary" href="/dashboard">Dashboard</a>
 </section>
+<?php endif; ?>
 
 <?php if (!empty($wrongAnswers)): ?>
     <section class="result-errors">
