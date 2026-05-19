@@ -1263,3 +1263,26 @@ input:focus {
 .result-badge-card p {
     margin: 6px 0 0;
 }
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.profile-badges-card,
+.profile-account-card {
+    margin-top: 16px;
+}
+
+.profile-account-actions {
+    display: grid;
+    gap: 10px;
+}
+
+@media (max-width: 920px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -13,6 +13,7 @@ use App\Controllers\QuizController;
 use App\Controllers\StatsController;
 use App\Controllers\ReviewController;
 use App\Controllers\FreePracticeController;
+use App\Controllers\ProfileController;
 
 $router = new Router();
 
@@ -52,5 +53,8 @@ $router->get('/review', [ReviewController::class, 'index']);
 $router->post('/review/start', [ReviewController::class, 'start']);
 
 $router->get('/stats', [StatsController::class, 'index']);
+
+$router->get('/profile', [ProfileController::class, 'index']);
+$router->post('/profile', [ProfileController::class, 'update']);
 
 return $router;
