@@ -125,6 +125,13 @@ final class QuizController
             return;
         }
 
+        $newBadges = Session::get('new_badges_quiz_' . $sessionId, []);
+        Session::forget('new_badges_quiz_' . $sessionId);
+
+        if (!is_array($newBadges)) {
+            $newBadges = [];
+        }
+
         View::render('quiz.results', [
             'title' => 'Résultat',
             'resultContext' => $resultContext,

@@ -13,6 +13,27 @@ $mode = (string) ($session['mode'] ?? 'mission');
 $sourceType = (string) ($session['source_type'] ?? 'objective');
 ?>
 
+
+<?php if (!empty($newBadges)): ?>
+    <section class="result-badges">
+        <p class="eyebrow">Badge débloqué</p>
+
+        <div class="result-badge-list">
+            <?php foreach ($newBadges as $badge): ?>
+                <article class="result-badge-card">
+                    <div class="result-badge-title-row">
+                        <strong><?= e((string) ($badge['title'] ?? 'Badge')) ?></strong>
+                        <?php if (!empty($badge['icon'])): ?>
+                            <span class="result-badge-icon"><?= e((string) $badge['icon']) ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <p><?= e((string) ($badge['description'] ?? '')) ?></p>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </section>
+<?php endif; ?>
+
 <section class="result-card">
     <p class="eyebrow">Résultat</p>
     <h1><?= e($resultContext['score_label']) ?></h1>
