@@ -11,6 +11,7 @@ use App\Core\View;
 use App\Controllers\MissionController;
 use App\Controllers\PathController;
 use App\Controllers\QuizController;
+use App\Controllers\StatsController;
 
 $router = new Router();
 
@@ -63,10 +64,6 @@ $router->get('/review', function () {
     ]);
 });
 
-$router->get('/stats', function () {
-    View::render('stats.index', [
-        'title' => 'Mes stats',
-    ]);
-});
+$router->get('/stats', [StatsController::class, 'index']);
 
 return $router;
