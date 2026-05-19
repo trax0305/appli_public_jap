@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Core\Database;
+use App\Services\StatsService;
 
 final class QuizCorrectionService
 {
@@ -74,6 +75,14 @@ final class QuizCorrectionService
         throw new \RuntimeException('Question introuvable.');
     }
 
+    if ($answer['user_answer'] !== null) {
+        return [
+            'is_correct' => (int) $answer['is_correct'] === 1,
+            'user_answer' => (string) $answer['user_answer'],
+            'expected_answer' => $answer['expected_answer'],
+        ];
+    }
+
     $session = $this->getSession($sessionId);
 
     if ($session !== null && $session['direction'] === 'written') {
@@ -90,11 +99,22 @@ final class QuizCorrectionService
          WHERE id = :id'
     );
 
+    $trimmedAnswer = trim($userAnswer);
+
     $stmt->execute([
-        'user_answer' => trim($userAnswer),
+        'user_answer' => $trimmedAnswer,
         'is_correct' => $isCorrect ? 1 : 0,
         'id' => $answerId,
     ]);
+
+    $statsService = new StatsService();
+    $statsService->recordKanaAnswer(
+        isset($session['user_id']) ? (int) $session['user_id'] : null,
+        $sessionId,
+        (int) $answer['kana_id'],
+        $isCorrect,
+        (string) $answer['displayed_value']
+    );
 
     if ($this->getCurrentQuestion($sessionId) === null) {
         $this->completeSession($sessionId);
@@ -102,7 +122,7 @@ final class QuizCorrectionService
 
     return [
         'is_correct' => $isCorrect,
-        'user_answer' => trim($userAnswer),
+        'user_answer' => $trimmedAnswer,
         'expected_answer' => $answer['expected_answer'],
     ];
 }

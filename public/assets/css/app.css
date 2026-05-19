@@ -956,3 +956,137 @@ input:focus {
         grid-template-columns: 1fr;
     }
 }
+.stats-grid {
+    display: grid;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.stats-grid-top {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.stats-grid-two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.stats-metric-card {
+    padding: 20px;
+}
+
+.stats-metric-label {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.stats-metric-value {
+    margin: 8px 0 0;
+    color: var(--color-text);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.stats-alpha-list {
+    display: grid;
+    gap: 10px;
+}
+
+.stats-alpha-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    padding: 12px 14px;
+    background: #fff;
+}
+
+.stats-alpha-item p {
+    margin: 4px 0 0;
+}
+
+.stats-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 54px;
+    height: 36px;
+    border-radius: 999px;
+    background: rgba(217, 74, 61, 0.12);
+    color: var(--color-primary);
+    font-weight: 800;
+}
+
+.stats-table-wrap {
+    overflow-x: auto;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    font-size: 0.93rem;
+}
+
+.stats-kana-cell {
+    font-family: "Noto Sans JP", system-ui, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-text);
+}
+
+.stats-empty-card h2 {
+    margin-top: 0;
+}
+
+.stats-empty-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.stats-badge-list {
+    display: grid;
+    gap: 10px;
+}
+
+.stats-badge-item {
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    padding: 14px;
+    background: #fff;
+}
+
+.stats-badge-item p {
+    margin: 6px 0;
+}
+
+@media (max-width: 920px) {
+    .stats-grid-top,
+    .stats-grid-two {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 620px) {
+    .stats-grid-top,
+    .stats-grid-two {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-empty-actions {
+        display: grid;
+    }
+
+    .stats-empty-actions .button {
+        width: 100%;
+    }
+}
