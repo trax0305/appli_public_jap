@@ -7,12 +7,12 @@ use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
 use App\Controllers\OnboardingController;
 use App\Core\Router;
-use App\Core\View;
 use App\Controllers\MissionController;
 use App\Controllers\PathController;
 use App\Controllers\QuizController;
 use App\Controllers\StatsController;
 use App\Controllers\ReviewController;
+use App\Controllers\FreePracticeController;
 
 $router = new Router();
 
@@ -45,11 +45,8 @@ $router->post('/quiz/{id}/answer', [QuizController::class, 'answer']);
 $router->get('/quiz/{id}/results', [QuizController::class, 'results']);
 $router->post('/quiz/{id}/retry-errors', [QuizController::class, 'retryErrors']);
 
-$router->get('/free-practice', function () {
-    View::render('free-practice.index', [
-        'title' => 'Mode libre',
-    ]);
-});
+$router->get('/free-practice', [FreePracticeController::class, 'index']);
+$router->post('/free-practice/start', [FreePracticeController::class, 'start']);
 
 $router->get('/review', [ReviewController::class, 'index']);
 $router->post('/review/start', [ReviewController::class, 'start']);

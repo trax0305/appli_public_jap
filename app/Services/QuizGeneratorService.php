@@ -116,6 +116,125 @@ final class QuizGeneratorService
     }
 
 
+
+    public function startFreeQuiz(int $userId, array $selectedKana, array $config): int
+    {
+        if ($selectedKana === []) {
+            throw new \RuntimeException('Aucun kana disponible pour ce quiz libre.');
+        }
+
+        $pdo = Database::connection();
+
+        $direction = (string) ($config['direction'] ?? 'kana_to_romaji');
+        $kanaSet = (string) ($config['alphabet'] ?? 'hiragana');
+        $questionCount = max(1, (int) ($config['question_count'] ?? 20));
+
+        $questions = $this->generateQuestions(
+            $selectedKana,
+            $questionCount,
+            $direction,
+            $kanaSet
+        );
+
+        $optionsKanaPool = $selectedKana;
+
+        if (($config['options_scope'] ?? 'selected') === 'learned') {
+            $learnedKana = $this->getLearnedKanaForUser($userId);
+
+            if ($learnedKana !== []) {
+                $optionsKanaPool = $learnedKana;
+            }
+        }
+
+        $pdo->beginTransaction();
+
+        try {
+            $stmt = $pdo->prepare(
+                'INSERT INTO quiz_sessions (
+                    user_id,
+                    mode,
+                    source_type,
+                    source_id,
+                    kana_set,
+                    direction,
+                    total_questions,
+                    settings_json
+                ) VALUES (
+                    :user_id,
+                    :mode,
+                    :source_type,
+                    :source_id,
+                    :kana_set,
+                    :direction,
+                    :total_questions,
+                    :settings_json
+                )'
+            );
+
+            $stmt->execute([
+                'user_id' => $userId,
+                'mode' => 'free',
+                'source_type' => 'free',
+                'source_id' => null,
+                'kana_set' => $kanaSet,
+                'direction' => $direction,
+                'total_questions' => count($questions),
+                'settings_json' => json_encode([
+                    'quick_filters' => $config['quick_filters'] ?? [],
+                    'question_count' => $questionCount,
+                    'question_count_mode' => $config['question_count_mode'] ?? '20',
+                    'include_wrong' => (bool) ($config['include_wrong'] ?? false),
+                    'options_scope' => $config['options_scope'] ?? 'selected',
+                ], JSON_UNESCAPED_UNICODE),
+            ]);
+
+            $sessionId = (int) $pdo->lastInsertId();
+
+            $stmt = $pdo->prepare(
+                'INSERT INTO quiz_answers (
+                    session_id,
+                    kana_id,
+                    question_order,
+                    displayed_value,
+                    expected_answer,
+                    options_json
+                ) VALUES (
+                    :session_id,
+                    :kana_id,
+                    :question_order,
+                    :displayed_value,
+                    :expected_answer,
+                    :options_json
+                )'
+            );
+
+            foreach ($questions as $index => $question) {
+                $options = $this->generateOptions(
+                    $optionsKanaPool,
+                    (string) $question['expected_answer'],
+                    $direction,
+                    $kanaSet
+                );
+
+                $stmt->execute([
+                    'session_id' => $sessionId,
+                    'kana_id' => (int) $question['kana_id'],
+                    'question_order' => $index + 1,
+                    'displayed_value' => $question['displayed_value'],
+                    'expected_answer' => $question['expected_answer'],
+                    'options_json' => json_encode($options, JSON_UNESCAPED_UNICODE),
+                ]);
+            }
+
+            $pdo->commit();
+
+            return $sessionId;
+        } catch (\Throwable $exception) {
+            $pdo->rollBack();
+            throw $exception;
+        }
+    }
+
     public function startSmartReviewQuiz(int $userId, array $selectedKana, string $direction, string $kanaSet): int
     {
         if ($selectedKana === []) {
@@ -586,4 +705,24 @@ private function getKanaFromSession(int $sessionId): array
 
     return $stmt->fetchAll();
 }
+    private function getLearnedKanaForUser(int $userId): array
+    {
+        $pdo = Database::connection();
+
+        $stmt = $pdo->prepare(
+            'SELECT DISTINCT k.*
+             FROM user_kana_stats uks
+             INNER JOIN kana k ON k.id = uks.kana_id
+             WHERE uks.user_id = :user_id
+               AND uks.seen_count > 0
+             ORDER BY k.sort_order ASC'
+        );
+
+        $stmt->execute([
+            'user_id' => $userId,
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
 }
