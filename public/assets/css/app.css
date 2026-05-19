@@ -1369,3 +1369,11 @@ input:focus {
     color: var(--color-primary);
     text-decoration: underline;
 }
+
+.result-context-card {
+    margin-top: 14px;
+}
+
+.result-context-card h2 {
+    margin-top: 0;
+}

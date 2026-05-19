@@ -10,6 +10,7 @@ use App\Core\Session;
 use App\Core\View;
 use App\Services\QuizCorrectionService;
 use App\Services\QuizGeneratorService;
+use App\Services\QuizResultService;
 
 final class QuizController
 {
@@ -113,11 +114,12 @@ final class QuizController
         AuthMiddleware::requireAuth();
 
         $sessionId = (int) $id;
+        $userId = (int) Session::get('user_id');
 
-        $service = new QuizCorrectionService();
-        $session = $service->getSession($sessionId);
+        $resultService = new QuizResultService();
+        $resultContext = $resultService->buildResultContext($userId, $sessionId);
 
-        if ($session === null) {
+        if ($resultContext === null) {
             http_response_code(404);
             echo 'Quiz introuvable';
             return;
@@ -132,10 +134,7 @@ final class QuizController
 
         View::render('quiz.results', [
             'title' => 'Résultat',
-            'session' => $session,
-            'answers' => $service->getSessionAnswers($sessionId),
-            'missionId' => $service->getMissionIdFromSession($sessionId),
-            'newBadges' => $newBadges,
+            'resultContext' => $resultContext,
         ]);
     }
 
