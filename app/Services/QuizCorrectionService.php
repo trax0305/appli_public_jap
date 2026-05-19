@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Core\Database;
+use App\Services\StatsService;
 
 final class QuizCorrectionService
 {
@@ -74,6 +75,14 @@ final class QuizCorrectionService
         throw new \RuntimeException('Question introuvable.');
     }
 
+    if ($answer['user_answer'] !== null) {
+        return [
+            'is_correct' => (int) $answer['is_correct'] === 1,
+            'user_answer' => (string) $answer['user_answer'],
+            'expected_answer' => $answer['expected_answer'],
+        ];
+    }
+
     $session = $this->getSession($sessionId);
 
     if ($session !== null && $session['direction'] === 'written') {
@@ -90,11 +99,22 @@ final class QuizCorrectionService
          WHERE id = :id'
     );
 
+    $trimmedAnswer = trim($userAnswer);
+
     $stmt->execute([
-        'user_answer' => trim($userAnswer),
+        'user_answer' => $trimmedAnswer,
         'is_correct' => $isCorrect ? 1 : 0,
         'id' => $answerId,
     ]);
+
+    $statsService = new StatsService();
+    $statsService->recordKanaAnswer(
+        isset($session['user_id']) ? (int) $session['user_id'] : null,
+        $sessionId,
+        (int) $answer['kana_id'],
+        $isCorrect,
+        (string) $answer['displayed_value']
+    );
 
     if ($this->getCurrentQuestion($sessionId) === null) {
         $this->completeSession($sessionId);
@@ -102,7 +122,7 @@ final class QuizCorrectionService
 
     return [
         'is_correct' => $isCorrect,
-        'user_answer' => trim($userAnswer),
+        'user_answer' => $trimmedAnswer,
         'expected_answer' => $answer['expected_answer'],
     ];
 }
@@ -448,6 +468,123 @@ private function completePath(int $userId, int $pathId): void
         'user_id' => $userId,
         'path_id' => $pathId,
     ]);
+
+    $this->unlockNextPathIfNeeded($userId, $pathId);
+}
+
+private function unlockNextPathIfNeeded(int $userId, int $completedPathId): void
+{
+    $pdo = Database::connection();
+
+    $stmt = $pdo->prepare(
+        'SELECT *
+         FROM learning_paths
+         WHERE id = :id
+           AND is_active = 1
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        'id' => $completedPathId,
+    ]);
+
+    $currentPath = $stmt->fetch();
+
+    if (!$currentPath) {
+        return;
+    }
+
+    $stmt = $pdo->prepare(
+        'SELECT *
+         FROM learning_paths
+         WHERE is_active = 1
+           AND sort_order > :sort_order
+         ORDER BY sort_order ASC
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        'sort_order' => (int) $currentPath['sort_order'],
+    ]);
+
+    $nextPath = $stmt->fetch();
+
+    if (!$nextPath) {
+        return;
+    }
+
+    $stmt = $pdo->prepare(
+        'SELECT *
+         FROM missions
+         WHERE path_id = :path_id
+           AND is_active = 1
+         ORDER BY sort_order ASC'
+    );
+
+    $stmt->execute([
+        'path_id' => (int) $nextPath['id'],
+    ]);
+
+    $missions = $stmt->fetchAll();
+
+    if ($missions === []) {
+        return;
+    }
+
+    $firstMission = $missions[0];
+
+    $pdo->beginTransaction();
+
+    try {
+        $stmt = $pdo->prepare(
+            'INSERT INTO user_paths (user_id, path_id, status, current_mission_id)
+             VALUES (:user_id, :path_id, "available", :current_mission_id)
+             ON DUPLICATE KEY UPDATE
+                status = CASE
+                    WHEN status IN ("in_progress", "completed") THEN status
+                    WHEN status IN ("locked", "available") THEN "available"
+                    ELSE status
+                END,
+                current_mission_id = CASE
+                    WHEN status IN ("in_progress", "completed") THEN current_mission_id
+                    ELSE VALUES(current_mission_id)
+                END'
+        );
+
+        $stmt->execute([
+            'user_id' => $userId,
+            'path_id' => (int) $nextPath['id'],
+            'current_mission_id' => (int) $firstMission['id'],
+        ]);
+
+        foreach ($missions as $index => $mission) {
+            $targetStatus = $index === 0 ? 'available' : 'locked';
+
+            $stmt = $pdo->prepare(
+                'INSERT INTO user_missions (user_id, mission_id, status)
+                 VALUES (:user_id, :mission_id, :status)
+                 ON DUPLICATE KEY UPDATE
+                    status = CASE
+                        WHEN status IN ("in_progress", "completed") THEN status
+                        WHEN :status = "available" AND status = "locked" THEN "available"
+                        ELSE status
+                    END'
+            );
+
+            $stmt->execute([
+                'user_id' => $userId,
+                'mission_id' => (int) $mission['id'],
+                'status' => $targetStatus,
+            ]);
+        }
+
+        $this->initializeFirstObjectiveForMission($userId, (int) $firstMission['id']);
+
+        $pdo->commit();
+    } catch (\Throwable $exception) {
+        $pdo->rollBack();
+        throw $exception;
+    }
 }
 
 public function getSessionAnswers(int $sessionId): array
