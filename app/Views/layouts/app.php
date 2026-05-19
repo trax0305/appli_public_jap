@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
-    <main class="app-shell">
+    <main class="app-shell app-shell-with-bottom-nav">
         <?php require view_path('partials/flash.php'); ?>
         <?= $content ?>
     </main>
+
+    <?php require view_path('partials/bottom-nav.php'); ?>
 
     <script src="/assets/js/app.js"></script>
 </body>
