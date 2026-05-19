@@ -51,15 +51,11 @@ final class QuizController
             redirect('/quiz/' . $sessionId . '/results');
         }
 
-        $feedback = Session::get('quiz_feedback_' . $sessionId);
-        Session::forget('quiz_feedback_' . $sessionId);
-
         View::render('quiz.play', [
             'title' => 'Quiz',
             'session' => $session,
             'question' => $question,
             'options' => json_decode($question['options_json'], true) ?: [],
-            'feedback' => $feedback,
         ]);
     }
 
@@ -78,11 +74,38 @@ final class QuizController
         $userAnswer = (string) ($_POST['answer'] ?? '');
 
         $service = new QuizCorrectionService();
-        $feedback = $service->answerQuestion($sessionId, $answerId, $userAnswer);
+        $service->answerQuestion($sessionId, $answerId, $userAnswer);
 
-        Session::put('quiz_feedback_' . $sessionId, $feedback);
+        redirect('/quiz/' . $sessionId . '/feedback/' . $answerId);
+    }
 
-        redirect('/quiz/' . $sessionId);
+
+    public function feedback(string $sessionId, string $answerId): void
+    {
+        AuthMiddleware::requireAuth();
+
+        $sessionIdInt = (int) $sessionId;
+        $answerIdInt = (int) $answerId;
+        $userId = (int) Session::get('user_id');
+
+        $service = new QuizCorrectionService();
+        $session = $service->getSession($sessionIdInt);
+
+        if ($session === null || (int) ($session['user_id'] ?? 0) !== $userId) {
+            redirect('/quiz/' . $sessionIdInt);
+        }
+
+        $answer = $service->getAnswerForFeedback($userId, $sessionIdInt, $answerIdInt);
+
+        if ($answer === null) {
+            redirect('/quiz/' . $sessionIdInt);
+        }
+
+        View::render('quiz.feedback', [
+            'title' => 'Correction',
+            'session' => $session,
+            'answer' => $answer,
+        ]);
     }
 
     public function results(string $id): void
@@ -100,11 +123,19 @@ final class QuizController
             return;
         }
 
+        $newBadges = Session::get('new_badges_quiz_' . $sessionId, []);
+        Session::forget('new_badges_quiz_' . $sessionId);
+
+        if (!is_array($newBadges)) {
+            $newBadges = [];
+        }
+
         View::render('quiz.results', [
             'title' => 'Résultat',
             'session' => $session,
             'answers' => $service->getSessionAnswers($sessionId),
             'missionId' => $service->getMissionIdFromSession($sessionId),
+            'newBadges' => $newBadges,
         ]);
     }
 
