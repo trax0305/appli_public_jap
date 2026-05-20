@@ -13,6 +13,7 @@ $mode = (string) ($session['mode'] ?? 'mission');
 $sourceType = (string) ($session['source_type'] ?? 'objective');
 ?>
 
+
 <section class="result-card">
     <p class="eyebrow">Résultat</p>
     <h1><?= e($resultContext['score_label']) ?></h1>
@@ -62,6 +63,47 @@ $sourceType = (string) ($session['source_type'] ?? 'objective');
         <?php if ($mission !== null && !empty($mission['next_mission_title'])): ?>
             <p><strong>Mission suivante :</strong> <?= e((string) $mission['next_mission_title']) ?></p>
         <?php endif; ?>
+    </section>
+<?php endif; ?>
+
+<?php if (!empty($newBadges)): ?>
+    <section class="result-badges">
+        <p class="eyebrow">Badge débloqué</p>
+
+        <div class="result-badge-list">
+            <?php foreach ($newBadges as $badge): ?>
+                <article class="result-badge-card">
+                    <div class="result-badge-title-row">
+                        <strong><?= e((string) ($badge['title'] ?? 'Badge')) ?></strong>
+                        <?php if (!empty($badge['icon'])): ?>
+                            <span class="result-badge-icon"><?= e((string) $badge['icon']) ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <p><?= e((string) ($badge['description'] ?? '')) ?></p>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </section>
+<?php endif; ?>
+
+<section class="result-actions">
+    <?php if ($sourceType === 'objective' && $objective !== null): ?>
+        <a class="button button-primary" href="/missions/<?= e((string) $objective['mission_id']) ?>">
+            Continuer la mission
+        </a>
+    <?php elseif ($mode === 'free'): ?>
+        <a class="button button-primary" href="/free-practice">
+            Retour mode libre
+        </a>
+    <?php elseif ($mode === 'review'): ?>
+        <a class="button button-primary" href="/review">
+            Nouvelle révision
+        </a>
+    <?php else: ?>
+        <a class="button button-primary" href="/dashboard">
+            Continuer
+        </a>
+    <?php endif; ?>
 
         <?php if ($path !== null && $path['path_completed']): ?>
             <p><strong>Parcours terminé :</strong> <?= e((string) $path['path_title']) ?></p>
@@ -133,6 +175,7 @@ $sourceType = (string) ($session['source_type'] ?? 'objective');
 
     <a class="button button-secondary" href="/dashboard">Dashboard</a>
 </section>
+<?php endif; ?>
 
 <?php if (!empty($wrongAnswers)): ?>
     <section class="result-errors">

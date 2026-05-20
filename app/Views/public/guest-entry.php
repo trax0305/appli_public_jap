@@ -9,38 +9,39 @@
 
 <section class="page-heading">
     <p class="eyebrow">Commencer gratuitement</p>
-    <h1>Tu veux commencer comment ?</h1>
-    <p>Tu peux tester sans compte. La sauvegarde complète viendra avec l’inscription.</p>
+    <h1>Teste les kana sans compte</h1>
+    <p>Commence par un quiz court sur les voyelles hiragana. Tu pourras créer un compte ensuite pour sauvegarder ta progression.</p>
 </section>
 
 <section class="choice-grid">
     <article class="choice-card choice-card-primary">
         <div>
-            <p class="choice-label">Recommandé</p>
-            <h2>Parcours guidé</h2>
+            <p class="choice-label">Quiz invité</p>
+            <h2>Essayer les voyelles hiragana</h2>
             <p>
-                Idéal si tu débutes complètement. L’app te propose les missions
-                dans le bon ordre.
+                Cinq questions rapides pour reconnaître あ, い, う, え et お.
             </p>
         </div>
 
-        <a class="button button-primary" href="/register">
-            Essayer la première mission
-        </a>
+        <form method="post" action="/guest/free-practice/start">
+            <?= csrf_field() ?>
+            <button class="button button-primary" type="submit">
+                Lancer le quiz invité
+            </button>
+        </form>
     </article>
 
     <article class="choice-card">
         <div>
-            <p class="choice-label">Libre</p>
-            <h2>Mode libre</h2>
+            <p class="choice-label">Sauvegarde</p>
+            <h2>Créer un compte gratuit</h2>
             <p>
-                Choisis toi-même les kana, les groupes et le type de quiz
-                que tu veux lancer.
+                Garde tes stats, tes badges et ta progression dans les parcours.
             </p>
         </div>
 
-        <a class="button button-secondary" href="/free-practice">
-            Ouvrir le mode libre
+        <a class="button button-secondary" href="/register">
+            Créer mon compte
         </a>
     </article>
 </section>

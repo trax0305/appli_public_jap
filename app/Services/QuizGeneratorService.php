@@ -541,6 +541,24 @@ final class QuizGeneratorService
         return $options;
     }
 
+    private function getGuestVowelKana(): array
+    {
+        $pdo = Database::connection();
+
+        $stmt = $pdo->prepare(
+            'SELECT *
+             FROM kana
+             WHERE romaji IN ("a", "i", "u", "e", "o")
+               AND is_variant = 0
+               AND is_combo = 0
+             ORDER BY sort_order ASC'
+        );
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     public function startErrorReviewQuiz(int $userId, int $sourceSessionId): int
 {
     $pdo = Database::connection();

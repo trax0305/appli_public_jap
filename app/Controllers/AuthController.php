@@ -88,6 +88,8 @@ final class AuthController
 
     public function logout(): void
     {
+        AuthMiddleware::requireAuth();
+
         if (!Csrf::check($_POST['_csrf'] ?? null)) {
             Session::flash('error', 'Session expirée. Réessaie.');
             redirect('/dashboard');

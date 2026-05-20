@@ -181,7 +181,7 @@ final class QuizCorrectionService
 
         $session = $this->getSession($sessionId);
 
-        if ($session === null || $session['source_type'] !== 'objective') {
+        if ($session === null || $session['user_id'] === null || $session['source_type'] !== 'objective') {
             return;
         }
 
