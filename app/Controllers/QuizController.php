@@ -40,8 +40,7 @@ final class QuizController
         $session = $service->getSession($sessionId);
 
         if (!$this->canAccessSession($session)) {
-            http_response_code(404);
-            echo 'Quiz introuvable';
+            $this->notFound();
             return;
         }
 
@@ -55,19 +54,19 @@ final class QuizController
             'title' => 'Quiz',
             'session' => $session,
             'question' => $question,
-            'options' => json_decode($question['options_json'], true) ?: [],
+            'options' => json_decode((string) $question['options_json'], true) ?: [],
         ]);
     }
 
     public function answer(string $id): void
     {
         $sessionId = (int) $id;
+
         $service = new QuizCorrectionService();
         $session = $service->getSession($sessionId);
 
         if (!$this->canAccessSession($session)) {
-            http_response_code(404);
-            echo 'Quiz introuvable';
+            $this->notFound();
             return;
         }
 
@@ -84,35 +83,20 @@ final class QuizController
         redirect('/quiz/' . $sessionId . '/feedback/' . $answerId);
     }
 
-
     public function feedback(string $sessionId, string $answerId): void
     {
         $sessionIdInt = (int) $sessionId;
         $answerIdInt = (int) $answerId;
-
-        $service = new QuizCorrectionService();
-        $service->answerQuestion($sessionId, $answerId, $userAnswer);
-
-        redirect('/quiz/' . $sessionId . '/feedback/' . $answerId);
-    }
-
-
-    public function feedback(string $sessionId, string $answerId): void
-    {
-        AuthMiddleware::requireAuth();
-
-        $sessionIdInt = (int) $sessionId;
-        $answerIdInt = (int) $answerId;
-        $userId = (int) Session::get('user_id');
 
         $service = new QuizCorrectionService();
         $session = $service->getSession($sessionIdInt);
 
-        if ($session === null || (int) ($session['user_id'] ?? 0) !== $userId) {
-            redirect('/quiz/' . $sessionIdInt);
+        if (!$this->canAccessSession($session)) {
+            $this->notFound();
+            return;
         }
 
-        $answer = $service->getAnswerForFeedback($userId, $sessionIdInt, $answerIdInt);
+        $answer = $service->getAnswerForFeedback($sessionIdInt, $answerIdInt);
 
         if ($answer === null) {
             redirect('/quiz/' . $sessionIdInt);
@@ -128,33 +112,23 @@ final class QuizController
     public function results(string $id): void
     {
         $sessionId = (int) $id;
-        $userId = (int) Session::get('user_id');
 
-        $resultService = new QuizResultService();
-        $resultContext = $resultService->buildResultContext($userId, $sessionId);
+        $correctionService = new QuizCorrectionService();
+        $session = $correctionService->getSession($sessionId);
 
-        if ($resultContext === null) {
-            http_response_code(404);
-            echo 'Quiz introuvable';
+        if (!$this->canAccessSession($session)) {
+            $this->notFound();
             return;
         }
 
         $resultService = new QuizResultService();
-        $resultContext = ($session['user_id'] === null)
+        $resultContext = $session['user_id'] === null
             ? $resultService->buildGuestResultContext($sessionId)
-            : $resultService->buildResultContext((int) Session::get('user_id'), $sessionId);
+            : $resultService->buildResultContext((int) $session['user_id'], $sessionId);
 
         if ($resultContext === null) {
-            http_response_code(404);
-            echo 'Quiz introuvable';
+            $this->notFound();
             return;
-        }
-
-        $newBadges = Session::get('new_badges_quiz_' . $sessionId, []);
-        Session::forget('new_badges_quiz_' . $sessionId);
-
-        if (!is_array($newBadges)) {
-            $newBadges = [];
         }
 
         View::render('quiz.results', [
@@ -164,28 +138,28 @@ final class QuizController
     }
 
     public function retryErrors(string $id): void
-{
-    AuthMiddleware::requireAuth();
+    {
+        AuthMiddleware::requireAuth();
 
-    if (!Csrf::check($_POST['_csrf'] ?? null)) {
-        Session::flash('error', 'Session expirée. Réessaie.');
-        redirect('/quiz/' . $id . '/results');
+        if (!Csrf::check($_POST['_csrf'] ?? null)) {
+            Session::flash('error', 'Session expirée. Réessaie.');
+            redirect('/quiz/' . $id . '/results');
+        }
+
+        $sourceSessionId = (int) $id;
+        $userId = (int) Session::get('user_id');
+
+        $generator = new QuizGeneratorService();
+
+        try {
+            $newSessionId = $generator->startErrorReviewQuiz($userId, $sourceSessionId);
+        } catch (\Throwable $exception) {
+            Session::flash('error', 'Aucune erreur à revoir.');
+            redirect('/quiz/' . $sourceSessionId . '/results');
+        }
+
+        redirect('/quiz/' . $newSessionId);
     }
-
-    $sourceSessionId = (int) $id;
-    $userId = (int) Session::get('user_id');
-
-    $generator = new QuizGeneratorService();
-
-    try {
-        $newSessionId = $generator->startErrorReviewQuiz($userId, $sourceSessionId);
-    } catch (\Throwable $exception) {
-        Session::flash('error', 'Aucune erreur à revoir.');
-        redirect('/quiz/' . $sourceSessionId . '/results');
-    }
-
-    redirect('/quiz/' . $newSessionId);
-}
 
     private function canAccessSession(?array $session): bool
     {
@@ -200,5 +174,11 @@ final class QuizController
         }
 
         return $session['user_id'] !== null && (int) $session['user_id'] === (int) $currentUserId;
+    }
+
+    private function notFound(): void
+    {
+        http_response_code(404);
+        echo 'Quiz introuvable';
     }
 }

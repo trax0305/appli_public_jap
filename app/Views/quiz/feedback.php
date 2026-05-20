@@ -1,5 +1,18 @@
 <?php
 $isCorrect = (int) $answer['is_correct'] === 1;
+$isGuest = $session['user_id'] === null;
+$settings = json_decode((string) ($session['settings_json'] ?? '{}'), true);
+$guestMissionId = is_array($settings) ? (int) ($settings['guest_mission_id'] ?? 0) : 0;
+$guestType = is_array($settings) ? (string) ($settings['guest_type'] ?? '') : '';
+$quitUrl = '/dashboard';
+
+if ($isGuest && $guestMissionId > 0) {
+    $quitUrl = '/guest/missions/' . $guestMissionId;
+} elseif ($isGuest && $guestType === 'free_practice') {
+    $quitUrl = '/guest/free-practice';
+} elseif ($isGuest) {
+    $quitUrl = '/guest';
+}
 ?>
 
 <section class="quiz-shell">
@@ -38,6 +51,6 @@ $isCorrect = (int) $answer['is_correct'] === 1;
             Suivant
         </a>
 
-        <a class="quiz-quit-link" href="/dashboard">Quitter</a>
+        <a class="quiz-quit-link" href="<?= e($quitUrl) ?>">Quitter</a>
     </article>
 </section>

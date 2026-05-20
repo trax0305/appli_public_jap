@@ -9,6 +9,7 @@ use App\Core\Csrf;
 use App\Core\Session;
 use App\Core\View;
 use App\Services\AuthService;
+use App\Services\GuestProgressService;
 
 final class AuthController
 {
@@ -81,6 +82,13 @@ final class AuthController
             ], 'auth');
 
             return;
+        }
+
+        $guestProgress = new GuestProgressService();
+
+        if ($guestProgress->transferToUser((int) $result['user_id'])) {
+            Session::flash('success', 'Compte créé. Ta progression invitée a été sauvegardée.');
+            redirect('/dashboard');
         }
 
         redirect('/onboarding');

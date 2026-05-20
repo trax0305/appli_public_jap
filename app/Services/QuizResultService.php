@@ -36,6 +36,38 @@ final class QuizResultService
         ];
     }
 
+    public function buildGuestResultContext(int $sessionId): ?array
+    {
+        $session = $this->getGuestSession($sessionId);
+
+        if ($session === null) {
+            return null;
+        }
+
+        $score = (int) $session['score_percent'];
+        $settings = json_decode((string) ($session['settings_json'] ?? '{}'), true);
+        $guestType = is_array($settings) ? (string) ($settings['guest_type'] ?? '') : '';
+        $freePractice = new GuestFreePracticeService();
+
+        return [
+            'session' => $session,
+            'score_label' => $this->getScoreLabel($score),
+            'is_perfect' => $score === 100,
+            'wrong_answers' => $this->getWrongAnswers($sessionId),
+            'objective_context' => null,
+            'mission_context' => null,
+            'path_context' => null,
+            'unlocked_badges' => [],
+            'is_guest' => true,
+            'guest_context' => [
+                ...((new GuestGuidedService())->getResultContext($session)),
+                'guest_type' => $guestType,
+                'free_limit_reached' => $freePractice->hasReachedLimit(),
+                'free_remaining_count' => $freePractice->getRemainingCount(),
+            ],
+        ];
+    }
+
     private function getSession(int $userId, int $sessionId): ?array
     {
         $pdo = Database::connection();
@@ -52,6 +84,25 @@ final class QuizResultService
             'id' => $sessionId,
             'user_id' => $userId,
         ]);
+
+        $session = $stmt->fetch();
+
+        return $session ?: null;
+    }
+
+    private function getGuestSession(int $sessionId): ?array
+    {
+        $pdo = Database::connection();
+
+        $stmt = $pdo->prepare(
+            'SELECT *
+             FROM quiz_sessions
+             WHERE id = :id
+               AND user_id IS NULL
+             LIMIT 1'
+        );
+
+        $stmt->execute(['id' => $sessionId]);
 
         $session = $stmt->fetch();
 

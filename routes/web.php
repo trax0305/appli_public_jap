@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
+use App\Controllers\GuestFreePracticeController;
+use App\Controllers\GuestGuidedController;
 use App\Controllers\HomeController;
 use App\Controllers\OnboardingController;
 use App\Core\Router;
@@ -19,7 +21,14 @@ $router = new Router();
 
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/guest', [HomeController::class, 'guestEntry']);
-$router->post('/guest/free-practice/start', [HomeController::class, 'startGuestFreePractice']);
+$router->get('/guest/free-practice', [GuestFreePracticeController::class, 'index']);
+$router->post('/guest/free-practice/start', [GuestFreePracticeController::class, 'start']);
+$router->get('/guest/guided', [GuestGuidedController::class, 'index']);
+$router->post('/guest/guided/start', [GuestGuidedController::class, 'start']);
+$router->get('/guest/missions/{id}', [GuestGuidedController::class, 'mission']);
+$router->get('/guest/missions/{id}/discovery', [GuestGuidedController::class, 'discovery']);
+$router->post('/guest/missions/{id}/discovery/complete', [GuestGuidedController::class, 'completeDiscovery']);
+$router->post('/guest/quiz/start', [GuestGuidedController::class, 'startQuiz']);
 
 $router->get('/dashboard', [DashboardController::class, 'index']);
 

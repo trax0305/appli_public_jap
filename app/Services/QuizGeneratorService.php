@@ -115,6 +115,113 @@ final class QuizGeneratorService
         }
     }
 
+    public function startGuestObjectiveQuiz(int $objectiveId, string $pathCode, int $missionId): int
+    {
+        $pdo = Database::connection();
+
+        $objective = $this->getObjective($objectiveId);
+
+        if ($objective === null || (int) $objective['mission_id'] !== $missionId) {
+            throw new \RuntimeException('Objectif invité introuvable.');
+        }
+
+        if ($objective['objective_type'] === 'discovery') {
+            throw new \RuntimeException('La découverte ne lance pas de quiz.');
+        }
+
+        $kana = $this->getKanaForObjective($objective);
+
+        if ($kana === []) {
+            throw new \RuntimeException('Aucun kana trouvé pour cet objectif.');
+        }
+
+        $direction = $this->resolveDirection($objective);
+        $questionCount = $this->resolveQuestionCount($objective, count($kana));
+        $questions = $this->generateQuestions($kana, $questionCount, $direction, $objective['kana_set']);
+
+        $pdo->beginTransaction();
+
+        try {
+            $stmt = $pdo->prepare(
+                'INSERT INTO quiz_sessions (
+                    user_id,
+                    mode,
+                    source_type,
+                    source_id,
+                    kana_set,
+                    direction,
+                    total_questions,
+                    settings_json
+                ) VALUES (
+                    NULL,
+                    :mode,
+                    :source_type,
+                    :source_id,
+                    :kana_set,
+                    :direction,
+                    :total_questions,
+                    :settings_json
+                )'
+            );
+
+            $stmt->execute([
+                'mode' => 'mission',
+                'source_type' => 'objective',
+                'source_id' => $objectiveId,
+                'kana_set' => $objective['kana_set'],
+                'direction' => $direction,
+                'total_questions' => count($questions),
+                'settings_json' => json_encode([
+                    'guest' => true,
+                    'guest_path_code' => $pathCode,
+                    'guest_mission_id' => $missionId,
+                    'question_count_mode' => $objective['question_count_mode'],
+                    'character_scope' => $objective['character_scope'],
+                    'objective_code' => $objective['code'],
+                    'objective_type' => $objective['objective_type'],
+                ], JSON_UNESCAPED_UNICODE),
+            ]);
+
+            $sessionId = (int) $pdo->lastInsertId();
+
+            $stmt = $pdo->prepare(
+                'INSERT INTO quiz_answers (
+                    session_id,
+                    kana_id,
+                    question_order,
+                    displayed_value,
+                    expected_answer,
+                    options_json
+                ) VALUES (
+                    :session_id,
+                    :kana_id,
+                    :question_order,
+                    :displayed_value,
+                    :expected_answer,
+                    :options_json
+                )'
+            );
+
+            foreach ($questions as $index => $question) {
+                $stmt->execute([
+                    'session_id' => $sessionId,
+                    'kana_id' => (int) $question['kana_id'],
+                    'question_order' => $index + 1,
+                    'displayed_value' => $question['displayed_value'],
+                    'expected_answer' => $question['expected_answer'],
+                    'options_json' => json_encode($question['options'], JSON_UNESCAPED_UNICODE),
+                ]);
+            }
+
+            $pdo->commit();
+
+            return $sessionId;
+        } catch (\Throwable $exception) {
+            $pdo->rollBack();
+            throw $exception;
+        }
+    }
+
 
 
     public function startFreeQuiz(int $userId, array $selectedKana, array $config): int
@@ -541,22 +648,135 @@ final class QuizGeneratorService
         return $options;
     }
 
-    private function getGuestVowelKana(): array
+    private function getGuestFreeKana(string $group): array
     {
         $pdo = Database::connection();
+        $groupIds = match ($group) {
+            'K' => [2],
+            'S' => [3],
+            'T' => [4],
+            'N' => [5],
+            'H' => [6],
+            'M' => [7],
+            'R' => [8],
+            'Y_W_N' => [9, 10, 11],
+            default => [1],
+        };
+
+        $placeholders = implode(',', array_fill(0, count($groupIds), '?'));
 
         $stmt = $pdo->prepare(
             'SELECT *
              FROM kana
-             WHERE romaji IN ("a", "i", "u", "e", "o")
+             WHERE consonant_group_id IN (' . $placeholders . ')
                AND is_variant = 0
                AND is_combo = 0
              ORDER BY sort_order ASC'
         );
 
-        $stmt->execute();
+        $stmt->execute($groupIds);
 
         return $stmt->fetchAll();
+    }
+
+    public function startGuestFreeQuiz(array $config = []): int
+    {
+        $kanaSet = in_array(($config['kana_set'] ?? 'hiragana'), ['hiragana', 'katakana'], true)
+            ? (string) $config['kana_set']
+            : 'hiragana';
+        $group = (string) ($config['group'] ?? 'VOWEL');
+        $direction = in_array(($config['direction'] ?? 'kana_to_romaji'), ['kana_to_romaji', 'romaji_to_kana', 'written'], true)
+            ? (string) $config['direction']
+            : 'kana_to_romaji';
+        $questionCount = in_array((int) ($config['question_count'] ?? 5), [5, 10], true)
+            ? (int) $config['question_count']
+            : 5;
+        $kana = $this->getGuestFreeKana($group);
+
+        if ($kana === []) {
+            throw new \RuntimeException('Aucun kana disponible pour le quiz invité.');
+        }
+
+        $pdo = Database::connection();
+        $questions = $this->generateQuestions($kana, $questionCount, $direction, $kanaSet);
+
+        $pdo->beginTransaction();
+
+        try {
+            $stmt = $pdo->prepare(
+                'INSERT INTO quiz_sessions (
+                    user_id,
+                    mode,
+                    source_type,
+                    source_id,
+                    kana_set,
+                    direction,
+                    total_questions,
+                    settings_json
+                ) VALUES (
+                    NULL,
+                    :mode,
+                    :source_type,
+                    NULL,
+                    :kana_set,
+                    :direction,
+                    :total_questions,
+                    :settings_json
+                )'
+            );
+
+            $stmt->execute([
+                'mode' => 'free',
+                'source_type' => 'free',
+                'kana_set' => $kanaSet,
+                'direction' => $direction,
+                'total_questions' => count($questions),
+                'settings_json' => json_encode([
+                    'guest' => true,
+                    'guest_type' => 'free_practice',
+                    'selected_group' => $group,
+                    'question_count' => $questionCount,
+                ], JSON_UNESCAPED_UNICODE),
+            ]);
+
+            $sessionId = (int) $pdo->lastInsertId();
+
+            $stmt = $pdo->prepare(
+                'INSERT INTO quiz_answers (
+                    session_id,
+                    kana_id,
+                    question_order,
+                    displayed_value,
+                    expected_answer,
+                    options_json
+                ) VALUES (
+                    :session_id,
+                    :kana_id,
+                    :question_order,
+                    :displayed_value,
+                    :expected_answer,
+                    :options_json
+                )'
+            );
+
+            foreach ($questions as $index => $question) {
+                $stmt->execute([
+                    'session_id' => $sessionId,
+                    'kana_id' => (int) $question['kana_id'],
+                    'question_order' => $index + 1,
+                    'displayed_value' => $question['displayed_value'],
+                    'expected_answer' => $question['expected_answer'],
+                    'options_json' => json_encode($question['options'], JSON_UNESCAPED_UNICODE),
+                ]);
+            }
+
+            $pdo->commit();
+
+            return $sessionId;
+        } catch (\Throwable $exception) {
+            $pdo->rollBack();
+            throw $exception;
+        }
     }
 
     public function startErrorReviewQuiz(int $userId, int $sourceSessionId): int
