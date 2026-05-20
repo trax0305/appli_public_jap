@@ -11,7 +11,6 @@ $correctAnswers = (int) ($session['correct_answers'] ?? 0);
 $totalQuestions = (int) ($session['total_questions'] ?? 0);
 $mode = (string) ($session['mode'] ?? 'mission');
 $sourceType = (string) ($session['source_type'] ?? 'objective');
-$isGuest = !empty($resultContext['is_guest']) || $session['user_id'] === null;
 ?>
 
 
@@ -26,20 +25,6 @@ $isGuest = !empty($resultContext['is_guest']) || $session['user_id'] === null;
     </p>
 </section>
 
-<?php if ($isGuest): ?>
-    <section class="card result-context-card">
-        <p class="eyebrow">Mode invité</p>
-        <h2>Bien joué !</h2>
-        <p>Crée un compte gratuit pour sauvegarder ta progression, tes stats et tes badges.</p>
-
-        <div class="result-actions">
-            <a class="button button-primary" href="/register">Créer mon compte</a>
-            <a class="button button-secondary" href="/guest">Continuer en mode invité</a>
-        </div>
-    </section>
-<?php endif; ?>
-
-<?php if (!$isGuest): ?>
 <?php if ($objective !== null): ?>
     <section class="card result-context-card">
         <p class="eyebrow">Objectif</p>
@@ -78,6 +63,47 @@ $isGuest = !empty($resultContext['is_guest']) || $session['user_id'] === null;
         <?php if ($mission !== null && !empty($mission['next_mission_title'])): ?>
             <p><strong>Mission suivante :</strong> <?= e((string) $mission['next_mission_title']) ?></p>
         <?php endif; ?>
+    </section>
+<?php endif; ?>
+
+<?php if (!empty($newBadges)): ?>
+    <section class="result-badges">
+        <p class="eyebrow">Badge débloqué</p>
+
+        <div class="result-badge-list">
+            <?php foreach ($newBadges as $badge): ?>
+                <article class="result-badge-card">
+                    <div class="result-badge-title-row">
+                        <strong><?= e((string) ($badge['title'] ?? 'Badge')) ?></strong>
+                        <?php if (!empty($badge['icon'])): ?>
+                            <span class="result-badge-icon"><?= e((string) $badge['icon']) ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <p><?= e((string) ($badge['description'] ?? '')) ?></p>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </section>
+<?php endif; ?>
+
+<section class="result-actions">
+    <?php if ($sourceType === 'objective' && $objective !== null): ?>
+        <a class="button button-primary" href="/missions/<?= e((string) $objective['mission_id']) ?>">
+            Continuer la mission
+        </a>
+    <?php elseif ($mode === 'free'): ?>
+        <a class="button button-primary" href="/free-practice">
+            Retour mode libre
+        </a>
+    <?php elseif ($mode === 'review'): ?>
+        <a class="button button-primary" href="/review">
+            Nouvelle révision
+        </a>
+    <?php else: ?>
+        <a class="button button-primary" href="/dashboard">
+            Continuer
+        </a>
+    <?php endif; ?>
 
         <?php if ($path !== null && $path['path_completed']): ?>
             <p><strong>Parcours terminé :</strong> <?= e((string) $path['path_title']) ?></p>

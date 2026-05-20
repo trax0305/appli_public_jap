@@ -91,13 +91,28 @@ final class QuizController
         $answerIdInt = (int) $answerId;
 
         $service = new QuizCorrectionService();
+        $service->answerQuestion($sessionId, $answerId, $userAnswer);
+
+        redirect('/quiz/' . $sessionId . '/feedback/' . $answerId);
+    }
+
+
+    public function feedback(string $sessionId, string $answerId): void
+    {
+        AuthMiddleware::requireAuth();
+
+        $sessionIdInt = (int) $sessionId;
+        $answerIdInt = (int) $answerId;
+        $userId = (int) Session::get('user_id');
+
+        $service = new QuizCorrectionService();
         $session = $service->getSession($sessionIdInt);
 
-        if (!$this->canAccessSession($session)) {
+        if ($session === null || (int) ($session['user_id'] ?? 0) !== $userId) {
             redirect('/quiz/' . $sessionIdInt);
         }
 
-        $answer = $service->getAnswerForFeedback($sessionIdInt, $answerIdInt);
+        $answer = $service->getAnswerForFeedback($userId, $sessionIdInt, $answerIdInt);
 
         if ($answer === null) {
             redirect('/quiz/' . $sessionIdInt);
@@ -113,11 +128,12 @@ final class QuizController
     public function results(string $id): void
     {
         $sessionId = (int) $id;
+        $userId = (int) Session::get('user_id');
 
-        $correctionService = new QuizCorrectionService();
-        $session = $correctionService->getSession($sessionId);
+        $resultService = new QuizResultService();
+        $resultContext = $resultService->buildResultContext($userId, $sessionId);
 
-        if (!$this->canAccessSession($session)) {
+        if ($resultContext === null) {
             http_response_code(404);
             echo 'Quiz introuvable';
             return;

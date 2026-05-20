@@ -109,16 +109,14 @@ final class QuizCorrectionService
         'id' => $answerId,
     ]);
 
-    if ($session !== null && $session['user_id'] !== null) {
-        $statsService = new StatsService();
-        $statsService->recordKanaAnswer(
-            (int) $session['user_id'],
-            $sessionId,
-            (int) $answer['kana_id'],
-            $isCorrect,
-            (string) $answer['displayed_value']
-        );
-    }
+    $statsService = new StatsService();
+    $statsService->recordKanaAnswer(
+        isset($session['user_id']) ? (int) $session['user_id'] : null,
+        $sessionId,
+        (int) $answer['kana_id'],
+        $isCorrect,
+        (string) $answer['displayed_value']
+    );
 
     if ($this->getCurrentQuestion($sessionId) === null) {
         $this->completeSession($sessionId);
@@ -697,7 +695,7 @@ private function getLatestCompletedSessionId(int $userId): ?int
     return $session ? (int) $session['id'] : null;
 }
 
-public function getAnswerForFeedback(int $sessionId, int $answerId): ?array
+public function getAnswerForFeedback(int $userId, int $sessionId, int $answerId): ?array
 {
     $pdo = Database::connection();
 
@@ -714,12 +712,14 @@ public function getAnswerForFeedback(int $sessionId, int $answerId): ?array
          INNER JOIN kana k ON k.id = qa.kana_id
          WHERE qa.id = :answer_id
            AND qa.session_id = :session_id
+           AND qs.user_id = :user_id
          LIMIT 1'
     );
 
     $stmt->execute([
         'answer_id' => $answerId,
         'session_id' => $sessionId,
+        'user_id' => $userId,
     ]);
 
     $answer = $stmt->fetch();

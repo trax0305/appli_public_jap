@@ -14,44 +14,23 @@
         <h1>Apprends les kana japonais simplement.</h1>
 
         <p class="hero-text">
-            Des missions guidées, des quiz rapides et une révision intelligente
-            pour progresser sans te prendre la tête.
+            Hiragana, katakana, quiz rapides et révisions ciblées.
+            Commence en moins d’une minute.
         </p>
 
         <div class="actions">
-            <a class="button button-primary" href="/guest">Commencer gratuitement</a>
-            <a class="button button-secondary" href="/free-practice">M’entraîner librement</a>
+            <a class="button button-primary" href="/guest">Tester gratuitement</a>
         </div>
+
+        <ul class="benefits-inline" aria-label="Bénéfices clés">
+            <li>✓ Missions guidées</li>
+            <li>✓ Quiz rapides</li>
+            <li>✓ Stats claires</li>
+        </ul>
     </div>
 
     <div class="hero-kana" aria-hidden="true">
         <span>あ</span>
         <span>ア</span>
     </div>
-</section>
-
-<section class="benefits-grid">
-    <article class="benefit-card">
-        <span class="benefit-icon">✓</span>
-        <h2>Hiragana et katakana</h2>
-        <p>Travaille les deux alphabets progressivement, sans tout mélanger dès le départ.</p>
-    </article>
-
-    <article class="benefit-card">
-        <span class="benefit-icon">✓</span>
-        <h2>Mode guidé ou libre</h2>
-        <p>Suis un parcours clair ou choisis toi-même les kana que tu veux travailler.</p>
-    </article>
-
-    <article class="benefit-card">
-        <span class="benefit-icon">✓</span>
-        <h2>Révision ciblée</h2>
-        <p>L’app t’aide à revenir sur tes erreurs et tes derniers groupes travaillés.</p>
-    </article>
-
-    <article class="benefit-card">
-        <span class="benefit-icon">✓</span>
-        <h2>Progression claire</h2>
-        <p>Vois ce que tu maîtrises, ce qu’il faut revoir et la prochaine étape à faire.</p>
-    </article>
 </section>
