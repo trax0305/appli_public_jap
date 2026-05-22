@@ -440,6 +440,10 @@ p {
     color: var(--color-muted);
 }
 
+.guest-main-cta-form {
+    margin: 0;
+}
+
 @media (max-width: 820px) {
     .public-shell {
         display: flex;
@@ -594,8 +598,57 @@ p {
         width: 100%;
     }
 
+    .guest-free-page.public-main {
+        padding-top: 14px;
+        padding-bottom: 18px;
+    }
+
+    .guest-free-page .guest-heading {
+        margin-bottom: 10px;
+    }
+
+    .guest-free-page .guest-heading h1 {
+        margin-bottom: 6px;
+        font-size: clamp(1.55rem, 7.5vw, 1.95rem);
+        line-height: 1.08;
+    }
+
+    .guest-free-page .guest-heading p {
+        font-size: 0.9rem;
+        line-height: 1.35;
+    }
+
+    .guest-free-page .guest-free-card {
+        gap: 10px;
+        padding: 14px;
+        border-radius: 20px;
+    }
+
+    .guest-free-page .guest-limit-text {
+        font-size: 0.82rem;
+        line-height: 1.25;
+    }
+
     .guest-free-form {
         grid-template-columns: 1fr;
+        gap: 9px;
+    }
+
+    .guest-free-page .guest-free-form label {
+        gap: 4px;
+        font-size: 0.82rem;
+    }
+
+    .guest-free-page .guest-free-form select {
+        min-height: 40px;
+        padding: 0 12px;
+        border-radius: 14px;
+        font-size: 0.9rem;
+    }
+
+    .guest-free-page .guest-free-form button {
+        min-height: 42px;
+        margin-top: 2px;
     }
 
     .guest-link-separator {
@@ -606,6 +659,21 @@ p {
         display: block;
         margin-top: 8px;
     }
+
+    .guest-free-page .guest-account-link {
+        margin-top: 10px;
+        font-size: 0.88rem;
+        line-height: 1.35;
+    }
+
+    .guest-free-page .guest-account-link a {
+        margin-top: 5px;
+    }
+
+    .guest-free-page .guest-account-link a:first-child {
+        margin-top: 0;
+    }
+
 }
 
 @media (max-width: 420px) {
@@ -1698,4 +1766,322 @@ input:focus {
 
 .result-context-card h2 {
     margin-top: 0;
+}
+
+@media (min-width: 821px) {
+    .guest-mission-page {
+        width: min(100%, 1120px);
+    }
+
+    .guest-mission-page .guest-mission-header {
+        position: relative;
+        display: block;
+    }
+
+    .guest-mission-page .guest-mission-copy,
+    .guest-mission-page .guest-mission-grid {
+        width: min(100%, 960px);
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .guest-mission-page .guest-change-path {
+        flex: 0 0 auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .guest-mission-page .guest-mission-grid {
+        align-items: start;
+    }
+
+    .guest-mission-page .guest-kana-card {
+        align-self: start;
+    }
+
+    .guest-mission-page .guest-kana-grid {
+        grid-template-columns: repeat(5, minmax(86px, 1fr));
+        gap: 12px;
+        margin: 18px 0;
+    }
+
+    .guest-mission-page .guest-kana-mini {
+        min-height: 128px;
+    }
+
+    .guest-mission-page .guest-kana-mini .kana-symbol {
+        font-size: 3.25rem;
+    }
+
+    .guest-mission-page .guest-main-cta-form,
+    .guest-mission-page .guest-kana-card > .button-full {
+        width: min(100%, 360px);
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 820px) {
+    .guest-mission-page.public-main {
+        padding-top: 10px;
+    }
+
+    .guest-mission-page .guest-mission-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 7px 10px;
+        margin-bottom: 10px;
+    }
+
+    .guest-mission-page .guest-mission-copy {
+        display: contents;
+    }
+
+    .guest-mission-page .guest-mission-header h1 {
+        grid-column: 1 / -1;
+        margin-bottom: 4px;
+        font-size: clamp(1.45rem, 6.5vw, 1.85rem);
+        line-height: 1.08;
+        text-align: center;
+    }
+
+    .guest-mission-page .guest-mission-header p {
+        grid-column: 1 / -1;
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    .guest-mission-page .guest-mission-header .eyebrow {
+        grid-column: 1;
+        margin: 0;
+        font-size: 0.76rem;
+        text-align: left;
+    }
+
+    .guest-mission-page .guest-change-path {
+        grid-column: 2;
+        grid-row: 1;
+        flex: 0 0 auto;
+        width: auto;
+        min-height: 24px;
+        padding: 0 8px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .guest-mission-page .guest-mission-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .guest-mission-page .guest-kana-card {
+        padding: 12px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(36, 36, 36, 0.04);
+    }
+
+    .guest-mission-page .guest-kana-card .eyebrow {
+        margin-bottom: 6px;
+        font-size: 0.76rem;
+    }
+
+    .guest-mission-page .guest-kana-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 7px;
+        margin: 7px 0 11px;
+    }
+
+    .guest-mission-page .guest-kana-mini {
+        display: grid;
+        grid-column: span 2;
+        width: auto;
+        min-height: 52px;
+        padding: 6px 6px;
+        border-radius: 13px;
+        gap: 2px;
+    }
+
+    .guest-mission-page .guest-kana-mini:nth-child(4) {
+        grid-column: 2 / span 2;
+    }
+
+    .guest-mission-page .guest-kana-mini:nth-child(5) {
+        grid-column: 4 / span 2;
+    }
+
+    .guest-mission-page .guest-kana-mini .kana-symbol {
+        font-size: 1.55rem;
+    }
+
+    .guest-mission-page .guest-kana-mini .kana-romaji {
+        font-size: 0.72rem;
+    }
+
+    .guest-mission-page .guest-mission-steps {
+        padding: 12px;
+        border-radius: 20px;
+        box-shadow: 0 18px 44px rgba(36, 36, 36, 0.06);
+    }
+
+    .guest-mission-page .guest-mission-steps h2 {
+        margin: 0 0 9px;
+        font-size: 0.95rem;
+    }
+
+    .guest-mission-page .guest-steps-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .guest-mission-page .guest-step-item {
+        display: flex;
+        flex: 1 1 100%;
+        min-height: 0;
+        padding: 8px 11px;
+        border-radius: 999px;
+    }
+
+    .guest-mission-page .guest-step-item > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .guest-mission-page .guest-step-item strong {
+        overflow: hidden;
+        font-size: 0.82rem;
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .guest-mission-page .guest-step-item span {
+        flex: 0 0 auto;
+        font-size: 0.78rem;
+        font-weight: 800;
+    }
+
+    .guest-mission-page .guest-step-item form {
+        display: none;
+    }
+
+    .guest-discovery-page.public-main {
+        padding-top: 10px;
+    }
+
+    .guest-discovery-page .guest-discovery-header {
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .guest-discovery-page .guest-discovery-header > div {
+        width: 100%;
+    }
+
+    .guest-discovery-page .guest-discovery-top-row {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 5px;
+    }
+
+    .guest-discovery-page .guest-discovery-header h1 {
+        margin-bottom: 4px;
+        font-size: clamp(1.45rem, 6.5vw, 1.85rem);
+        line-height: 1.08;
+        text-align: center;
+    }
+
+    .guest-discovery-page .guest-discovery-header p {
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    .guest-discovery-page .guest-discovery-header .eyebrow {
+        margin: 0;
+        font-size: 0.76rem;
+        text-align: left;
+    }
+
+    .guest-discovery-page .guest-discovery-back {
+        flex: 0 0 auto;
+        align-self: auto;
+        width: auto;
+        min-height: 24px;
+        padding: 0 8px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .guest-discovery-page .guest-discovery-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 8px;
+        margin: 8px 0;
+    }
+
+    .guest-discovery-page .guest-discovery-kana {
+        display: grid;
+        grid-column: span 2;
+        min-height: 72px;
+        padding: 9px 8px;
+        border-radius: 16px;
+        gap: 3px;
+    }
+
+    .guest-discovery-page .guest-discovery-kana:nth-child(4) {
+        grid-column: 2 / span 2;
+    }
+
+    .guest-discovery-page .guest-discovery-kana:nth-child(5) {
+        grid-column: 4 / span 2;
+    }
+
+    .guest-discovery-page .guest-discovery-kana .discovery-kana {
+        font-size: 2.35rem;
+    }
+
+    .guest-discovery-page .guest-discovery-kana .discovery-romaji {
+        font-size: 0.82rem;
+    }
+
+    .guest-discovery-page .guest-discovery-action {
+        display: grid;
+        gap: 10px;
+        margin-top: 10px;
+        padding: 14px;
+        border-radius: 20px;
+    }
+
+    .guest-discovery-page .guest-discovery-action p {
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    .guest-discovery-page .guest-discovery-action form {
+        margin: 0;
+    }
+
+    .guest-discovery-page .guest-discovery-action .button {
+        width: 100%;
+    }
 }

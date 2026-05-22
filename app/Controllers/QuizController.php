@@ -55,6 +55,7 @@ final class QuizController
             'session' => $session,
             'question' => $question,
             'options' => json_decode((string) $question['options_json'], true) ?: [],
+            'hideBottomNav' => true,
         ]);
     }
 
@@ -106,6 +107,7 @@ final class QuizController
             'title' => 'Correction',
             'session' => $session,
             'answer' => $answer,
+            'hideBottomNav' => true,
         ]);
     }
 

@@ -7,7 +7,7 @@
     <a class="header-link" href="/login">Se connecter</a>
 </header>
 
-<section class="guest-page public-main">
+<section class="guest-page guest-free-page public-main">
     <div class="page-heading guest-heading">
         <h1>Tester le mode libre</h1>
         <p>Choisis quelques kana et lance un quiz sans compte.</p>
