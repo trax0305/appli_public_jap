@@ -1,4 +1,4 @@
-<section class="auth-card">
+<section class="auth-card auth-card-login">
     <a class="brand auth-brand" href="/">
         <span class="brand-mark">あア</span>
         <span class="brand-name">App Japonais</span>

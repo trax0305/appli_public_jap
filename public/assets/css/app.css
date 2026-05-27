@@ -416,7 +416,7 @@ p {
     display: grid;
     gap: 7px;
     color: var(--color-text);
-    font-weight: 800;
+    font-weight: 650;
 }
 
 .guest-free-form select {
@@ -428,6 +428,7 @@ p {
     background: #fff;
     color: var(--color-text);
     font: inherit;
+    font-weight: 500;
 }
 
 .guest-free-form button {
@@ -700,6 +701,11 @@ p {
     margin-bottom: 28px;
 }
 
+.auth-card-login,
+.auth-card-register {
+    width: 100%;
+}
+
 .form {
     display: grid;
     gap: 18px;
@@ -767,6 +773,127 @@ input:focus {
     color: var(--color-muted);
     font-size: 0.85rem;
     line-height: 1.4;
+}
+
+@media (min-width: 821px) {
+    .auth-shell:has(.auth-card-login),
+    .auth-shell:has(.auth-card-register) {
+        display: grid;
+        width: min(100% - 32px, 560px);
+        min-height: 100vh;
+        padding: 32px 0;
+        place-items: center;
+    }
+
+    .auth-card-login,
+    .auth-card-register {
+        display: block;
+        padding: 34px;
+    }
+
+    .auth-card-login .auth-brand,
+    .auth-card-register .auth-brand {
+        margin-bottom: 26px;
+    }
+
+    .auth-card-login > .eyebrow,
+    .auth-card-register > .eyebrow {
+        margin-bottom: 8px;
+    }
+
+    .auth-card-login > h1,
+    .auth-card-register > h1 {
+        margin-bottom: 0;
+        font-size: clamp(2.1rem, 3vw, 2.55rem);
+        line-height: 1.08;
+        white-space: nowrap;
+    }
+
+    .auth-card-login > .form,
+    .auth-card-register > .form {
+        margin-top: 24px;
+    }
+
+    .auth-card-login > .center-link,
+    .auth-card-register > .center-link {
+        margin-top: 22px;
+    }
+}
+
+@media (max-width: 620px) {
+    .auth-shell:has(.auth-card-login),
+    .auth-shell:has(.auth-card-register) {
+        width: 100%;
+        min-height: 100svh;
+        padding: 0 18px 28px;
+    }
+
+    .auth-card-login,
+    .auth-card-register {
+        padding: 24px 0 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .auth-card-login .auth-brand,
+    .auth-card-register .auth-brand {
+        margin-bottom: 32px;
+    }
+
+    .auth-card-login > .eyebrow,
+    .auth-card-register > .eyebrow {
+        margin-bottom: 8px;
+        font-size: 0.82rem;
+    }
+
+    .auth-card-login > h1,
+    .auth-card-register > h1 {
+        margin-bottom: 0;
+        font-size: clamp(1.55rem, 7vw, 1.9rem);
+        line-height: 1.08;
+        white-space: nowrap;
+    }
+
+    .auth-card-login > .form,
+    .auth-card-register > .form {
+        gap: 16px;
+        margin-top: 22px;
+    }
+
+    .auth-card-login label,
+    .auth-card-register label {
+        font-size: 0.95rem;
+        font-weight: 750;
+    }
+
+    .auth-card-login input,
+    .auth-card-register input {
+        min-height: 54px;
+        border-radius: 18px;
+    }
+
+    .auth-card-login .button,
+    .auth-card-register .button {
+        min-height: 52px;
+    }
+
+    .auth-card-login > .center-link,
+    .auth-card-register > .center-link {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px 7px;
+        margin-top: 22px;
+        font-size: 0.96rem;
+        line-height: 1.4;
+    }
+
+    .auth-card-login > .center-link a,
+    .auth-card-register > .center-link a {
+        white-space: nowrap;
+    }
 }
 
 .onboarding-card {
@@ -1733,13 +1860,27 @@ input:focus {
     gap: 14px;
 }
 
+.quiz-feedback-card-success {
+    border-color: rgba(45, 154, 88, 0.58);
+    background: linear-gradient(180deg, rgba(72, 168, 111, 0.24), var(--color-card) 72%);
+    box-shadow: 0 20px 60px rgba(45, 154, 88, 0.16);
+}
+
+.quiz-feedback-card-error {
+    border-color: rgba(217, 74, 61, 0.58);
+    background: linear-gradient(180deg, rgba(217, 74, 61, 0.24), var(--color-card) 72%);
+    box-shadow: 0 20px 60px rgba(217, 74, 61, 0.16);
+}
+
 .quiz-feedback-lines {
     display: grid;
     gap: 6px;
+    text-align: center;
 }
 
 .quiz-feedback-lines p {
     margin: 0;
+    color: var(--color-text);
 }
 
 .quiz-feedback-kana {
@@ -1758,6 +1899,110 @@ input:focus {
 .quiz-quit-link:hover {
     color: var(--color-primary);
     text-decoration: underline;
+}
+
+@media (max-width: 620px) {
+    .quiz-play-shell,
+    .quiz-feedback-shell {
+        width: calc(100% + 32px);
+        margin-right: -16px;
+        margin-left: -16px;
+    }
+
+    .quiz-play-card {
+        gap: 24px;
+        padding: 18px 16px 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .quiz-play-card .eyebrow {
+        margin: 0;
+    }
+
+    .quiz-play-card .quiz-symbol {
+        font-size: clamp(5.5rem, 28vw, 7.4rem);
+    }
+
+    .quiz-play-card .quiz-options {
+        width: min(100%, 340px);
+        margin: 0 auto;
+    }
+
+    .quiz-play-card .quiz-option {
+        min-height: 56px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.78);
+    }
+
+    .quiz-feedback-card {
+        align-content: start;
+        justify-items: center;
+        gap: 24px;
+        min-height: calc(100svh - 64px);
+        padding: 18px 16px 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .quiz-feedback-card-success {
+        background: linear-gradient(180deg, rgba(72, 168, 111, 0.24), rgba(250, 247, 240, 0) 44%);
+    }
+
+    .quiz-feedback-card-error {
+        background: linear-gradient(180deg, rgba(217, 74, 61, 0.24), rgba(250, 247, 240, 0) 44%);
+    }
+
+    .quiz-feedback-card::before {
+        content: "";
+        justify-self: center;
+        width: 58px;
+        height: 5px;
+        border-radius: 999px;
+    }
+
+    .quiz-feedback-card-success::before {
+        background: #2D9A58;
+        box-shadow: 0 10px 24px rgba(45, 154, 88, 0.26);
+    }
+
+    .quiz-feedback-card-error::before {
+        background: var(--color-primary);
+        box-shadow: 0 10px 24px rgba(217, 74, 61, 0.28);
+    }
+
+    .quiz-feedback-card .quiz-symbol {
+        color: var(--color-text);
+        font-size: clamp(5.6rem, 28vw, 7.4rem);
+    }
+
+    .quiz-feedback-lines {
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        font-size: 1.05rem;
+        line-height: 1.35;
+    }
+
+    .quiz-feedback-lines strong {
+        color: var(--color-text);
+    }
+
+    .quiz-feedback-card .button {
+        align-self: start;
+        width: min(100%, 300px);
+        height: 52px;
+        min-height: 0;
+        padding: 0 24px;
+    }
+
+    .quiz-quit-link {
+        font-size: 1rem;
+    }
 }
 
 .result-context-card {
@@ -1819,6 +2064,79 @@ input:focus {
         width: min(100%, 360px);
         margin-right: auto;
         margin-left: auto;
+    }
+
+    .guest-mission-page .guest-kana-card > .button-full {
+        display: flex;
+    }
+
+    .guest-discovery-page .guest-discovery-header {
+        position: relative;
+        display: block;
+        margin-bottom: 22px;
+    }
+
+    .guest-discovery-page .guest-discovery-header > div,
+    .guest-discovery-page .guest-discovery-grid,
+    .guest-discovery-page .guest-discovery-action {
+        width: min(100%, 960px);
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .guest-discovery-page .guest-discovery-top-row {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .guest-discovery-page .guest-discovery-back {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-height: 38px;
+        padding: 0 16px;
+        font-size: 0.95rem;
+    }
+
+    .guest-discovery-page .guest-discovery-header h1 {
+        margin-bottom: 10px;
+        font-size: clamp(2.2rem, 3.6vw, 2.8rem);
+    }
+
+    .guest-discovery-page .guest-discovery-header p {
+        margin: 0;
+    }
+
+    .guest-discovery-page .guest-discovery-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 0;
+        margin-bottom: 18px;
+    }
+
+    .guest-discovery-page .guest-discovery-kana {
+        min-height: 138px;
+        padding: 18px 14px 14px;
+        border-radius: 20px;
+    }
+
+    .guest-discovery-page .guest-discovery-kana .discovery-kana {
+        font-size: clamp(3.4rem, 5vw, 4.15rem);
+    }
+
+    .guest-discovery-page .guest-discovery-action {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-top: 0;
+        padding: 20px 24px;
+        border-radius: 22px;
+    }
+
+    .guest-discovery-page .guest-discovery-action p,
+    .guest-discovery-page .guest-discovery-action form {
+        margin: 0;
     }
 }
 

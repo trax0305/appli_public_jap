@@ -1,11 +1,11 @@
-<section class="quiz-shell">
+<section class="quiz-shell quiz-play-shell">
     <div class="quiz-progress">
         Question <?= e((string) $question['question_order']) ?>
         /
         <?= e((string) $session['total_questions']) ?>
     </div>
 
-    <article class="quiz-card">
+    <article class="quiz-card quiz-play-card">
         <?php if ($session['direction'] === 'romaji_to_kana'): ?>
             <p class="eyebrow">Quel kana correspond à :</p>
         <?php elseif ($session['direction'] === 'written'): ?>
