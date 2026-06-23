@@ -24,8 +24,8 @@ $secondaryLearningHref = $isGuided ? '/free-practice' : '/paths';
         </a>
 
         <nav class="dashboard-connected-nav" aria-label="Navigation connectée">
-            <a href="/paths">Parcours</a>
-            <a href="/free-practice">Libre</a>
+            <a href="/paths">Apprendre</a>
+            <a href="/free-practice">Quiz</a>
             <a href="/stats">Stats</a>
             <a href="/profile">Profil</a>
         </nav>
@@ -179,15 +179,6 @@ $secondaryLearningHref = $isGuided ? '/free-practice' : '/paths';
                     </a>
                 </article>
 
-                <article class="mini-card dashboard-quick-card">
-                    <h2>Actions rapides</h2>
-
-                    <div class="quick-actions">
-                        <a href="/free-practice">Mode libre</a>
-                        <a href="/stats">Mes stats</a>
-                        <a href="/paths">Parcours</a>
-                    </div>
-                </article>
             </aside>
         </section>
     <?php elseif ($mode === 'free'): ?>
@@ -211,15 +202,6 @@ $secondaryLearningHref = $isGuided ? '/free-practice' : '/paths';
                     </a>
                 </article>
 
-                <article class="mini-card dashboard-quick-card">
-                    <h2>Actions rapides</h2>
-
-                    <div class="quick-actions">
-                        <a href="/free-practice">Mode libre</a>
-                        <a href="/stats">Mes stats</a>
-                        <a href="/paths">Parcours</a>
-                    </div>
-                </article>
             </aside>
         </section>
     <?php else: ?>

@@ -1277,39 +1277,35 @@ input:focus {
     }
 
     .dashboard-mobile-dashboard .dashboard-profile-link {
-        flex: 0 0 auto;
-        border: 1px solid var(--color-border);
-        border-radius: 999px;
-        padding: 6px 10px;
-        background: rgba(255, 255, 255, 0.64);
-        color: var(--color-muted);
-        font-size: 0.8rem;
-    }
-
-    .dashboard-mobile-dashboard .dashboard-current-card,
-    .dashboard-mobile-dashboard .dashboard-review-card {
-        border-radius: 18px;
-        padding: 16px;
+        display: none;
     }
 
     .dashboard-mobile-dashboard .dashboard-current-card {
-        gap: 9px;
+        gap: 8px;
+        padding: 14px 0 0;
+        border: 0;
+        border-top: 1px solid rgba(232, 225, 216, 0.9);
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
     }
 
     .dashboard-mobile-dashboard .dashboard-current-card h2 {
-        font-size: 1.08rem;
+        font-size: 1.28rem;
+        line-height: 1.12;
     }
 
     .dashboard-mobile-dashboard .dashboard-current-card h3 {
-        font-size: 1.02rem;
+        font-size: 1.08rem;
+        line-height: 1.18;
     }
 
     .dashboard-mobile-dashboard .dashboard-muted {
-        margin-top: 6px;
+        margin-top: 8px;
     }
 
     .dashboard-mobile-dashboard .dashboard-current-card .progress-block {
-        margin: 4px 0 8px;
+        margin: 8px 0 10px;
     }
 
     .dashboard-mobile-dashboard .dashboard-current-card .progress-label {
@@ -1322,15 +1318,31 @@ input:focus {
         white-space: nowrap;
     }
 
+    .dashboard-mobile-dashboard .dashboard-current-card .progress-bar {
+        height: 8px;
+    }
+
+    .dashboard-mobile-dashboard .dashboard-current-card .button-full {
+        width: min(100%, 340px);
+        justify-self: center;
+    }
+
     .dashboard-mobile-dashboard .dashboard-current-card .button-primary {
-        min-height: 52px;
+        min-height: 50px;
         font-size: 1rem;
     }
 
     .dashboard-mobile-dashboard .dashboard-review-card {
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
-        gap: 6px 12px;
+        gap: 4px 12px;
+        margin-top: 0;
+        padding: 14px 0 0;
+        border: 0;
+        border-top: 1px solid rgba(232, 225, 216, 0.9);
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
     }
 
     .dashboard-mobile-dashboard .dashboard-review-card h2 {
@@ -1348,8 +1360,9 @@ input:focus {
         grid-row: 1 / span 2;
         justify-self: end;
         width: auto;
-        min-height: 40px;
-        padding: 0 15px;
+        min-height: 34px;
+        padding: 0 14px;
+        background: rgba(255, 255, 255, 0.58);
     }
 }
 
@@ -2245,6 +2258,12 @@ input:focus {
     }
 }
 
+@media (max-width: 979px) {
+    .dashboard-header .button-secondary[href="/dashboard"] {
+        display: none;
+    }
+}
+
 .app-shell-with-bottom-nav {
     padding-bottom: 104px;
 }
@@ -2256,9 +2275,9 @@ input:focus {
     bottom: 0;
     z-index: 40;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 4px;
-    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
     background: rgba(250, 247, 240, 0.96);
     border-top: 1px solid var(--color-border);
     backdrop-filter: blur(8px);
@@ -2268,17 +2287,17 @@ input:focus {
     display: grid;
     justify-items: center;
     gap: 2px;
-    min-height: 52px;
-    padding: 6px 4px;
-    border-radius: 14px;
+    min-height: 50px;
+    padding: 6px 2px;
+    border-radius: 12px;
     color: var(--color-muted);
     text-decoration: none;
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     font-weight: 700;
 }
 
 .bottom-nav-icon {
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1;
 }
 
